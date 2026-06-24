@@ -32,15 +32,46 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
 | [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
 | [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
 
-## 빠른 시작
+## 사용법
 
-배선이 끝났다면(위 connect 문서 참고):
+배선이 끝났다면(위 connect 문서 참고) 작업할 디렉터리에서 바로 쓴다.
+
+### PC에서
 
 ```bash
 cd ~/my-project
 codex                 # 대화형 (기본 모델: qwen-122b-codex)
 codex exec "..."      # 비대화형 (자동화/CI)
 ```
+
+권한은 **샌드박스 × 승인 모드**로 조절한다 (처음엔 좁게, 신뢰되면 넓게).
+
+```bash
+# 일반 코딩 (작업트리 안에서 쓰기/실행 허용)
+codex exec --sandbox workspace-write "fix the failing test and run it"
+
+# 읽기 전용 (코드 설명·리뷰)
+codex exec --sandbox read-only "explain server.py"
+```
+
+- 샌드박스: `read-only` → `workspace-write` → `danger-full-access`
+- 승인: `untrusted` / `on-failure` / `on-request` / `never`
+- 빠른 자동 반복: `codex --full-auto` (결과는 검토)
+
+자세한 모드·권한·운영·트러블슈팅 → **[use-codex-cli](documentation/howto/use-codex-cli.md)**
+
+### 휴대폰에서
+
+모델·Codex는 Mac에서 돌고, 폰은 **원격 터미널** 역할만 한다 (Tailscale + SSH + tmux).
+
+```bash
+# 폰 터미널 앱(Moshi 권장)에서
+ssh ohama@100.118.140.2
+tmux new -A -s codex      # 끊겨도 유지
+codex
+```
+
+추천 앱(Moshi)·설정·끊김 방지 → **[use-codex-from-phone](documentation/howto/use-codex-from-phone.md)**
 
 ## 검증된 능력
 
