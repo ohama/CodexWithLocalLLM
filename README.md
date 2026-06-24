@@ -34,8 +34,11 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
 
 ## 예제
 
-레벨별로 Codex를 점검·시연하는 실행 가능한 예제 → **[examples/codex-tests](examples/codex-tests/README.md)**
-(스모크 → 단일파일 → 멀티스텝 → 자가수정 → 멀티파일). `cd examples/codex-tests && ./run.sh` 로 실행.
+레벨별로 Codex를 점검·시연하는 예제 (스모크 → 단일파일 → 멀티스텝 → 자가수정 → 멀티파일).
+
+- **입력 → 출력으로 바로 보기:** [examples/codex-tests/EXAMPLES.md](examples/codex-tests/EXAMPLES.md)
+- 실행: `cd examples/codex-tests && ./run.sh` (전체) 또는 `./run.sh 05` (특정 레벨)
+- 구조·응용: [examples/codex-tests/README.md](examples/codex-tests/README.md)
 
 ## 사용법
 
