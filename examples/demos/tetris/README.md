@@ -43,5 +43,6 @@ codex exec --sandbox workspace-write \
 Codex가 로컬 qwen-122b와 **3번 메시지를 주고받아**(작성 → grep 검증 → 요약) 완성했다.
 그 전체 왕복 기록은 → **[SESSION.md](SESSION.md)**.
 
-> 참고: 이 작업은 122B로 단일 HTML을 한 번에 생성하느라 무겁다(실제 생성 ~10분대).
-> 빠르게 만들려면 더 작은 모델(qwen-35b)을 Codex용으로 라우팅하는 편이 낫다.
+> 참고: 실제 생성은 **약 2분**이면 끝났다. (처음엔 백그라운드 `codex exec`가
+> `Reading additional input from stdin...`에서 39분 hang했는데, 이는 모델이 아니라
+> **stdin 문제** — 백그라운드/CI 실행 시 `codex exec "..." < /dev/null` 로 stdin을 닫아야 한다.)

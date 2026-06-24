@@ -52,10 +52,19 @@ codex exec "fix the failing test in test_wordstat.py and run it"
 ### 비대화형 — `codex exec "프롬프트"`
 - 끝까지 자율 실행 후 최종 요약만 출력. 파이프라인·반복에 적합.
 - git 리포 밖에서 돌릴 땐 `--skip-git-repo-check` 필요.
+- **백그라운드/CI/스크립트로 돌릴 땐 반드시 `< /dev/null`** — 안 그러면 `Reading additional
+  input from stdin...`에서 무한 대기(hang)한다. (TTY가 아닌 stdin이 EOF를 못 받기 때문)
 
 ```bash
+# 대화형 셸에서 한 번 실행
 codex exec --skip-git-repo-check "create hello.py that prints hi"
+
+# 백그라운드·자동화·CI (stdin 닫기 필수)
+codex exec --skip-git-repo-check --sandbox workspace-write "..." < /dev/null > build.log 2>&1 &
 ```
+
+> 정상이면 로그에 `OpenAI Codex v…` 배너가 즉시 뜬다. 배너 없이 멈춰 있고 모델 서버가 idle(0% CPU)이면
+> 모델이 아니라 **stdin 문제** — `< /dev/null`을 빠뜨린 것이다.
 
 ---
 

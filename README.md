@@ -45,6 +45,8 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
 cd ~/my-project
 codex                 # 대화형 (기본 모델: qwen-122b-codex)
 codex exec "..."      # 비대화형 (자동화/CI)
+# 백그라운드/CI는 stdin 닫기 필수 (안 하면 hang):
+codex exec "..." < /dev/null > build.log 2>&1 &
 ```
 
 권한은 **샌드박스 × 승인 모드**로 조절한다 (처음엔 좁게, 신뢰되면 넓게).
