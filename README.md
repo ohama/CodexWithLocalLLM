@@ -86,6 +86,9 @@ codex
 - 실행: `cd examples/codex-tests && ./run.sh` (전체) 또는 `./run.sh 05` (특정 레벨)
 - 구조·응용: [examples/codex-tests/README.md](examples/codex-tests/README.md)
 
+**데모** — Codex × 로컬 qwen-122b로 만든 실제 프로그램:
+- 🎮 [테트리스](examples/demos/tetris/) (단일 `index.html`) · 생성 시 모델 왕복 전체 기록 → [SESSION.md](examples/demos/tetris/SESSION.md)
+
 ## 문서
 
 | 문서 | 내용 |
