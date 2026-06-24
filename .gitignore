@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+.env
+.env.local
+*.local
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Python
+__pycache__/
+.venv/
+*.egg-info/
