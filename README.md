@@ -29,6 +29,7 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
 |------|------|
 | [connect-codex-to-local-qwen122b](documentation/howto/connect-codex-to-local-qwen122b.md) | 유튜브 영상 분석 + 시스템에 맞춘 배선 구축 전 과정 (설치·shim·브릿지) |
 | [use-codex-cli](documentation/howto/use-codex-cli.md) | 일상 사용법 — 실행 모드, 샌드박스/승인 권한, 운영·트러블슈팅 |
+| [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
 | [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
 
 ## 빠른 시작
