@@ -32,6 +32,11 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
 | [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
 | [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
 
+## 예제
+
+레벨별로 Codex를 점검·시연하는 실행 가능한 예제 → **[examples/codex-tests](examples/codex-tests/README.md)**
+(스모크 → 단일파일 → 멀티스텝 → 자가수정 → 멀티파일). `cd examples/codex-tests && ./run.sh` 로 실행.
+
 ## 사용법
 
 배선이 끝났다면(위 connect 문서 참고) 작업할 디렉터리에서 바로 쓴다.
