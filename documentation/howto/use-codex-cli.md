@@ -170,6 +170,12 @@ launchctl kickstart -k gui/$(id -u)/com.ohama.qwen122b
 | `404 ... /responses` | LiteLLM 모델 id에 `openai/chat_completions/` prefix 누락 |
 | `429 Too Many Requests` 반복 | 한 번 실패 후 라우터 cooldown — 백엔드/ shim 로그 확인 후 재시도 |
 | `Model metadata for ... not found` (경고) | 무시해도 됨 (성능 영향 없음) |
+| `codex exec`가 `Reading additional input from stdin...`에서 멈춤(무한 대기) | **백그라운드/파이프 실행 시 stdin이 EOF를 못 받아 hang.** 프롬프트를 인자로 줘도 stdin을 읽으려 함 → **`codex exec "..." < /dev/null`** 로 stdin을 닫을 것. (모델·서비스 정상인데 mlx CPU 0%·세션 배너 미출력이면 이 증상) |
+
+> **백그라운드 실행 체크리스트**: `codex exec`를 `&`/`run_in_background`/`nohup`으로 돌릴 땐 항상
+> `< /dev/null`. 정상이면 build 로그에 `OpenAI Codex v…` 배너가 즉시 뜬다. 배너 없이 멈춰 있으면
+> 모델이 아니라 stdin 문제다. (참고: 테트리스 데모 1차 시도가 이걸로 39분 hang → `< /dev/null`
+> 적용 후 실제 생성은 ~2분.)
 
 ### 로그 위치
 - LiteLLM: `/Users/ohama/agent-stack/litellm/litellm.log`, `litellm.err.log`
