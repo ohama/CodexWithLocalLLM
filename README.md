@@ -23,27 +23,21 @@ Codex CLI ──Responses API──▶ LiteLLM :4000 (qwen-122b-codex)
             ──▶ mlx_lm.server :8001 (Qwen3.5-MoE 122B)
 ```
 
-## 문서
+## 환경 (전제조건)
 
-| 문서 | 내용 |
-|------|------|
-| [connect-codex-to-local-qwen122b](documentation/howto/connect-codex-to-local-qwen122b.md) | 유튜브 영상 분석 + 시스템에 맞춘 배선 구축 전 과정 (설치·shim·브릿지) |
-| [use-codex-cli](documentation/howto/use-codex-cli.md) | 일상 사용법 — 실행 모드, 샌드박스/승인 권한, 운영·트러블슈팅 |
-| [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
-| [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
+- Apple Silicon (통합 메모리 ≥ 약 80GB 권장 — 4bit MLX 양자화 65GB)
+- `mlx_lm.server`, LiteLLM, OpenAI Codex CLI 0.142+
+- 서비스는 launchd로 영구화(`com.ohama.litellm`, `com.ohama.role-shim`, `com.ohama.qwen122b`)
 
-## 예제
+## 설치 (배선)
 
-레벨별로 Codex를 점검·시연하는 예제 (스모크 → 단일파일 → 멀티스텝 → 자가수정 → 멀티파일).
+위 두 벽을 해결하는 배선 구축 전 과정(설치·shim·브릿지)은 한 문서에 정리돼 있다.
 
-- **실제 실행 기록(입력+출력 전체):** [examples/codex-tests/RESULTS.md](examples/codex-tests/RESULTS.md)
-- 입력 → 출력 요약: [examples/codex-tests/EXAMPLES.md](examples/codex-tests/EXAMPLES.md)
-- 실행: `cd examples/codex-tests && ./run.sh` (전체) 또는 `./run.sh 05` (특정 레벨)
-- 구조·응용: [examples/codex-tests/README.md](examples/codex-tests/README.md)
+→ **[connect-codex-to-local-qwen122b](documentation/howto/connect-codex-to-local-qwen122b.md)**
 
 ## 사용법
 
-배선이 끝났다면(위 connect 문서 참고) 작업할 디렉터리에서 바로 쓴다.
+배선이 끝났다면 작업할 디렉터리에서 바로 쓴다.
 
 ### PC에서
 
@@ -82,14 +76,26 @@ codex
 
 추천 앱(Moshi)·설정·끊김 방지 → **[use-codex-from-phone](documentation/howto/use-codex-from-phone.md)**
 
+## 예제
+
+레벨별로 Codex를 점검·시연하는 예제 (스모크 → 단일파일 → 멀티스텝 → 자가수정 → 멀티파일).
+**실패→디버깅→통과**까지 실제 실행 기록으로 확인할 수 있다.
+
+- **실제 실행 기록(입력+출력 전체):** [examples/codex-tests/RESULTS.md](examples/codex-tests/RESULTS.md)
+- 입력 → 출력 요약: [examples/codex-tests/EXAMPLES.md](examples/codex-tests/EXAMPLES.md)
+- 실행: `cd examples/codex-tests && ./run.sh` (전체) 또는 `./run.sh 05` (특정 레벨)
+- 구조·응용: [examples/codex-tests/README.md](examples/codex-tests/README.md)
+
+## 문서
+
+| 문서 | 내용 |
+|------|------|
+| [connect-codex-to-local-qwen122b](documentation/howto/connect-codex-to-local-qwen122b.md) | 유튜브 영상 분석 + 시스템에 맞춘 배선 구축 전 과정 (설치·shim·브릿지) |
+| [use-codex-cli](documentation/howto/use-codex-cli.md) | 일상 사용법 — 실행 모드, 샌드박스/승인 권한, 운영·트러블슈팅 |
+| [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
+| [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
+
 ## 검증된 능력
 
-로컬 qwen-122b를 에이전트로 실측한 결과 — 병렬 툴콜, 멀티턴 tool 루프, 멀티스텝 코딩
-(작성→실행→검증→종료), 그리고 실패 진단 후 self-repair까지 모두 통과. 실제 CLI 도구 작성·테스트도
-end-to-end로 동작 확인.
-
-## 환경
-
-- Apple Silicon (통합 메모리 ≥ 약 80GB 권장 — 4bit MLX 양자화 65GB)
-- `mlx_lm.server`, LiteLLM, OpenAI Codex CLI 0.142+
-- 서비스는 launchd로 영구화(`com.ohama.litellm`, `com.ohama.role-shim`, `com.ohama.qwen122b`)
+로컬 qwen-122b를 에이전트로 실측해 — 병렬 툴콜, 멀티턴 tool 루프, 멀티스텝 코딩, 실패 진단 후
+self-repair까지 모두 통과했다. 레벨별 실제 입출력은 → **[RESULTS.md](examples/codex-tests/RESULTS.md)**.
