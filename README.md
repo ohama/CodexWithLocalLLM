@@ -98,7 +98,7 @@ codex
 | [connect-codex-to-local-qwen122b](documentation/howto/connect-codex-to-local-qwen122b.md) | 유튜브 영상 분석 + 시스템에 맞춘 배선 구축 전 과정 (설치·shim·브릿지) |
 | [use-codex-cli](documentation/howto/use-codex-cli.md) | 일상 사용법 — 실행 모드, 샌드박스/승인 권한, 운영·트러블슈팅 |
 | [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
-| [codex-vs-hermes-workflow](documentation/codex-vs-hermes-workflow.md) | Codex vs Hermes 비교 — research→planning→execute. 실측: 단발은 동급, Hermes 분해 모드(kanban)는 영속 task 그래프로 병렬·의존성 |
+| [codex-vs-hermes-workflow](documentation/codex-vs-hermes-workflow.md) | Codex vs Hermes 비교 — research→planning→execute. 실측: 단발은 동급, Hermes는 kanban 분해→워커 실행→통합(20테스트 통과)까지 실증 (병렬 caveat 포함) |
 | [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
 
 ## 검증된 능력
