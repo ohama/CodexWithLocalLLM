@@ -12,10 +12,9 @@
 
 ## 공정성 — 같은 모델로 맞춤
 
-세 도구 모두 같은 LiteLLM 게이트웨이(`localhost:4000`)를 쓰지만 기본 모델이 달랐다.
-**OpenHands는 기본 `qwen-35b`** 여서, 비교 동안 임시로 **`qwen-122b`로 변경 후 원복**했다
-(`~/.openhands/agent_settings.json`의 `llm.model`/`condenser.llm.model`). 따라서 아래 결과는
-세 도구 모두 **qwen-122b** 기준이다.
+세 도구 모두 같은 LiteLLM 게이트웨이(`localhost:4000`)를 쓴다. OpenHands도
+**`qwen-122b`로 설정**(`~/.openhands/agent_settings.json`의 `llm.model`/`condenser.llm.model`)되어,
+세 도구 모두 **qwen-122b** 기준으로 비교했다.
 
 ---
 
@@ -27,7 +26,7 @@
 | 코드 규모 | 530줄 | 565줄 | 625줄 |
 | 테스트 | **통과** (독립검증 OK) | **통과** | **18 tests OK** (독립검증) |
 | 결과물 정돈 | 깔끔 | `:memory:` 잔여 | `:memory:` 잔여 |
-| 모델 | qwen-122b | qwen-122b | qwen-122b(임시) |
+| 모델 | qwen-122b | qwen-122b | qwen-122b |
 
 **→ 세 도구 모두 동일 과제를 완성**(테스트 통과하는 멀티모듈 KV 서비스). qwen-122b로 통일하니
 **산출물 품질은 사실상 대등**하다.
@@ -88,7 +87,7 @@
 **비교의 한계(정직하게):**
 - 단일 과제(KV 스토어) 한 건 기준. 더 크고 모호한 과제일수록 Hermes 분해/ OpenHands condenser의
   이점이 커질 수 있다.
-- OpenHands는 비교 위해 122b로 임시 변경(평소 35b). 평소 설정에선 더 빠르되 품질은 모델만큼 낮아진다.
+- 세 도구 모두 qwen-122b 기준. 더 작은 모델(예: qwen-35b)로 바꾸면 속도는 빨라지되 품질은 모델만큼 달라진다.
 - 토큰/시간은 도구별 로그 형식이 달라 정밀 수치 비교는 생략(Codex만 ~849k 관측).
 
 ---
