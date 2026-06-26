@@ -58,16 +58,31 @@
 
 ## Traceability
 
-(로드맵 생성 시 채움)
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (TBD) | | |
+| TASK-01 | Phase 1 — Fixed Tasks | Pending |
+| TASK-02 | Phase 1 — Fixed Tasks | Pending |
+| TASK-03 | Phase 1 — Fixed Tasks | Pending |
+| RUN-01 | Phase 2 — Equal-Conditions Runner | Pending |
+| RUN-02 | Phase 2 — Equal-Conditions Runner | Pending |
+| RUN-03 | Phase 2 — Equal-Conditions Runner | Pending |
+| RUN-04 | Phase 2 — Equal-Conditions Runner | Pending |
+| RUN-05 | Phase 2 — Equal-Conditions Runner | Pending |
+| MET-01 | Phase 3 — Metric Collection | Pending |
+| MET-02 | Phase 3 — Metric Collection | Pending |
+| MET-03 | Phase 3 — Metric Collection | Pending |
+| MET-04 | Phase 3 — Metric Collection | Pending |
+| REP-01 | Phase 4 — Benchmark Run & Reporting | Pending |
+| REP-02 | Phase 4 — Benchmark Run & Reporting | Pending |
+| REP-03 | Phase 4 — Benchmark Run & Reporting | Pending |
+| REPRO-01 | Phase 5 — Reproducibility Guide | Pending |
+| REPRO-02 | Phase 5 — Reproducibility Guide | Pending |
+| REPRO-03 | Phase 5 — Reproducibility Guide | Pending |
 
 **Coverage:**
 - v1 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18 ⚠️
+- Mapped to phases: 18
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-26*
