@@ -1,4 +1,4 @@
-# 2. 사전 준비 — 백엔드 확인
+# 3. 사전 준비 — 백엔드 확인
 
 두 도구 모두 **로컬 LiteLLM 게이트웨이(`:4000`)** 를 통해 같은 qwen-122b를 쓴다. 비교를 시작하기
 전에 이 백엔드가 살아 있는지부터 확인한다.
@@ -58,4 +58,4 @@ openhands --version   # 예: OpenHands CLI 1.16.0
 - [ ] `gateway OK` 가 나온다
 - [ ] `codex --version` / `openhands --version` 둘 다 버전이 나온다
 
-다 됐으면 [3. Codex 연결](03-connect-codex.md)로.
+다 됐으면 [4. Codex 연결](04-connect-codex.md)로.

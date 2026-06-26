@@ -1,15 +1,15 @@
-# 8. 막혔을 때 (트러블슈팅)
+# 9. 막혔을 때 (트러블슈팅)
 
 ## 증상별 빠른 진단
 
 | 증상 | 원인 / 조치 |
 |------|-------------|
-| `gateway DOWN` | 백엔드 스택을 안 띄움 → [2장](02-prerequisites.md) 참고. `lsof -ti tcp:4000` 로 확인, `launchctl kickstart -k gui/$(id -u)/com.ohama.litellm` 로 재시작 |
+| `gateway DOWN` | 백엔드 스택을 안 띄움 → [3장](03-prerequisites.md) 참고. `lsof -ti tcp:4000` 로 확인, `launchctl kickstart -k gui/$(id -u)/com.ohama.litellm` 로 재시작 |
 | codex 가 멈춤(hang), 출력 없음 | `codex exec` 를 stdin 없이 돌림 → 항상 `< /dev/null` 붙이기. (러너는 자동 처리) mlx CPU 0%면 이 증상 |
-| openhands 출력이 run 폴더에 없음 (`0 files`) | openhands 를 손으로 `--file` 로 부름 → **반드시 `run.sh`/`run-matrix.sh` 로만** 실행 ([4장](04-connect-openhands.md)) |
-| 모델이 qwen-122b 가 아님 | [3](03-connect-codex.md)·[4](04-connect-openhands.md)장 확인 명령 재실행 |
+| openhands 출력이 run 폴더에 없음 (`0 files`) | openhands 를 손으로 `--file` 로 부름 → **반드시 `run.sh`/`run-matrix.sh` 로만** 실행 ([5장](05-connect-openhands.md)) |
+| 모델이 qwen-122b 가 아님 | [4](04-connect-codex.md)·[5](05-connect-openhands.md)장 확인 명령 재실행 |
 | 매트릭스 중간에 느림/멈춘 듯 | L3는 원래 오래 걸린다(수 분). 백그라운드(`&`)로 돌렸는지 확인 — 직렬로 포그라운드 실행할 것 |
-| `FAIL` 인데 진짜인지 모르겠음 | [6장 §이상치 진단](06-interpret.md) — `0 files`면 누출 의심, 채점기 직접 실행해 확인 |
+| `FAIL` 인데 진짜인지 모르겠음 | [7장 §이상치 진단](07-interpret.md) — `0 files`면 누출 의심, 채점기 직접 실행해 확인 |
 
 ## 채점기 직접 돌려보기
 

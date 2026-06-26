@@ -1,4 +1,4 @@
-# 3. Codex 를 qwen-122b 에 연결
+# 4. Codex 를 qwen-122b 에 연결
 
 이미 `codex` 가 로컬 qwen 으로 동작하면 이 장은 건너뛴다.
 
@@ -53,4 +53,4 @@ LITELLM_API_KEY=dummy codex exec --skip-git-repo-check --sandbox read-only \
 
 ## 다음
 
-codex가 연결됐으면 [4. OpenHands 연결](04-connect-openhands.md)로.
+codex가 연결됐으면 [5. OpenHands 연결](05-connect-openhands.md)로.
