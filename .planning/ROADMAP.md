@@ -29,11 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Each task ships an independent test using only Python stdlib; the test exits 0 on pass and nonzero on fail.
   3. Each task's prompt is stored as identical text in one canonical place, independent of which tool will run it.
   4. Running the test for each level against its reference/fixture solution passes for all three levels.
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Define and freeze L1/L2/L3 task specs and prompts in one canonical location
-- [ ] 01-02: Write stdlib-only independent test per level with clear pass/fail exit codes
+- [ ] 01-PLAN.md — Define and freeze L1/L2/L3 task specs + prompts + pass-criterion README (one canonical location)
+- [ ] 02-PLAN.md — Write stdlib-only independent judge per level + reference solutions, validated (exit 0 on reference, nonzero on broken)
 
 ### Phase 2: Equal-Conditions Runner
 **Goal**: A single command runs a chosen (tool, level) under identical, isolated conditions against qwen-122b, non-interactively and serially.
