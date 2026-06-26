@@ -13,7 +13,7 @@ This milestone builds a reproducible benchmark harness that runs the same three 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Fixed Tasks** - Three fixed-complexity, tool-agnostic tasks with objective pass criteria
-- [ ] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
+- [x] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
 - [ ] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
 - [ ] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
 - [ ] **Phase 5: Reproducibility Guide** - A user can reproduce the whole benchmark from the docs
@@ -48,9 +48,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-PLAN.md — Runner scaffold: arg parse + level normalize + isolated run dir + serial lock + gateway preflight (stubbed invocation)
-- [ ] 02-PLAN.md — Wire non-interactive same-model invocation: codex `< /dev/null` + openhands `--headless`, transcript capture, model-confirming meta.json
-- [ ] 03-PLAN.md — Live smoke (L1) for both tools, serial, with human-verify of openhands output isolation
+- [x] 01-PLAN.md — Runner scaffold: arg parse + level normalize + isolated run dir + serial lock + gateway preflight (stubbed invocation)
+- [x] 02-PLAN.md — Wire non-interactive same-model invocation: codex `< /dev/null` + openhands `--headless`, transcript capture, model-confirming meta.json
+- [x] 03-PLAN.md — Live smoke (L1) for both tools, serial, with human-verify of openhands output isolation
 
 ### Phase 3: Metric Collection
 **Goal**: Every run automatically produces the four metrics, with success judged by an independent test re-run rather than tool self-report.
@@ -106,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fixed Tasks | 2/2 | ✓ Complete | 2026-06-26 |
-| 2. Equal-Conditions Runner | 0/3 | Not started | - |
+| 2. Equal-Conditions Runner | 3/3 | ✓ Complete | 2026-06-26 |
 | 3. Metric Collection | 0/2 | Not started | - |
 | 4. Benchmark Run & Reporting | 0/2 | Not started | - |
 | 5. Reproducibility Guide | 0/2 | Not started | - |

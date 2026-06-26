@@ -63,11 +63,11 @@
 | TASK-01 | Phase 1 — Fixed Tasks | Complete |
 | TASK-02 | Phase 1 — Fixed Tasks | Complete |
 | TASK-03 | Phase 1 — Fixed Tasks | Complete |
-| RUN-01 | Phase 2 — Equal-Conditions Runner | Pending |
-| RUN-02 | Phase 2 — Equal-Conditions Runner | Pending |
-| RUN-03 | Phase 2 — Equal-Conditions Runner | Pending |
-| RUN-04 | Phase 2 — Equal-Conditions Runner | Pending |
-| RUN-05 | Phase 2 — Equal-Conditions Runner | Pending |
+| RUN-01 | Phase 2 — Equal-Conditions Runner | Complete |
+| RUN-02 | Phase 2 — Equal-Conditions Runner | Complete |
+| RUN-03 | Phase 2 — Equal-Conditions Runner | Complete |
+| RUN-04 | Phase 2 — Equal-Conditions Runner | Complete |
+| RUN-05 | Phase 2 — Equal-Conditions Runner | Complete |
 | MET-01 | Phase 3 — Metric Collection | Pending |
 | MET-02 | Phase 3 — Metric Collection | Pending |
 | MET-03 | Phase 3 — Metric Collection | Pending |
