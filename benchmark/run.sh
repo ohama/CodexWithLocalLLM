@@ -141,13 +141,68 @@ run_openhands() {
   set -e
 }
 
-# ── 8. Start summary + dispatch ─────────────────────────────────────────
+# ── 8. Resolve model from the tool's own config (single source of truth) ─
+# meta.json is the authoritative same-model record (RUN-03): it must name the
+# qwen-122b-family model WITHOUT rerunning anything. Resolve per tool:
+#   codex     -> `model = "..."` line in ~/.codex/config.toml
+#   openhands -> .llm.model in ~/.openhands/agent_settings.json
+# stdlib only (grep/sed for toml, python3 json for json) — no new deps.
+resolve_model() {
+  case "$TOOL" in
+    codex)
+      MODEL="$(grep -E '^[[:space:]]*model[[:space:]]*=' "$HOME/.codex/config.toml" \
+                 | head -1 | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/')"
+      ;;
+    openhands)
+      MODEL="$(python3 -c "import json;print(json.load(open('$HOME/.openhands/agent_settings.json'))['llm']['model'])")"
+      ;;
+  esac
+  [ -n "${MODEL:-}" ] || MODEL="unknown"
+  # Same-model assertion (RUN-03): both tools must run the qwen-122b backend.
+  case "$MODEL" in
+    *qwen-122b*) ;;
+    *) echo "⚠ resolved model '$MODEL' is not in the qwen-122b family (same-model criterion)" >&2 ;;
+  esac
+}
+resolve_model
+
+# ── 9. Start summary + dispatch ─────────────────────────────────────────
 echo "tool        : $TOOL"
 echo "level       : $LEVEL"
+echo "model       : $MODEL"
 echo "run dir     : $RUN_DIR"
 echo "prompt file : $PROMPT_FILE"
 
+# Record-only provenance timestamps (UTC ISO). NOT metrics — wall-clock
+# measurement/aggregation is Phase 3. These only stamp when the run happened.
+STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 case "$TOOL" in
   codex)     run_codex ;;
   openhands) run_openhands ;;
 esac
+FINISHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+# ── 10. Self-describing run record (meta.json) ──────────────────────────
+# Written even on a nonzero agent exit (recording a failed run is valid).
+cat > "$RUN_DIR/meta.json" <<EOF
+{
+  "tool": "$TOOL",
+  "level": "$LEVEL",
+  "model": "$MODEL",
+  "base_url": "http://localhost:4000/v1",
+  "prompt_file": "$PROMPT_FILE",
+  "run_dir": "$RUN_DIR",
+  "started_at": "$STARTED_AT",
+  "finished_at": "$FINISHED_AT",
+  "exit_code": $TOOL_EXIT,
+  "transcript": "transcript.log"
+}
+EOF
+
+# ── 11. Final summary ───────────────────────────────────────────────────
+echo "──────── run complete ────────"
+echo "run dir    : $RUN_DIR"
+echo "transcript : $RUN_DIR/transcript.log"
+echo "meta       : $RUN_DIR/meta.json"
+echo "model      : $MODEL"
+echo "exit code  : $TOOL_EXIT"
