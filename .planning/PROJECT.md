@@ -15,21 +15,18 @@
 
 ### Validated
 
-<!-- 이번 세션에서 이미 확인된 것 -->
-
 - ✓ Codex/OpenHands 모두 로컬 qwen-122b(LiteLLM :4000)로 동작 — existing
-- ✓ 레벨별 과제 스크립트 골격 존재(`examples/codex-tests/`) — existing
-- ✓ 수동 1회 비교 경험(KV 스토어: codex 23테스트 / openhands 18테스트 통과) — existing
+- ✓ 3단계 복잡도 과제 정의(L1 fib / L2 wordstat / L3 KV), 고정·도구무관·stdlib 독립 judge — v1.0
+- ✓ 동일 조건 러너 `run.sh`(격리·순차·동일모델·비대화) — v1.0
+- ✓ 지표 자동 수집 `score.py`(성공[독립judge]·시간·단계[step_method]·규모) — v1.0
+- ✓ 도구×레벨 매트릭스 실행+리포트 `run-matrix.sh`/`report.py`/`RESULTS.md` — v1.0
+- ✓ 재현 가이드 `REPRODUCE.md`(사전조건·명령별 효과·from-scratch) — v1.0
 
 ### Active
 
-<!-- 이번 마일스톤에서 빌드 -->
+<!-- 다음 마일스톤 후보 (확정 전) -->
 
-- [ ] 3단계 복잡도 과제 정의(L1 단일파일 / L2 멀티파일 CLI / L3 다중모듈 서비스), 고정·재사용 가능
-- [ ] 두 도구를 동일 조건으로 실행하는 러너(격리 디렉터리, 동일 프롬프트, 동일 모델)
-- [ ] 지표 자동 수집: 성공여부(독립 테스트 통과) · wall-clock 시간 · 단계/도구호출 수 · 산출 규모
-- [ ] 결과를 표/transcript로 기록하는 산출물(도구×레벨 매트릭스)
-- [ ] 사용자가 따라 할 수 있는 재현 가이드(매 명령과 효과 명시)
+(없음 — 다음 마일스톤은 `/gsd:new-milestone`에서 정의)
 
 ### Out of Scope
 
@@ -59,11 +56,11 @@
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| codex+openhands만 비교(hermes 제외) | 사용자 지정, 범위 집중 | — Pending |
-| 동일 모델 qwen-122b로 통일 | 도구 차이만 분리(모델 변수 제거) | — Pending |
-| 3레벨 과제는 기존 검증본 재사용(fib/wordstat/KV) | 빠른 시작 + 이미 동작 확인됨 | — Pending |
-| 순차 측정 | 단일 mlx 백엔드 경합 회피 | — Pending |
-| 지표 4종(성공·시간·단계수·규모) | 사용자 선택 | — Pending |
+| codex+openhands만 비교(hermes 제외) | 사용자 지정, 범위 집중 | ✓ Good |
+| 동일 모델 qwen-122b로 통일 | 도구 차이만 분리(모델 변수 제거) | ✓ Good |
+| 3레벨 과제는 기존 검증본 재사용(fib/wordstat/KV) | 빠른 시작 + 이미 동작 확인됨 | ✓ Good |
+| 순차 측정 | 단일 mlx 백엔드 경합 회피 | ✓ Good |
+| 지표 4종(성공·시간·단계수·규모) | 사용자 선택 | ✓ Good |
 
 ---
-*Last updated: 2026-06-26 after initialization*
+*Last updated: 2026-06-26 after v1.0 milestone*
