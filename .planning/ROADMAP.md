@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Fixed Tasks** - Three fixed-complexity, tool-agnostic tasks with objective pass criteria
 - [x] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
 - [x] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
-- [ ] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
+- [x] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
 - [ ] **Phase 5: Reproducibility Guide** - A user can reproduce the whole benchmark from the docs
 
 ## Phase Details
@@ -80,8 +80,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Run the full 6-cell matrix serially via run.sh; preserve transcripts; aggregate metrics into results.json
-- [ ] 04-02-PLAN.md — Generate committed RESULTS.md: tool × level table (success+time+steps[step_method]+size), transcript refs, per-level diffs
+- [x] 04-01-PLAN.md — Run the full 6-cell matrix serially via run.sh; preserve transcripts; aggregate metrics into results.json
+- [x] 04-02-PLAN.md — Generate committed RESULTS.md: tool × level table (success+time+steps[step_method]+size), transcript refs, per-level diffs
 
 ### Phase 5: Reproducibility Guide
 **Goal**: A user can reproduce the entire benchmark from the documentation alone, with every command and its effect spelled out.
@@ -108,5 +108,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Fixed Tasks | 2/2 | ✓ Complete | 2026-06-26 |
 | 2. Equal-Conditions Runner | 3/3 | ✓ Complete | 2026-06-26 |
 | 3. Metric Collection | 2/2 | ✓ Complete | 2026-06-26 |
-| 4. Benchmark Run & Reporting | 0/2 | Not started | - |
+| 4. Benchmark Run & Reporting | 2/2 | ✓ Complete | 2026-06-26 |
 | 5. Reproducibility Guide | 0/2 | Not started | - |

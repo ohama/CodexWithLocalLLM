@@ -72,9 +72,9 @@
 | MET-02 | Phase 3 — Metric Collection | Complete |
 | MET-03 | Phase 3 — Metric Collection | Complete |
 | MET-04 | Phase 3 — Metric Collection | Complete |
-| REP-01 | Phase 4 — Benchmark Run & Reporting | Pending |
-| REP-02 | Phase 4 — Benchmark Run & Reporting | Pending |
-| REP-03 | Phase 4 — Benchmark Run & Reporting | Pending |
+| REP-01 | Phase 4 — Benchmark Run & Reporting | Complete |
+| REP-02 | Phase 4 — Benchmark Run & Reporting | Complete |
+| REP-03 | Phase 4 — Benchmark Run & Reporting | Complete |
 | REPRO-01 | Phase 5 — Reproducibility Guide | Pending |
 | REPRO-02 | Phase 5 — Reproducibility Guide | Pending |
 | REPRO-03 | Phase 5 — Reproducibility Guide | Pending |
