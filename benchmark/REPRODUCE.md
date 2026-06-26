@@ -83,3 +83,78 @@ openhands --version
 
 기대: 둘 다 버전 문자열을 출력하고 정상 종료한다(예: `codex-cli 0.142.0`,
 `OpenHands CLI 1.16.0`). 둘 중 하나라도 실패하면 해당 도구가 PATH 에 없는 것이다.
+
+## 벤치마크 실행 (Running the benchmark)
+
+위에서 아래로 그대로 따라 읽으면 된다. 각 단계는 명령 한 블록 + 그 효과 + 만들어지는 산출물로 이루어진다.
+
+### 1단계 — 단일 셀 실행
+
+```bash
+bash benchmark/run.sh <tool> <level>
+```
+
+- `<tool>` = `codex` | `openhands`
+- `<level>` = `l1`|`l1-fib`|`1` (fib) · `l2`|`l2-wordstat`|`2` (wordstat) · `l3`|`l3-kvstore`|`3` (kvstore)
+
+효과: 고정된 `tasks/<level>/PROMPT.md` 를 **그대로(verbatim)** 도구에 먹인다. 실행은 매번
+**새로 격리된 디렉터리** `benchmark/.runs/<tool>-<level>-<stamp>/` 에서, **직렬 mkdir-lock**
+아래(다른 실행이 잡고 있으면 exit 3), :4000 의 `qwen-122b` 를 상대로 이루어진다. codex 는
+`< /dev/null` 과 함께 돌고(stdin-hang 가드), openhands 는 인라인 `--task ... --headless` 로
+돌며 작업 디렉터리는 `OPENHANDS_WORK_DIR` 로 RUN_DIR 에 고정된다(파일 경로 앵커를 쓰지 않는다).
+실행이 끝나면 `transcript.log` + `meta.json` 을 쓰고, 이어서 `score.py` 를 자동 호출해
+`meta.json` 에 네 지표(`passed` / `duration_seconds` / `steps[step_method]` / `files`+`loc`)를
+채운다. 마지막 요약(summary)이 그 지표들을 그대로 echo 한다.
+
+레벨별 예상 소요(무엇을 기대해야 하는지):
+
+```
+L1 ~30-50s · L2 ~100-145s · L3 ~145s+
+```
+
+(codex 의 L3 는 진짜로 FAIL/truncate 날 수 있다 — 아래 Caveats 참조.)
+
+### 2단계 — 전체 매트릭스 (6셀)
+
+```bash
+bash benchmark/run-matrix.sh
+```
+
+효과: `(tool, level)` 조합마다 `run.sh` 를 **엄격히 직렬로**, tool-major 순서(codex l1/l2/l3 →
+openhands l1/l2/l3)로 한 번씩 호출한다. **절대 백그라운드(`&`)로 돌리지 말 것** — 백엔드가
+하나라 한 번에 한 셀만 가능하다. 결과는 `benchmark/.runs/matrix-<stamp>/` 에 쌓인다:
+`results.json`(집계 지표), `manifest.txt`, 그리고 셀마다 `<tool>-<level>.console.log`. 한 셀이
+실패해도(`passed=false`) 그것은 **유효한 기록**이지 중단 사유가 아니다. 총 소요 ~10-15분.
+
+### 3단계 — 리포트 생성
+
+```bash
+python3 benchmark/report.py
+```
+
+효과: 가장 최신 `benchmark/.runs/matrix-*/results.json` 을 자동으로 찾아 `benchmark/RESULTS.md`
+를 쓴다(도구×레벨 표: 성공/시간/`steps[step_method]`/크기 + transcript 발췌 + 레벨별 차이).
+순수 포매팅이라 어떤 에이전트/채점기도 다시 돌리지 않는다(LLM 시간 0). **idempotent** —
+같은 `results.json` 이면 byte-identical 한 RESULTS.md 가 나온다. 선택 인자로 특정 results.json
+이나 매트릭스 디렉터리를 줄 수 있다:
+
+```bash
+python3 benchmark/report.py benchmark/.runs/matrix-<stamp>/
+```
+
+### 4단계 — 결과 읽기
+
+```bash
+# benchmark/RESULTS.md 를 연다
+```
+
+효과: 커밋되는, 자기 완결적인 비교 리포트다. 이것이 당신이 보존/공유하는 산출물이다.
+
+### 주의 — openhands 를 직접 호출하지 말 것
+
+이 가이드의 모든 실행은 **반드시 `run.sh` 를 거친다.** openhands 를 손으로 직접 돌리되
+PROMPT.md 를 가리키는
+`--file`
+플래그를 넘기는 방식은 금지한다. 그렇게 하면 openhands 가 그 파일이 있는 디렉터리(정식 task
+폴더)로 작업 디렉터리를 앵커링해, 격리된 RUN_DIR 바깥(정식 task 폴더)으로 산출물이 새어 나간다
+(Phase 4 에서 관측된 버그). `run.sh` 는 프롬프트를 인라인 `--task` 로 먹이므로 이 누수가 없다.
