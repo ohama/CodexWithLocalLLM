@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-06-26)
 ## Current Position
 
 Phase: 2 of 5 (Equal-Conditions Runner)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-06-26 — Completed 02-02-PLAN.md (wired real codex/openhands invocations: codex exec < /dev/null, openhands --headless with workspace pinned to RUN_DIR; transcript.log + model-confirming meta.json per run)
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-06-26 — Completed 02-03-PLAN.md (live L1 smoke for both tools on real qwen-122b backend, serial; each left an isolated run dir with non-empty transcript.log + qwen-122b meta.json + fib.py inside; no leakage; RUN-01..05 confirmed live; Phase 2 complete)
 
-Progress: [████░░░░░░] 36%
+Progress: [█████░░░░░] 45%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: ~9 min
-- Total execution time: 0.6 hours
+- Total plans completed: 5
+- Average duration: ~8 min
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
-| 2 — Equal-Conditions Runner | 2/3 | ~18 min | ~9 min |
+| 2 — Equal-Conditions Runner | 3/3 | ~26 min | ~9 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~7 min), 01-02 (~9 min), 02-01 (~6 min), 02-02 (~12 min)
+- Last 5 plans: 01-02 (~9 min), 02-01 (~6 min), 02-02 (~12 min), 02-03 (~8 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -62,6 +62,9 @@ Recent decisions affecting current work:
 - --override-with-envs repurposed to pin the LLM model (LLM_MODEL) from the runner — it only overrides LLM_* in this version and requires them; strengthens RUN-03 against config drift (02-02)
 - Tool exit captured via ${PIPESTATUS[0]} under set +e; nonzero agent exit is a valid recorded run (never abort), meta.json written regardless (02-02)
 - meta.json model resolved from each tool's own config (codex config.toml / openhands agent_settings.json) so same-model criterion is offline-confirmable (02-02)
+- OpenHands workspace pinned via OPENHANDS_WORK_DIR (not --override-with-envs, which only pins the LLM) — live-confirmed in 02-03: openhands fib.py lands inside $RUN_DIR, no leakage to repo root or ~/.openhands/workspace (02-03)
+- Runner leaves transcript.log + meta.json per run dir as the stable Phase 3 contract; Phase 2 does no judging/metrics — correctness scoring is deferred to Phase 3 (02-03)
+- RUN-01..05 confirmed LIVE on real qwen-122b backend: one command/tool, isolated dirs, both qwen-122b @ :4000, non-interactive (exit 0), serial under lock (02-03)
 
 ### Pending Todos
 
@@ -75,12 +78,12 @@ None yet.
 
 - codex exec hangs without `< /dev/null` in background/pipe — handled in runner (run_codex uses `< /dev/null`) (02-02)
 - Single mlx backend → tools must run serially, never concurrently (enforced by mkdir-mutex lock) (Phase 2)
-- Plan 03 must verify at runtime that openhands `--always-approve --exit-without-confirmation` don't conflict with `--headless` (could not be exercised without model time); `--headless` alone already auto-approves if they need trimming (02-02)
-- Plan 03 human-verify should CONFIRM openhands solution lands in $RUN_DIR (OPENHANDS_WORK_DIR pin), not fix it (02-02)
+- RESOLVED (02-03): openhands `--headless --always-approve --exit-without-confirmation` ran clean at runtime, no conflict, exit 0, no interactive block.
+- RESOLVED (02-03): openhands solution confirmed landing in $RUN_DIR via OPENHANDS_WORK_DIR pin (live human-verify approved).
 
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 02-02-PLAN.md — wired real codex/openhands invocations into run.sh (codex exec < /dev/null; openhands --headless, workspace pinned to RUN_DIR via OPENHANDS_WORK_DIR, model pinned via --override-with-envs); per-run transcript.log + model-confirming meta.json. Structurally verified (no model time).
+Stopped at: Completed 02-03-PLAN.md — live L1 smoke for both tools on the real qwen-122b backend (serial under the lock). Each left an isolated benchmark/.runs/ dir with a non-empty transcript.log + qwen-122b meta.json (@ :4000) + fib.py inside; no leakage to repo root or ~/.openhands/workspace; both exit 0; openhands isolation human-verified. RUN-01..05 confirmed live. PHASE 2 COMPLETE.
 Resume file: None
-Next: Phase 2 Plan 03 — single real smoke run + OpenHands isolation human-verify; confirm transcript.log/meta.json populate and the solution lands in $RUN_DIR
+Next: Phase 3 — metric measurement (read each run dir's meta.json + transcript.log, run the hidden judges, record capability/time per tool). The two L1 run dirs are ready reference inputs.
