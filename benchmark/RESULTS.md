@@ -1,10 +1,10 @@
 # Benchmark Results — codex vs openhands (qwen-122b)
 
-- **Source:** `benchmark/.runs/matrix-20260626-042701/results.json`
-- **Matrix timestamp:** 20260626-042701
+- **Source:** `benchmark/.runs/matrix-20260626-074243/results.json`
+- **Matrix timestamp:** 20260626-074243
 - **Model(s):** codex → `qwen-122b-codex`, openhands → `openai/qwen-122b`
   - Both are the same local **qwen-122b** family served at `http://localhost:4000/v1`; the two tools merely report the model string differently (codex: `qwen-122b-codex`, openhands: `openai/qwen-122b`).
-- **Cells:** 6 (2 tools × 3 levels)
+- **Cells:** 12 (2 tools × 3 levels)
 
 > This report is the **durable** record. `benchmark/.runs/` is gitignored, so the raw run directories are not committed — the metrics table and transcript excerpts below bake the evidence into version control (REP-02 + REP-03).
 
@@ -12,12 +12,12 @@
 
 | Tool | Level | Success | Time | Steps (step_method) | Size (files / loc) |
 |------|-------|---------|------|---------------------|--------------------|
-| codex | l1-fib | PASS | 26s | 2 (codex:count of 'exec' blocks) | 1f / 31loc |
-| openhands | l1-fib | PASS | 49s | 4 (openhands:Number of agent messages) | 1f / 31loc |
-| codex | l2-wordstat | PASS | 98s | 10 (codex:count of 'exec' blocks) | 4f / 148loc |
-| openhands | l2-wordstat | PASS | 145s | 16 (openhands:Number of agent messages) | 4f / 222loc |
+| codex | l1-fib | PASS | 23s | 2 (codex:count of 'exec' blocks) | 1f / 25loc |
+| openhands | l1-fib | PASS | 47s | 4 (openhands:Number of agent messages) | 1f / 31loc |
+| codex | l2-wordstat | PASS | 83s | 6 (codex:count of 'exec' blocks) | 4f / 191loc |
+| openhands | l2-wordstat | PASS | 165s | 17 (openhands:Number of agent messages) | 4f / 305loc |
 | codex | l3-kvstore | FAIL | 14s | 2 (codex:count of 'exec' blocks) | 0f / 0loc |
-| openhands | l3-kvstore | PASS | 147s | 15 (openhands:Number of agent messages) | 9f / 362loc |
+| openhands | l3-kvstore | PASS | 134s | 12 (openhands:Number of agent messages) | 9f / 360loc |
 
 ### Reading the numbers
 
@@ -39,70 +39,70 @@ Two corrections were applied to the first raw matrix; both are disclosed here ra
 
 ### l1-fib
 
-- **Time:** codex 26s vs openhands 49s (Δ +23s; **codex** faster).
+- **Time:** codex 23s vs openhands 47s (Δ +24s; **codex** faster).
 - **Process (units differ — not directly comparable):** codex 2 (codex:count of 'exec' blocks) vs openhands 4 (openhands:Number of agent messages).
-- **Output:** codex 1f/31loc vs openhands 1f/31loc (Δ +0f / +0loc).
+- **Output:** codex 1f/25loc vs openhands 1f/31loc (Δ +0f / +6loc).
 - **Verdict:** codex **PASS**, openhands **PASS**.
 
 ### l2-wordstat
 
-- **Time:** codex 98s vs openhands 145s (Δ +47s; **codex** faster).
-- **Process (units differ — not directly comparable):** codex 10 (codex:count of 'exec' blocks) vs openhands 16 (openhands:Number of agent messages).
-- **Output:** codex 4f/148loc vs openhands 4f/222loc (Δ +0f / +74loc).
+- **Time:** codex 83s vs openhands 165s (Δ +82s; **codex** faster).
+- **Process (units differ — not directly comparable):** codex 6 (codex:count of 'exec' blocks) vs openhands 17 (openhands:Number of agent messages).
+- **Output:** codex 4f/191loc vs openhands 4f/305loc (Δ +0f / +114loc).
 - **Verdict:** codex **PASS**, openhands **PASS**.
 
 ### l3-kvstore
 
-- **Time:** codex 14s vs openhands 147s (Δ +133s; **codex** faster).
-- **Process (units differ — not directly comparable):** codex 2 (codex:count of 'exec' blocks) vs openhands 15 (openhands:Number of agent messages).
-- **Output:** codex 0f/0loc vs openhands 9f/362loc (Δ +9f / +362loc).
+- **Time:** codex 14s vs openhands 134s (Δ +120s; **codex** faster).
+- **Process (units differ — not directly comparable):** codex 2 (codex:count of 'exec' blocks) vs openhands 12 (openhands:Number of agent messages).
+- **Output:** codex 0f/0loc vs openhands 9f/360loc (Δ +9f / +360loc).
 - **Verdict:** codex **FAIL**, openhands **PASS**.
 
 ## Transcript references & evidence excerpts (REP-03)
 
 Each run's transcript path and a short ANSI-stripped excerpt are embedded below so the evidence survives in the committed report even though `benchmark/.runs/` is gitignored.
 
-### codex / l1-fib — PASS in 26s
+### codex / l1-fib — PASS in 23s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l1-fib-20260626-042701/transcript.log`
-- **Steps:** 2 (codex:count of 'exec' blocks) · **Size:** 1f / 31loc
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l1-fib-20260626-074243/transcript.log`
+- **Steps:** 2 (codex:count of 'exec' blocks) · **Size:** 1f / 25loc
 
 ```text
 Reading additional input from stdin...
 OpenAI Codex v0.142.0
 --------
-workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l1-fib-20260626-042701
+workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l1-fib-20260626-074243
 model: qwen-122b-codex
 provider: litellm
 approval: never
 sandbox: workspace-write [workdir, /tmp, $TMPDIR]
 reasoning effort: none
 reasoning summaries: none
-session id: 019f022e-60da-7550-afb5-6fb336d4a8f0
+session id: 019f02e1-8ca3-7140-9ecd-6653478d4717
 --------
 user
 # L1 — Fibonacci (single file)
     ... (excerpt trimmed) ...
+- All required test cases (`fib(0)` through `fib(30)`)
+- Runs cleanly with `python3 fib.py` and exits with code 0
+All contract requirements are satisfied using only the Python standard library.
 tokens used
-49,021
+48,604
 The `fib.py` file has been created successfully at the project root. It contains:
-- A `fib(n: int) -> int` function using an iterative approach (standard library only)
-- All required Fibonacci values verified via assertions
-- The script runs cleanly with `python3 fib.py` and exits with code 0
-All contract requirements are satisfied:
-- `fib(0) == 0`, `fib(1) == 1`, `fib(2) == 1`, `fib(3) == 2`, `fib(5) == 5`, `fib(10) == 55`, `fib(20) == 6765`, `fib(30) == 832040`
-- Returns `int` type
-- No non-stdlib imports
+- An iterative `fib(n: int) -> int` function that computes Fibonacci numbers efficiently
+- All required test cases (`fib(0)` through `fib(30)`)
+- Runs cleanly with `python3 fib.py` and exits with code 0
+All contract requirements are satisfied using only the Python standard library.
 ```
 
-### openhands / l1-fib — PASS in 49s
+### openhands / l1-fib — PASS in 47s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l1-fib-20260626-042920/transcript.log`
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l1-fib-20260626-075016/transcript.log`
 - **Steps:** 4 (openhands:Number of agent messages) · **Size:** 1f / 31loc
 
 ```text
-13:29:21 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
-13:29:21 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:50:17 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:50:17 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
 /Users/ohama/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
 It will be compatible before version 2.0.0.
   from authlib.jose import JsonWebKey, jwt
@@ -116,59 +116,59 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
     ... (excerpt trimmed) ...
+│                                                                              │
 │ Finish with message:                                                         │
-│ Created fib.py with a working Fibonacci implementation. All 8 contract tests │
-│ pass (fib(0)=0, fib(1)=1, fib(2)=1, fib(3)=2, fib(5)=5, fib(10)=55,          │
-│ fib(20)=6765, fib(30)=832040). The script runs cleanly with exit code 0.     │
+│ Created fib.py with fib(n) function satisfying all contract requirements.    │
+│ All 8 assertions pass and the script exits cleanly with code 0.              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ────────────────────────────────────────────────────────────────────────────────
 Goodbye! 👋
-Conversation ID: caba0d5220fa4302a3cc4ad5fcaf61da
-Hint: run openhands --resume caba0d52-20fa-4302-a3cc-4ad5fcaf61da to resume this
+Conversation ID: 8f4b1dfdc1834991bb4074f90e0e0fe6
+Hint: run openhands --resume 8f4b1dfd-c183-4991-bb40-74f90e0e0fe6 to resume this
 conversation.
 ```
 
-### codex / l2-wordstat — PASS in 98s
+### codex / l2-wordstat — PASS in 83s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l2-wordstat-20260626-042728/transcript.log`
-- **Steps:** 10 (codex:count of 'exec' blocks) · **Size:** 4f / 148loc
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l2-wordstat-20260626-074306/transcript.log`
+- **Steps:** 6 (codex:count of 'exec' blocks) · **Size:** 4f / 191loc
 
 ```text
 Reading additional input from stdin...
 OpenAI Codex v0.142.0
 --------
-workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l2-wordstat-20260626-042728
+workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l2-wordstat-20260626-074306
 model: qwen-122b-codex
 provider: litellm
 approval: never
 sandbox: workspace-write [workdir, /tmp, $TMPDIR]
 reasoning effort: none
 reasoning summaries: none
-session id: 019f022e-c82e-7462-9b21-f52474d5e018
+session id: 019f02e1-e426-7af3-ac11-a8ee4ca28c66
 --------
 user
 # L2 — Word statistics CLI (multi-file)
     ... (excerpt trimmed) ...
-dog 2
-fox 2
-hello 2
-testing 2
 ```
-**Key implementation details:**
-- Tokenization uses regex `[A-Za-z0-9]+` to extract maximal runs of ASCII alphanumerics, lowercased
-- Tie-breaking for top words: count descending, then word ascending (alphabetically)
-- All 14 tests pass
-- Exit code 0 on success
+total: 28
+unique: 18
+top:
+the 4
+dog 3
+fox 3
+a 2
+brown 2
+```
 ```
 
-### openhands / l2-wordstat — PASS in 145s
+### openhands / l2-wordstat — PASS in 165s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l2-wordstat-20260626-044118/transcript.log`
-- **Steps:** 16 (openhands:Number of agent messages) · **Size:** 4f / 222loc
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l2-wordstat-20260626-075103/transcript.log`
+- **Steps:** 17 (openhands:Number of agent messages) · **Size:** 4f / 305loc
 
 ```text
-13:41:19 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
-13:41:19 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:51:04 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:51:04 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
 /Users/ohama/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
 It will be compatible before version 2.0.0.
   from authlib.jose import JsonWebKey, jwt
@@ -182,59 +182,59 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
     ... (excerpt trimmed) ...
-│ test input, and test_wordstat.py with 16 passing unit tests. The CLI         │
-│ correctly tokenizes words as ASCII alphanumerics (case-insensitive), outputs │
-│ total/unique counts and top 5 words sorted by frequency descending then word │
-│ ascending, and exits with code 0 on success.                                 │
+│ - Top 5 entries with single space between word and count                     │
+│ - Exit code 0 on success                                                     │
+│                                                                              │
+│ All 21 tests pass and CLI output matches the required format exactly.        │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ────────────────────────────────────────────────────────────────────────────────
 Goodbye! 👋
-Conversation ID: 857ef5c33680485f9f8bfd3385c1d9ea
-Hint: run openhands --resume 857ef5c3-3680-485f-9f8b-fd3385c1d9ea to resume this
+Conversation ID: 961be9ab8d28430192cfa93d7ab3de08
+Hint: run openhands --resume 961be9ab-8d28-4301-92cf-a93d7ab3de08 to resume this
 conversation.
 ```
 
 ### codex / l3-kvstore — FAIL in 14s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-042906/transcript.log`
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-074429/transcript.log`
 - **Steps:** 2 (codex:count of 'exec' blocks) · **Size:** 0f / 0loc
 
 ```text
 Reading additional input from stdin...
 OpenAI Codex v0.142.0
 --------
-workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-042906
+workdir: /Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-074429
 model: qwen-122b-codex
 provider: litellm
 approval: never
 sandbox: workspace-write [workdir, /tmp, $TMPDIR]
 reasoning effort: none
 reasoning summaries: none
-session id: 019f0230-4965-7842-b9a7-bfd33c8d841d
+session id: 019f02e3-2b21-72c0-9e4a-4440849d8fd8
 --------
 user
 # L3 — Key-value store service (multi-module)
     ... (excerpt trimmed) ...
-  • Verify CLI contract with manual testing
+  • Test the CLI contract
 codex
 Now I'll create the kvstore package with the storage module:
 exec
-/bin/zsh -lc 'mkdir -p kvstore' in /Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-042906
+/bin/zsh -lc 'mkdir -p kvstore' in /Users/ohama/projs/codex/benchmark/.runs/codex-l3-kvstore-20260626-074429
  succeeded in 0ms:
 codex
 tokens used
-48,823
+48,822
 Now I'll create the kvstore package with the storage module:
 ```
 
-### openhands / l3-kvstore — PASS in 147s
+### openhands / l3-kvstore — PASS in 134s
 
-- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l3-kvstore-20260626-044445/transcript.log`
-- **Steps:** 15 (openhands:Number of agent messages) · **Size:** 9f / 362loc
+- **Transcript:** `/Users/ohama/projs/codex/benchmark/.runs/openhands-l3-kvstore-20260626-075348/transcript.log`
+- **Steps:** 12 (openhands:Number of agent messages) · **Size:** 9f / 360loc
 
 ```text
-13:44:45 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
-13:44:45 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:53:48 - LiteLLM:WARNING: common_utils.py:979 - litellm: could not pre-load bedrock-runtime response stream shape — Bedrock event-stream decoding will be unavailable. Error: No module named 'botocore'
+16:53:49 - LiteLLM:WARNING: common_utils.py:24 - litellm: could not pre-load sagemaker-runtime response stream shape — SageMaker event-stream decoding will be unavailable. Error: No module named 'botocore'
 /Users/ohama/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
 It will be compatible before version 2.0.0.
   from authlib.jose import JsonWebKey, jwt
@@ -248,15 +248,15 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
     ... (excerpt trimmed) ...
-│ - CLI commands: `set`, `get`, `delete`, `list` with correct exit codes   │
-│ - All 15 tests pass, verifying CLI contract and persistence behavior     │
-│                                                                          │
-│ The service satisfies all requirements from the task specification.      │
-╰──────────────────────────────────────────────────────────────────────────╯
+│ Key-value store service implemented successfully. Created multi-module       │
+│ package with kvstore/storage.py for persistence and cli.py for CLI commands. │
+│ All 15 tests pass, verifying set, get, delete, list commands and persistence │
+│ across process invocations.                                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
 ────────────────────────────────────────────────────────────────────────────────
 Goodbye! 👋
-Conversation ID: a7d934ac3052422d855d5a0995b63e3d
-Hint: run openhands --resume a7d934ac-3052-422d-855d-5a0995b63e3d to resume this
+Conversation ID: 8ed36bec9b45472e8de6febda1e4c1d5
+Hint: run openhands --resume 8ed36bec-9b45-472e-8de6-febda1e4c1d5 to resume this
 conversation.
 ```
 
