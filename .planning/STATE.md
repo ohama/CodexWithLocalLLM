@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-06-26)
 ## Current Position
 
 Phase: 1 of 5 (Fixed Tasks)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-06-26 — Completed 01-01-PLAN.md (froze L1/L2/L3 prompts + pass-criterion README)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-06-26 — Completed 01-02-PLAN.md (3 stdlib-only judges + references, validated both ways)
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: ~7 min
-- Total execution time: 0.1 hours
+- Total plans completed: 2
+- Average duration: ~8 min
+- Total execution time: 0.3 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 — Fixed Tasks | 1/2 | ~7 min | ~7 min |
+| 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~7 min)
-- Trend: -
+- Last 5 plans: 01-01 (~7 min), 01-02 (~9 min)
+- Trend: steady
 
 *Updated after each plan completion*
 
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - Prompts never reference the hidden judge/test.py — trust decided by independent test only (01-01)
 - L3 persistence keyed on env KVSTORE_PATH (default ./kvstore.db) for hermetic runs (01-01)
 - Per-command exit codes pinned (get-miss=1, delete idempotent=0) so a black-box judge can key on them (01-01)
+- Judges read solution_dir from argv[1] (default cwd) so Phase 2 runner points them at any tool output unchanged (01-02)
+- L1 judge uses in-process importlib import; L2/L3 use subprocess black-box (only entry-file names are fixed) (01-02)
+- stdlib-only verified via portable import-line scan, not Perl negative-lookahead grep (macOS ERE lacks lookahead) (01-02)
 
 ### Pending Todos
 
@@ -66,6 +69,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 01-01-PLAN.md — benchmark/README.md + 3 frozen PROMPT.md (L1/L2/L3)
+Stopped at: Completed 01-02-PLAN.md — 3 stdlib-only judges (tasks/l{1,2,3}-*/test.py) + validated references; Phase 1 complete
 Resume file: None
-Next: 01-02-PLAN.md — stdlib-only independent judge per level + reference solutions
+Next: Phase 2 — runner that drives Codex CLI + OpenHands on the frozen prompts and scores output with these judges
