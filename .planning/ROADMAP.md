@@ -62,11 +62,11 @@ Plans:
   3. Step / tool-call count (file edits, command executions, self-corrections) is extracted from the run and recorded.
   4. Output size (file count and lines of code) is measured and recorded.
   5. All four metrics for a run land in a single structured record (one row / JSON per run).
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Independent pass/fail judging + wall-clock timing hooked into the runner
-- [ ] 03-02: Extract step/tool-call counts and output size into a structured per-run record
+- [ ] 03-01-PLAN.md — Create score.py: independent judge re-run (MET-01) + wall-clock duration (MET-02), extend meta.json
+- [ ] 03-02-PLAN.md — Extend score.py: tool-aware step count (MET-03) + output size (MET-04); auto-hook scorer into run.sh
 
 ### Phase 4: Benchmark Run & Reporting
 **Goal**: Execute the full 2-tools × 3-levels matrix and record results as a comparison artifact with preserved transcripts.
