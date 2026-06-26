@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-417b004c.js";
+            window.path_to_searchindex_js = "searchindex-51ac4c0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-95898587.js"></script>
+        <script src="toc-298e1ca2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,8 +181,13 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="8-결과-요약과-결론"><a class="header" href="#8-결과-요약과-결론">8. 결과 요약과 결론</a></h1>
-<p>앞 장의 해석법을 <strong>실제 12셀 측정값</strong>(2 도구 × 6 레벨, qwen-122b)에 적용해 보자. <strong>이건 한 번의
+<p>앞 장의 해석법을 <strong>실제 측정값</strong>(2 도구 × 6 레벨 = 12셀, qwen-122b)에 적용해 보자. <strong>이건 한 번의
 스냅샷</strong>이며, 당신이 직접 돌리면 숫자는 달라질 수 있다.</p>
+<blockquote>
+<p>📌 이후 <strong>L7(HTTP KV API, 최난도)</strong> 를 추가해 매트릭스가 <strong>2×7 = 14셀</strong>로 커졌다(<a href="02-tasks.html">2장</a>).
+아래 표는 L1~L6 측정분이며, L7 수치는 <code>bash benchmark/run-matrix.sh &amp;&amp; python3 benchmark/report.py</code>
+를 다시 돌리면 <code>RESULTS.md</code> 에 채워진다.</p>
+</blockquote>
 <h2 id="-결과-한눈-요약-tldr"><a class="header" href="#-결과-한눈-요약-tldr">⏩ 결과 한눈 요약 (TL;DR)</a></h2>
 <div class="table-wrapper">
 <table>

@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-417b004c.js";
+            window.path_to_searchindex_js = "searchindex-51ac4c0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-95898587.js"></script>
+        <script src="toc-298e1ca2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -191,7 +191,7 @@
 <pre><code>두 도구(codex, openhands)
    │   같은 모델(qwen-122b) · 같은 과제 · 같은 조건
    ▼
-같은 6종 과제를 시킴 (난이도 + 도메인)
+같은 7종 과제를 시킴 (난이도 + 도메인)
    │
    ▼
 성공 여부·시간·과정·규모를 자동 측정
@@ -202,7 +202,7 @@
 <h2 id="이-책의-흐름-수행--해석"><a class="header" href="#이-책의-흐름-수행--해석">이 책의 흐름 (수행 → 해석)</a></h2>
 <ol>
 <li><strong>개요</strong> — 무엇을·왜 비교하나, 공정성의 3원칙</li>
-<li><strong>과제 6종</strong> — 왜 이 과제들(fib/wordstat/KV/calc/todo/csvstat)을 골랐나 + 기대효과</li>
+<li><strong>과제 7종</strong> — 왜 이 과제들(fib/wordstat/KV/calc/todo/csvstat/kvapi)을 골랐나 + 기대효과</li>
 <li><strong>사전 준비</strong> — 백엔드(qwen-122b)가 떠 있는지 확인</li>
 <li><strong>Codex 연결</strong> — codex를 로컬 모델에 붙이기</li>
 <li><strong>OpenHands 연결</strong> — openhands를 같은 모델에 붙이기</li>
@@ -212,7 +212,7 @@
 <li><strong>막혔을 때</strong> — 트러블슈팅</li>
 </ol>
 <blockquote>
-<p><strong>비교 대상(도구)은 codex 와 openhands 둘뿐</strong>이고, <strong>두 도구에 똑같이 시키는 과제가 6종(L1~L6)</strong>
+<p><strong>비교 대상(도구)은 codex 와 openhands 둘뿐</strong>이고, <strong>두 도구에 똑같이 시키는 과제가 7종(L1~L7)</strong>
 이다. (다른 도구는 이 책의 범위 밖.)</p>
 </blockquote>
 <p>준비됐으면 <a href="#1-무엇을-왜-비교하나">1. 무엇을 왜 비교하나</a>부터 시작하자.</p>
@@ -252,10 +252,10 @@
 성능 순위가 아니다.</p>
 </blockquote>
 <h2 id="다음"><a class="header" href="#다음">다음</a></h2>
-<p>무엇을 비교하는지 알았으니, 이제 <a href="#2-벤치마크-과제-6종--선정-이유와-기대효과">2. 과제 6종 — 선정 이유와 기대효과</a>로 넘어가자.</p>
+<p>무엇을 비교하는지 알았으니, 이제 <a href="#2-벤치마크-과제-7종--선정-이유와-기대효과">2. 과제 7종 — 선정 이유와 기대효과</a>로 넘어가자.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="2-벤치마크-과제-6종--선정-이유와-기대효과"><a class="header" href="#2-벤치마크-과제-6종--선정-이유와-기대효과">2. 벤치마크 과제 6종 — 선정 이유와 기대효과</a></h1>
-<p>비교 <strong>대상</strong>은 도구 2개(codex · openhands)이고, 그 둘에게 <strong>똑같이 시키는 과제가 6종</strong>이다(모두 CLI).
+<h1 id="2-벤치마크-과제-7종--선정-이유와-기대효과"><a class="header" href="#2-벤치마크-과제-7종--선정-이유와-기대효과">2. 벤치마크 과제 7종 — 선정 이유와 기대효과</a></h1>
+<p>비교 <strong>대상</strong>은 도구 2개(codex · openhands)이고, 그 둘에게 <strong>똑같이 시키는 과제가 7종</strong>이다(모두 CLI/서버).
 왜 이 과제들인가? 그리고 각 과제에서 무엇을 보려고 하는가(기대효과)?</p>
 <h2 id="한눈에"><a class="header" href="#한눈에">한눈에</a></h2>
 <div class="table-wrapper">
@@ -270,6 +270,7 @@
 <tr><td><strong>L4</strong></td><td><code>calc</code> 산술식 평가 CLI</td><td>single-file / 알고리즘</td><td>파서·우선순위·괄호 (<code>eval</code> 금지)</td></tr>
 <tr><td><strong>L5</strong></td><td><code>todo</code> 할 일 관리 CLI</td><td>multi-file / 서브커맨드</td><td>서브커맨드 + JSON 영속 + 종료코드</td></tr>
 <tr><td><strong>L6</strong></td><td><code>csvstat</code> CSV 통계 CLI</td><td>multi-module / 데이터</td><td>CSV 파싱 + 수치 집계 + 에러처리</td></tr>
+<tr><td><strong>L7</strong></td><td><code>kvapi</code> HTTP KV API 서비스</td><td>multi-module / 서버</td><td>HTTP 서버 + 라우팅 + 영속 + 재시작 유지</td></tr>
 </tbody>
 </table>
 </div>
@@ -313,8 +314,11 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <strong>종료코드</strong>. 상태저장 CLI의 전형.</li>
 <li><strong>L6 csvstat(CSV 통계)</strong> — CSV를 파싱해 수치 컬럼을 집계하고, 없는 파일·없는 컬럼·비수치 컬럼에
 <strong>올바른 에러 종료코드</strong>로 반응. <em>데이터 처리 + 견고성</em>을 본다.</li>
+<li><strong>L7 kvapi(HTTP KV API)</strong> — 패키지 위에 <strong>장기 실행 HTTP 서버</strong>를 세워 PUT/GET/DELETE 라우팅과
+상태코드를 구현하고, <strong>서버를 껐다 켜도 데이터가 유지</strong>돼야 한다. L3보다 한 단계 위 — <em>서버 수명주기 +
+HTTP 계약</em>까지 끝까지 완성하는지를 본다(가장 어려운 과제).</li>
 </ul>
-<p>여섯 과제 모두 <strong>Python 표준 라이브러리만</strong> 쓴다 — 외부 설치 없이 <strong>어디서나 재현</strong>되게 하기 위해서다.</p>
+<p>일곱 과제 모두 <strong>Python 표준 라이브러리만</strong> 쓴다 — 외부 설치 없이 <strong>어디서나 재현</strong>되게 하기 위해서다.</p>
 <h2 id="공정성-장치-모든-레벨-공통"><a class="header" href="#공정성-장치-모든-레벨-공통">공정성 장치 (모든 레벨 공통)</a></h2>
 <ul>
 <li><strong>프롬프트는 한 곳에만</strong>(<code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code>), 두 도구에 <strong>글자 그대로</strong> 동일하게 준다.</li>
@@ -323,7 +327,7 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <li>L2~L6는 <strong>블랙박스</strong>(subprocess)로 채점한다 — 내부 구현이 어떻든 <em>겉으로 약속한 동작</em>만 본다.</li>
 <li>각 과제의 <strong>결과물(파일 리스트)</strong> 과 <strong>기능·사용법</strong>은 <code>benchmark/tasks/&lt;level&gt;/ABOUT.md</code> 에 정리돼 있다.</li>
 </ul>
-<h2 id="기대효과-이-6종으로-무엇을-알게-되나"><a class="header" href="#기대효과-이-6종으로-무엇을-알게-되나">기대효과 (이 6종으로 무엇을 알게 되나)</a></h2>
+<h2 id="기대효과-이-7종으로-무엇을-알게-되나"><a class="header" href="#기대효과-이-7종으로-무엇을-알게-되나">기대효과 (이 7종으로 무엇을 알게 되나)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -336,6 +340,7 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <tr><td><strong>알고리즘/파서</strong>를 직접 구현하는가</td><td>L4</td></tr>
 <tr><td><strong>서브커맨드 + 상태 + 종료코드</strong>를 정확히 다루는가</td><td>L5</td></tr>
 <tr><td><strong>데이터 파싱 + 에러 견고성</strong></td><td>L6</td></tr>
+<tr><td><strong>HTTP 서버 + 재시작 영속</strong>을 끝까지 완성하는가 (최난도)</td><td>L7</td></tr>
 <tr><td>같은 능력이라도 <strong>얼마나 빠른가</strong></td><td>모든 레벨의 Time</td></tr>
 <tr><td>작업을 <strong>어떤 식으로</strong> 진행하는가(granularity)</td><td>모든 레벨의 Steps(도구 내부 추세)</td></tr>
 </tbody>
@@ -494,7 +499,7 @@ v1에서 실제로 발견·수정한 버그).</p>
 <p>이제 실제로 두 도구에 과제를 시킨다. 모든 실행은 저장소 루트(<code>/Users/ohama/projs/codex</code>)에서 한다.</p>
 <pre><code class="language-sh">export LITELLM_API_KEY=dummy   # 아직 안 했으면
 </code></pre>
-<h2 id="과제-6종-난이도--도메인"><a class="header" href="#과제-6종-난이도--도메인">과제 6종 (난이도 + 도메인)</a></h2>
+<h2 id="과제-7종-난이도--도메인"><a class="header" href="#과제-7종-난이도--도메인">과제 7종 (난이도 + 도메인)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -507,11 +512,12 @@ v1에서 실제로 발견·수정한 버그).</p>
 <tr><td><strong>L4</strong></td><td><code>calc</code> 산술식 평가 CLI</td><td>파서·우선순위·괄호 (<code>eval</code> 금지)</td></tr>
 <tr><td><strong>L5</strong></td><td><code>todo</code> 할 일 관리 CLI</td><td>서브커맨드 + JSON 영속 + 종료코드</td></tr>
 <tr><td><strong>L6</strong></td><td><code>csvstat</code> CSV 통계 CLI</td><td>CSV 파싱 + 수치 집계 + 에러처리</td></tr>
+<tr><td><strong>L7</strong></td><td><code>kvapi</code> HTTP KV API 서비스</td><td>HTTP 서버 + 라우팅 + 영속 + 재시작 유지 (최난도)</td></tr>
 </tbody>
 </table>
 </div>
 <blockquote>
-<p>각 과제의 결과물(파일 리스트)·기능·사용법은 <a href="#2-벤치마크-과제-6종--선정-이유와-기대효과">2장</a> 및 <code>benchmark/tasks/&lt;level&gt;/ABOUT.md</code> 참고.</p>
+<p>각 과제의 결과물(파일 리스트)·기능·사용법은 <a href="#2-벤치마크-과제-7종--선정-이유와-기대효과">2장</a> 및 <code>benchmark/tasks/&lt;level&gt;/ABOUT.md</code> 참고.</p>
 </blockquote>
 <p>각 과제의 프롬프트는 <code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code> 한 곳에만 있고, 두 도구에 <strong>글자 그대로
 동일하게</strong> 주어진다. judge <code>benchmark/tasks/&lt;level&gt;/test.py</code> 는 도구가 못 보는 <strong>숨은 judge</strong>다.</p>
@@ -534,7 +540,7 @@ v1에서 실제로 발견·수정한 버그).</p>
 <pre><code class="language-sh">bash benchmark/run-matrix.sh
 </code></pre>
 <ul>
-<li><strong>효과:</strong> codex L1..L6, 이어서 openhands L1..L6 순으로 한 번에 하나씩 실행하고, 12개 결과를
+<li><strong>효과:</strong> codex L1..L7, 이어서 openhands L1..L7 순으로 한 번에 하나씩 실행하고, 14개 결과를
 하나의 <code>results.json</code> 으로 모은다. 전체 ~10–15분.</li>
 <li>⚠️ <strong>절대 백그라운드(<code>&amp;</code>)로 돌리지 말 것.</strong> 로컬 백엔드가 하나라 동시에 두 개를 돌리면 서로
 경합한다. 러너가 직렬을 강제하지만, 사람이 백그라운드로 띄우면 깨질 수 있다.</li>
@@ -648,8 +654,13 @@ echo "exit=$?"   # 0=PASS, nonzero=FAIL
 <p>해석법을 익혔으니, <a href="#8-결과-요약과-결론">8. 결과 요약과 결론</a>에서 실제 측정 예시를 함께 읽어 보자.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="8-결과-요약과-결론"><a class="header" href="#8-결과-요약과-결론">8. 결과 요약과 결론</a></h1>
-<p>앞 장의 해석법을 <strong>실제 12셀 측정값</strong>(2 도구 × 6 레벨, qwen-122b)에 적용해 보자. <strong>이건 한 번의
+<p>앞 장의 해석법을 <strong>실제 측정값</strong>(2 도구 × 6 레벨 = 12셀, qwen-122b)에 적용해 보자. <strong>이건 한 번의
 스냅샷</strong>이며, 당신이 직접 돌리면 숫자는 달라질 수 있다.</p>
+<blockquote>
+<p>📌 이후 <strong>L7(HTTP KV API, 최난도)</strong> 를 추가해 매트릭스가 <strong>2×7 = 14셀</strong>로 커졌다(<a href="#2-벤치마크-과제-7종--선정-이유와-기대효과">2장</a>).
+아래 표는 L1~L6 측정분이며, L7 수치는 <code>bash benchmark/run-matrix.sh &amp;&amp; python3 benchmark/report.py</code>
+를 다시 돌리면 <code>RESULTS.md</code> 에 채워진다.</p>
+</blockquote>
 <h2 id="-결과-한눈-요약-tldr"><a class="header" href="#-결과-한눈-요약-tldr">⏩ 결과 한눈 요약 (TL;DR)</a></h2>
 <div class="table-wrapper">
 <table>

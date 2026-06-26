@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-417b004c.js";
+            window.path_to_searchindex_js = "searchindex-51ac4c0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-95898587.js"></script>
+        <script src="toc-298e1ca2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,7 +184,7 @@
 <p>이제 실제로 두 도구에 과제를 시킨다. 모든 실행은 저장소 루트(<code>/Users/ohama/projs/codex</code>)에서 한다.</p>
 <pre><code class="language-sh">export LITELLM_API_KEY=dummy   # 아직 안 했으면
 </code></pre>
-<h2 id="과제-6종-난이도--도메인"><a class="header" href="#과제-6종-난이도--도메인">과제 6종 (난이도 + 도메인)</a></h2>
+<h2 id="과제-7종-난이도--도메인"><a class="header" href="#과제-7종-난이도--도메인">과제 7종 (난이도 + 도메인)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -197,6 +197,7 @@
 <tr><td><strong>L4</strong></td><td><code>calc</code> 산술식 평가 CLI</td><td>파서·우선순위·괄호 (<code>eval</code> 금지)</td></tr>
 <tr><td><strong>L5</strong></td><td><code>todo</code> 할 일 관리 CLI</td><td>서브커맨드 + JSON 영속 + 종료코드</td></tr>
 <tr><td><strong>L6</strong></td><td><code>csvstat</code> CSV 통계 CLI</td><td>CSV 파싱 + 수치 집계 + 에러처리</td></tr>
+<tr><td><strong>L7</strong></td><td><code>kvapi</code> HTTP KV API 서비스</td><td>HTTP 서버 + 라우팅 + 영속 + 재시작 유지 (최난도)</td></tr>
 </tbody>
 </table>
 </div>
@@ -224,7 +225,7 @@
 <pre><code class="language-sh">bash benchmark/run-matrix.sh
 </code></pre>
 <ul>
-<li><strong>효과:</strong> codex L1..L6, 이어서 openhands L1..L6 순으로 한 번에 하나씩 실행하고, 12개 결과를
+<li><strong>효과:</strong> codex L1..L7, 이어서 openhands L1..L7 순으로 한 번에 하나씩 실행하고, 14개 결과를
 하나의 <code>results.json</code> 으로 모은다. 전체 ~10–15분.</li>
 <li>⚠️ <strong>절대 백그라운드(<code>&amp;</code>)로 돌리지 말 것.</strong> 로컬 백엔드가 하나라 동시에 두 개를 돌리면 서로
 경합한다. 러너가 직렬을 강제하지만, 사람이 백그라운드로 띄우면 깨질 수 있다.</li>

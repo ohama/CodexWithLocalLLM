@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>2. 과제 6종 — 선정 이유와 기대효과 - Codex vs OpenHands 벤치마크 튜토리얼</title>
+        <title>2. 과제 7종 — 선정 이유와 기대효과 - Codex vs OpenHands 벤치마크 튜토리얼</title>
 
 
         <!-- Custom HTML head -->
@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-417b004c.js";
+            window.path_to_searchindex_js = "searchindex-51ac4c0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-95898587.js"></script>
+        <script src="toc-298e1ca2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -180,8 +180,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="2-벤치마크-과제-6종--선정-이유와-기대효과"><a class="header" href="#2-벤치마크-과제-6종--선정-이유와-기대효과">2. 벤치마크 과제 6종 — 선정 이유와 기대효과</a></h1>
-<p>비교 <strong>대상</strong>은 도구 2개(codex · openhands)이고, 그 둘에게 <strong>똑같이 시키는 과제가 6종</strong>이다(모두 CLI).
+                        <h1 id="2-벤치마크-과제-7종--선정-이유와-기대효과"><a class="header" href="#2-벤치마크-과제-7종--선정-이유와-기대효과">2. 벤치마크 과제 7종 — 선정 이유와 기대효과</a></h1>
+<p>비교 <strong>대상</strong>은 도구 2개(codex · openhands)이고, 그 둘에게 <strong>똑같이 시키는 과제가 7종</strong>이다(모두 CLI/서버).
 왜 이 과제들인가? 그리고 각 과제에서 무엇을 보려고 하는가(기대효과)?</p>
 <h2 id="한눈에"><a class="header" href="#한눈에">한눈에</a></h2>
 <div class="table-wrapper">
@@ -196,6 +196,7 @@
 <tr><td><strong>L4</strong></td><td><code>calc</code> 산술식 평가 CLI</td><td>single-file / 알고리즘</td><td>파서·우선순위·괄호 (<code>eval</code> 금지)</td></tr>
 <tr><td><strong>L5</strong></td><td><code>todo</code> 할 일 관리 CLI</td><td>multi-file / 서브커맨드</td><td>서브커맨드 + JSON 영속 + 종료코드</td></tr>
 <tr><td><strong>L6</strong></td><td><code>csvstat</code> CSV 통계 CLI</td><td>multi-module / 데이터</td><td>CSV 파싱 + 수치 집계 + 에러처리</td></tr>
+<tr><td><strong>L7</strong></td><td><code>kvapi</code> HTTP KV API 서비스</td><td>multi-module / 서버</td><td>HTTP 서버 + 라우팅 + 영속 + 재시작 유지</td></tr>
 </tbody>
 </table>
 </div>
@@ -239,8 +240,11 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <strong>종료코드</strong>. 상태저장 CLI의 전형.</li>
 <li><strong>L6 csvstat(CSV 통계)</strong> — CSV를 파싱해 수치 컬럼을 집계하고, 없는 파일·없는 컬럼·비수치 컬럼에
 <strong>올바른 에러 종료코드</strong>로 반응. <em>데이터 처리 + 견고성</em>을 본다.</li>
+<li><strong>L7 kvapi(HTTP KV API)</strong> — 패키지 위에 <strong>장기 실행 HTTP 서버</strong>를 세워 PUT/GET/DELETE 라우팅과
+상태코드를 구현하고, <strong>서버를 껐다 켜도 데이터가 유지</strong>돼야 한다. L3보다 한 단계 위 — <em>서버 수명주기 +
+HTTP 계약</em>까지 끝까지 완성하는지를 본다(가장 어려운 과제).</li>
 </ul>
-<p>여섯 과제 모두 <strong>Python 표준 라이브러리만</strong> 쓴다 — 외부 설치 없이 <strong>어디서나 재현</strong>되게 하기 위해서다.</p>
+<p>일곱 과제 모두 <strong>Python 표준 라이브러리만</strong> 쓴다 — 외부 설치 없이 <strong>어디서나 재현</strong>되게 하기 위해서다.</p>
 <h2 id="공정성-장치-모든-레벨-공통"><a class="header" href="#공정성-장치-모든-레벨-공통">공정성 장치 (모든 레벨 공통)</a></h2>
 <ul>
 <li><strong>프롬프트는 한 곳에만</strong>(<code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code>), 두 도구에 <strong>글자 그대로</strong> 동일하게 준다.</li>
@@ -249,7 +253,7 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <li>L2~L6는 <strong>블랙박스</strong>(subprocess)로 채점한다 — 내부 구현이 어떻든 <em>겉으로 약속한 동작</em>만 본다.</li>
 <li>각 과제의 <strong>결과물(파일 리스트)</strong> 과 <strong>기능·사용법</strong>은 <code>benchmark/tasks/&lt;level&gt;/ABOUT.md</code> 에 정리돼 있다.</li>
 </ul>
-<h2 id="기대효과-이-6종으로-무엇을-알게-되나"><a class="header" href="#기대효과-이-6종으로-무엇을-알게-되나">기대효과 (이 6종으로 무엇을 알게 되나)</a></h2>
+<h2 id="기대효과-이-7종으로-무엇을-알게-되나"><a class="header" href="#기대효과-이-7종으로-무엇을-알게-되나">기대효과 (이 7종으로 무엇을 알게 되나)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -262,6 +266,7 @@ stdout·종료코드·영속을 검증한다(도구 자기보고 불신).</p>
 <tr><td><strong>알고리즘/파서</strong>를 직접 구현하는가</td><td>L4</td></tr>
 <tr><td><strong>서브커맨드 + 상태 + 종료코드</strong>를 정확히 다루는가</td><td>L5</td></tr>
 <tr><td><strong>데이터 파싱 + 에러 견고성</strong></td><td>L6</td></tr>
+<tr><td><strong>HTTP 서버 + 재시작 영속</strong>을 끝까지 완성하는가 (최난도)</td><td>L7</td></tr>
 <tr><td>같은 능력이라도 <strong>얼마나 빠른가</strong></td><td>모든 레벨의 Time</td></tr>
 <tr><td>작업을 <strong>어떤 식으로</strong> 진행하는가(granularity)</td><td>모든 레벨의 Steps(도구 내부 추세)</td></tr>
 </tbody>

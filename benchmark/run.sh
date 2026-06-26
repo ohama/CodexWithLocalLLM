@@ -9,6 +9,7 @@
 #           l4 | l4-calc | 4       (calc)
 #           l5 | l5-todo | 5       (todo)
 #           l6 | l6-csvstat | 6    (csvstat)
+#           l7 | l7-kvapi | 7      (kvapi — HTTP service)
 #
 # Drives one tool over one frozen task PROMPT.md under identical conditions,
 # in a fresh isolated work dir. Tool invocation is stubbed in this plan (Plan 01)
@@ -22,7 +23,7 @@ usage() {
   cat >&2 <<EOF
 usage: run.sh <tool> <level>
   <tool>  codex | openhands
-  <level> l1|1 l2|2 l3|3 l4|4 l5|5 l6|6  (fib/wordstat/kvstore/calc/todo/csvstat)
+  <level> l1|1 .. l7|7  (fib/wordstat/kvstore/calc/todo/csvstat/kvapi)
 EOF
   exit 2
 }
@@ -47,6 +48,7 @@ case "$LEVEL_ARG" in
   l4|l4-calc|4) SHORT="l4" ;;
   l5|l5-todo|5) SHORT="l5" ;;
   l6|l6-csvstat|6) SHORT="l6" ;;
+  l7|l7-kvapi|7) SHORT="l7" ;;
   *) echo "✗ unknown level: '$LEVEL_ARG'" >&2; usage ;;
 esac
 

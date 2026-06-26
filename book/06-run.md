@@ -6,7 +6,7 @@
 export LITELLM_API_KEY=dummy   # 아직 안 했으면
 ```
 
-## 과제 6종 (난이도 + 도메인)
+## 과제 7종 (난이도 + 도메인)
 
 | 레벨 | 과제 | 무엇을 보나 |
 |------|------|-------------|
@@ -16,6 +16,7 @@ export LITELLM_API_KEY=dummy   # 아직 안 했으면
 | **L4** | `calc` 산술식 평가 CLI | 파서·우선순위·괄호 (`eval` 금지) |
 | **L5** | `todo` 할 일 관리 CLI | 서브커맨드 + JSON 영속 + 종료코드 |
 | **L6** | `csvstat` CSV 통계 CLI | CSV 파싱 + 수치 집계 + 에러처리 |
+| **L7** | `kvapi` HTTP KV API 서비스 | HTTP 서버 + 라우팅 + 영속 + 재시작 유지 (최난도) |
 
 > 각 과제의 결과물(파일 리스트)·기능·사용법은 [2장](02-tasks.md) 및 `benchmark/tasks/<level>/ABOUT.md` 참고.
 
@@ -46,7 +47,7 @@ bash benchmark/run.sh openhands l1
 ```sh
 bash benchmark/run-matrix.sh
 ```
-- **효과:** codex L1..L6, 이어서 openhands L1..L6 순으로 한 번에 하나씩 실행하고, 12개 결과를
+- **효과:** codex L1..L7, 이어서 openhands L1..L7 순으로 한 번에 하나씩 실행하고, 14개 결과를
   하나의 `results.json` 으로 모은다. 전체 ~10–15분.
 - ⚠️ **절대 백그라운드(`&`)로 돌리지 말 것.** 로컬 백엔드가 하나라 동시에 두 개를 돌리면 서로
   경합한다. 러너가 직렬을 강제하지만, 사람이 백그라운드로 띄우면 깨질 수 있다.
