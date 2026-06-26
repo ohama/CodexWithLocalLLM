@@ -20,7 +20,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 
 TOOLS=(codex openhands)
-LEVELS=(l1 l2 l3)            # aliases accepted by run.sh (-> l1-fib / l2-wordstat / l3-kvstore)
+LEVELS=(l1 l2 l3 l4 l5 l6)   # run.sh aliases -> fib / wordstat / kvstore / calc / todo / csvstat
 
 # One timestamped collection dir per sweep so re-runs never clobber prior ones.
 TS="$(date -u +%Y%m%d-%H%M%S)"

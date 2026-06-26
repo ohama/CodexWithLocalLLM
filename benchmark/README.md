@@ -17,23 +17,29 @@
 ```sh
 export LITELLM_API_KEY=dummy
 bash benchmark/run.sh codex l1        # 한 셀(도구,레벨)
-bash benchmark/run-matrix.sh          # 전체 6셀(직렬, ~10-15분)
+bash benchmark/run-matrix.sh          # 전체 12셀(직렬)
 python3 benchmark/report.py           # → RESULTS.md
 ```
 
 > 과제 텍스트는 `tasks/<level>/PROMPT.md` 한 곳에만(TASK-03), judge `tasks/<level>/test.py`(stdlib
 > 독립 judge)가 합격을 판정. 프롬프트·judge는 도구 런너와 독립적이다.
 
-## 복잡도 3단계 (검증된 과제 재사용)
+## 과제 6종 (분별력을 위해 서로 다른 능력을 자극)
 
-이전에 실측·검증된 과제를 그대로 재사용한다: fib(단일 파일), wordstat(멀티 파일 CLI),
-KV 스토어(멀티 모듈 서비스).
+각 과제는 `tasks/<level>/` 에 PROMPT.md(계약) + test.py(독립 judge) + ABOUT.md(결과물·사용법),
+정답은 `reference/<level>/` 에 있다. 레벨이 올라갈수록, 또 도메인이 달라질수록 도구의 한계가 드러난다.
 
-| Level | 만드는 것 | 정식 프롬프트 위치 | 복잡도 차원 |
-|-------|-----------|--------------------|-------------|
-| L1 | `fib.py` 한 파일의 피보나치 함수 | `tasks/l1-fib/PROMPT.md` | single-file |
-| L2 | `wordstat.py` 단어 통계 CLI | `tasks/l2-wordstat/PROMPT.md` | multi-file CLI |
-| L3 | `kvstore/` 패키지 + `cli.py` KV 서비스 | `tasks/l3-kvstore/PROMPT.md` | multi-module service |
+| Level | 만드는 것 | 복잡도 차원 | 자극하는 능력 |
+|-------|-----------|-------------|----------------|
+| L1 | `fib.py` 피보나치 함수 | single-file | 기본기 |
+| L2 | `wordstat.py` 단어 통계 CLI | multi-file CLI | 파일 협력 + 출력 계약 |
+| L3 | `kvstore/` + `cli.py` KV 서비스 | multi-module service | 패키지 + 상태 영속 |
+| L4 | `calc.py` 산술식 평가 CLI | single-file / 알고리즘 | 파서·우선순위(`eval` 금지) |
+| L5 | `todo.py` 할 일 관리 CLI | multi-file / 서브커맨드 | 서브커맨드 + JSON 영속 + 종료코드 |
+| L6 | `csvstat.py` + `csvstat/` CSV 통계 CLI | multi-module / 데이터 | CSV 파싱 + 수치 집계 + 에러처리 |
+
+> 각 과제의 **결과물(파일 리스트)** 과 **기능·사용법**은 `tasks/<level>/ABOUT.md` 에 정리돼 있다.
+> 전체 매트릭스는 이제 **2 도구 × 6 레벨 = 12 셀**이다.
 
 ## 레이아웃
 
@@ -46,10 +52,13 @@ benchmark/
   score.py                        # 4지표 채점/측정 (run.sh가 자동 호출)
   report.py                       # results.json → RESULTS.md
   tasks/
-    l1-fib/{PROMPT.md,test.py}    # 정식 프롬프트(단일 canonical) + stdlib 독립 judge
-    l2-wordstat/{PROMPT.md,test.py}
-    l3-kvstore/{PROMPT.md,test.py}
-  reference/<level>/              # judge 검증용 레퍼런스 해답
+    l1-fib/      {PROMPT.md, test.py, ABOUT.md}   # 계약 + 독립 judge + 결과물·사용법
+    l2-wordstat/ {PROMPT.md, test.py, ABOUT.md}
+    l3-kvstore/  {PROMPT.md, test.py, ABOUT.md}
+    l4-calc/     {PROMPT.md, test.py, ABOUT.md}
+    l5-todo/     {PROMPT.md, test.py, ABOUT.md}
+    l6-csvstat/  {PROMPT.md, test.py, ABOUT.md}
+  reference/<level>/              # judge 검증용 레퍼런스 해답 (6레벨)
   .runs/                          # 실행 산출물(gitignore) — RESULTS.md가 영구 기록
 ```
 
