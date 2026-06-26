@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-06-26)
 ## Current Position
 
 Phase: 1 of 5 (Fixed Tasks)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-06-26 — Roadmap created (5 phases, 18/18 requirements mapped)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-06-26 — Completed 01-01-PLAN.md (froze L1/L2/L3 prompts + pass-criterion README)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 10%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: - min
-- Total execution time: 0.0 hours
+- Total plans completed: 1
+- Average duration: ~7 min
+- Total execution time: 0.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 1 — Fixed Tasks | 1/2 | ~7 min | ~7 min |
 
 **Recent Trend:**
-- Last 5 plans: -
+- Last 5 plans: 01-01 (~7 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -46,6 +46,9 @@ Recent decisions affecting current work:
 - Single model qwen-122b for both tools — isolate tool differences
 - Reuse validated L1/L2/L3 tasks (fib / wordstat / KV) — fast start
 - Serial measurement — single mlx backend contention avoidance
+- Prompts never reference the hidden judge/test.py — trust decided by independent test only (01-01)
+- L3 persistence keyed on env KVSTORE_PATH (default ./kvstore.db) for hermetic runs (01-01)
+- Per-command exit codes pinned (get-miss=1, delete idempotent=0) so a black-box judge can key on them (01-01)
 
 ### Pending Todos
 
@@ -63,5 +66,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: ROADMAP.md and STATE.md created; REQUIREMENTS.md traceability filled
+Stopped at: Completed 01-01-PLAN.md — benchmark/README.md + 3 frozen PROMPT.md (L1/L2/L3)
 Resume file: None
+Next: 01-02-PLAN.md — stdlib-only independent judge per level + reference solutions
