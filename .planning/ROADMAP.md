@@ -45,11 +45,12 @@ Plans:
   3. Both codex and openhands are invoked against qwen-122b (LiteLLM :4000); the same model is confirmable from the run log.
   4. codex runs with `< /dev/null` and openhands with `--headless`; neither hangs on stdin nor blocks on an interactive prompt.
   5. Runs are serialized so only one tool hits the single backend at a time (no concurrent contention).
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Build runner CLI that takes (tool, level) and prepares an isolated work dir
-- [ ] 02-02: Wire non-interactive, same-model invocation for codex and openhands with serial execution
+- [ ] 01-PLAN.md — Runner scaffold: arg parse + level normalize + isolated run dir + serial lock + gateway preflight (stubbed invocation)
+- [ ] 02-PLAN.md — Wire non-interactive same-model invocation: codex `< /dev/null` + openhands `--headless`, transcript capture, model-confirming meta.json
+- [ ] 03-PLAN.md — Live smoke (L1) for both tools, serial, with human-verify of openhands output isolation
 
 ### Phase 3: Metric Collection
 **Goal**: Every run automatically produces the four metrics, with success judged by an independent test re-run rather than tool self-report.
@@ -105,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fixed Tasks | 2/2 | ✓ Complete | 2026-06-26 |
-| 2. Equal-Conditions Runner | 0/2 | Not started | - |
+| 2. Equal-Conditions Runner | 0/3 | Not started | - |
 | 3. Metric Collection | 0/2 | Not started | - |
 | 4. Benchmark Run & Reporting | 0/2 | Not started | - |
 | 5. Reproducibility Guide | 0/2 | Not started | - |
