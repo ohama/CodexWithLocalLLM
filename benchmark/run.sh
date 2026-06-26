@@ -127,13 +127,17 @@ run_openhands() {
   export LLM_API_KEY=dummy
   export LLM_BASE_URL="http://localhost:4000/v1"
   export LLM_MODEL="$MODEL"
-  # Feed the prompt verbatim via --file (safer than --task for multi-line text;
-  # identical bytes to what codex receives). --headless runs non-interactively
-  # and auto-approves actions; --always-approve / --exit-without-confirmation are
-  # belt-and-suspenders so the run never blocks for human confirmation.
+  # Feed the prompt verbatim via --task (inline text), NOT --file. With --file
+  # pointing at the canonical tasks/<level>/PROMPT.md, OpenHands anchored its
+  # working directory to that file's dir and wrote the solution into the canonical
+  # task folder (RUN-02 leak observed on L2/L3 in the Phase 4 matrix), leaving the
+  # isolated RUN_DIR empty. Inline --task removes the file-path anchor, so writes
+  # land in OPENHANDS_WORK_DIR=RUN_DIR (same inline approach codex uses).
+  # --headless runs non-interactively and auto-approves actions; --always-approve
+  # / --exit-without-confirmation never block for human confirmation.
   # `< /dev/null` for the same non-tty safety as codex.
   set +e
-  LITELLM_API_KEY=dummy openhands --file "$PROMPT_FILE" --headless \
+  LITELLM_API_KEY=dummy openhands --task "$PROMPT" --headless \
     --always-approve --exit-without-confirmation --override-with-envs \
     < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
   TOOL_EXIT="${PIPESTATUS[0]}"   # openhands's real exit, not tee's
