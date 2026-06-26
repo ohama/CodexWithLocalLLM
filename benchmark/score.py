@@ -19,6 +19,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import datetime
 
 # Locate tasks/<level>/test.py relative to this file, independent of cwd.
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +55,16 @@ def score_run(run_dir):
         meta["judge_exit"] = proc.returncode
         meta.pop("judge_note", None)
 
-    # --- MET-02: wall-clock duration_seconds (filled in by Task 3) ---
+    # --- MET-02: wall-clock duration_seconds from meta timestamps ---
+    # Timestamps are second-resolution UTC ISO, e.g. "2026-06-26T02:11:03Z".
+    # Best-effort: a missing/malformed timestamp yields null, never a crash.
+    fmt = "%Y-%m-%dT%H:%M:%SZ"
+    try:
+        started = datetime.strptime(meta["started_at"], fmt)
+        finished = datetime.strptime(meta["finished_at"], fmt)
+        meta["duration_seconds"] = int((finished - started).total_seconds())
+    except (KeyError, TypeError, ValueError):
+        meta["duration_seconds"] = None
 
     with open(meta_path, "w") as fh:
         json.dump(meta, fh, indent=2)
