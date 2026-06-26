@@ -6,6 +6,11 @@ OpenAI **Codex CLI**를 클라우드 API 대신 **로컬 LLM**(Qwen3.5-MoE 122B,
 유튜브 "Codex 무료 사용법(Ollama 연동)" 아이디어에서 출발하되, 이미 운영 중인
 **`mlx_lm.server` + LiteLLM** 스택에 맞게 변형·적용한 실전 기록이다.
 
+## 📖 튜토리얼 책
+
+초보자가 따라하며 **수행→해석**하는 Codex vs OpenHands 벤치마크 튜토리얼:
+→ **https://ohama.github.io/CodexWithLocalLLM/** (소스: `book/`)
+
 ## 무엇을 푸는가
 
 최신 Codex CLI를 로컬 OpenAI 호환 백엔드에 붙일 때 부딪히는 두 개의 호환성 벽을 해결한다.
