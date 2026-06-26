@@ -102,10 +102,10 @@ python3 benchmark/report.py        # 결과 → benchmark/RESULTS.md 생성
 open benchmark/RESULTS.md     # 또는 에디터로 열기
 ```
 - **도구 × 레벨 표**: 성공 여부 · 시간 · 단계수(step_method) · 산출 규모
-- **레벨별 차이 요약** + **정직성 노트**(어떤 셀이 왜 실패/재측정됐는지)
+- **레벨별 차이 요약** + **honesty note**(어떤 셀이 왜 실패/재측정됐는지)
 
 읽을 때 주의:
-- **성공/실패는 도구의 자기보고가 아니라 독립 채점기(judge) 재실행 결과**다.
+- **성공/실패는 도구의 자기보고가 아니라 독립 judge 재실행 결과**다.
 - **steps 숫자는 도구끼리 직접 비교 금지** — codex(‘exec’ 블록) vs openhands(agent 메시지)로 단위가 다르다.
   그래서 `step_method` 를 같이 본다.
 - **결과는 실행마다 달라질 수 있다**(LLM 비결정성). `benchmark/.runs/` 는 git 에 안 올라가므로

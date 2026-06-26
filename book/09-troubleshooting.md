@@ -9,11 +9,11 @@
 | openhands 출력이 run 폴더에 없음 (`0 files`) | openhands 를 손으로 `--file` 로 부름 → **반드시 `run.sh`/`run-matrix.sh` 로만** 실행 ([5장](05-connect-openhands.md)) |
 | 모델이 qwen-122b 가 아님 | [4](04-connect-codex.md)·[5](05-connect-openhands.md)장 확인 명령 재실행 |
 | 매트릭스 중간에 느림/멈춘 듯 | L3는 원래 오래 걸린다(수 분). 백그라운드(`&`)로 돌렸는지 확인 — 직렬로 포그라운드 실행할 것 |
-| `FAIL` 인데 진짜인지 모르겠음 | [7장 §이상치 진단](07-interpret.md) — `0 files`면 누출 의심, 채점기 직접 실행해 확인 |
+| `FAIL` 인데 진짜인지 모르겠음 | [7장 §이상치 진단](07-interpret.md) — `0 files`면 누출 의심, judge 직접 실행해 확인 |
 
-## 채점기 직접 돌려보기
+## judge 직접 돌려보기
 
-어떤 실행이 왜 실패/성공인지 확인하려면 채점기를 직접 돌린다(LLM 호출 없음, 즉시):
+어떤 실행이 왜 실패/성공인지 확인하려면 judge를 직접 돌린다(LLM 호출 없음, 즉시):
 
 ```sh
 python3 benchmark/tasks/<level>/test.py <run_dir>
@@ -52,6 +52,6 @@ python3 benchmark/report.py
 **codex와 openhands를 직접 비교 검증**한 것이다.
 
 핵심 세 가지만 기억하자:
-1. **성공은 독립 채점기가 정한다**(도구 자기보고 불신).
+1. **성공은 독립 judge가 정한다**(도구 자기보고 불신).
 2. **steps는 도구끼리 직접 비교 금지**(단위가 다름 — `step_method` 확인).
 3. **결과는 스냅샷**이다(LLM 비결정성 — 확신하려면 반복 측정).

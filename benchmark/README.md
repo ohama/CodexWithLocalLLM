@@ -21,8 +21,8 @@ bash benchmark/run-matrix.sh          # 전체 6셀(직렬, ~10-15분)
 python3 benchmark/report.py           # → RESULTS.md
 ```
 
-> 과제 텍스트는 `tasks/<level>/PROMPT.md` 한 곳에만(TASK-03), 채점기 `tasks/<level>/test.py`(stdlib
-> 독립 judge)가 합격을 판정. 프롬프트·채점기는 도구 런너와 독립적이다.
+> 과제 텍스트는 `tasks/<level>/PROMPT.md` 한 곳에만(TASK-03), judge `tasks/<level>/test.py`(stdlib
+> 독립 judge)가 합격을 판정. 프롬프트·judge는 도구 런너와 독립적이다.
 
 ## 복잡도 3단계 (검증된 과제 재사용)
 
@@ -46,10 +46,10 @@ benchmark/
   score.py                        # 4지표 채점/측정 (run.sh가 자동 호출)
   report.py                       # results.json → RESULTS.md
   tasks/
-    l1-fib/{PROMPT.md,test.py}    # 정식 프롬프트(단일 canonical) + stdlib 독립 채점기
+    l1-fib/{PROMPT.md,test.py}    # 정식 프롬프트(단일 canonical) + stdlib 독립 judge
     l2-wordstat/{PROMPT.md,test.py}
     l3-kvstore/{PROMPT.md,test.py}
-  reference/<level>/              # 채점기 검증용 레퍼런스 해답
+  reference/<level>/              # judge 검증용 레퍼런스 해답
   .runs/                          # 실행 산출물(gitignore) — RESULTS.md가 영구 기록
 ```
 
@@ -64,16 +64,16 @@ benchmark/
 python3 benchmark/tasks/<level>/test.py <solution_dir>   # exit 0 → PASS
 ```
 
-- 채점기가 **exit 0** 으로 끝나면 합격, **nonzero** 면 불합격이다.
+- judge가 **exit 0** 으로 끝나면 합격, **nonzero** 면 불합격이다.
 - **도구의 자가 보고(self-report)는 신뢰하지 않는다.** "테스트 다 통과했다"는 도구의 말이 아니라,
-  우리의 독립 채점기 종료 코드만이 합격을 결정한다(forward ref: MET-01, Phase 3).
+  우리의 독립 judge 종료 코드만이 합격을 결정한다(forward ref: MET-01, Phase 3).
 
-## 공통 규약 (채점기가 의존하는 약속)
+## 공통 규약 (judge가 의존하는 약속)
 
-1. **채점기 호출:** `python3 tasks/<level>/test.py <solution_dir>` 형태로 실행한다.
+1. **judge 호출:** `python3 tasks/<level>/test.py <solution_dir>` 형태로 실행한다.
    `<solution_dir>` 가 생략되면 현재 디렉터리(`.`)를 기본값으로 쓴다.
 2. **종료 코드 계약:** `0` = 모든 검사 통과, `nonzero` = 한 개 이상 검사 실패.
-3. **stdlib-only:** 과제와 채점기 모두 **파이썬 표준 라이브러리만** 사용한다(pip 설치 없음).
+3. **stdlib-only:** 과제와 judge 모두 **파이썬 표준 라이브러리만** 사용한다(pip 설치 없음).
    이것이 재현성을 보장한다(PROJECT.md 제약).
 4. **동일 프롬프트 규칙:** `PROMPT.md` 의 **정확한 텍스트를 모든 도구에 그대로(verbatim)** 먹인다.
    도구별 맞춤 문구는 없다(TASK-03).

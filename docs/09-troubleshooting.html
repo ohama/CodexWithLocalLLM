@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f13c1f60.js";
+            window.path_to_searchindex_js = "searchindex-40749d75.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-6d3ce328.js"></script>
@@ -193,12 +193,12 @@
 <tr><td>openhands 출력이 run 폴더에 없음 (<code>0 files</code>)</td><td>openhands 를 손으로 <code>--file</code> 로 부름 → <strong>반드시 <code>run.sh</code>/<code>run-matrix.sh</code> 로만</strong> 실행 (<a href="05-connect-openhands.html">5장</a>)</td></tr>
 <tr><td>모델이 qwen-122b 가 아님</td><td><a href="04-connect-codex.html">4</a>·<a href="05-connect-openhands.html">5</a>장 확인 명령 재실행</td></tr>
 <tr><td>매트릭스 중간에 느림/멈춘 듯</td><td>L3는 원래 오래 걸린다(수 분). 백그라운드(<code>&amp;</code>)로 돌렸는지 확인 — 직렬로 포그라운드 실행할 것</td></tr>
-<tr><td><code>FAIL</code> 인데 진짜인지 모르겠음</td><td><a href="07-interpret.html">7장 §이상치 진단</a> — <code>0 files</code>면 누출 의심, 채점기 직접 실행해 확인</td></tr>
+<tr><td><code>FAIL</code> 인데 진짜인지 모르겠음</td><td><a href="07-interpret.html">7장 §이상치 진단</a> — <code>0 files</code>면 누출 의심, judge 직접 실행해 확인</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="채점기-직접-돌려보기"><a class="header" href="#채점기-직접-돌려보기">채점기 직접 돌려보기</a></h2>
-<p>어떤 실행이 왜 실패/성공인지 확인하려면 채점기를 직접 돌린다(LLM 호출 없음, 즉시):</p>
+<h2 id="judge-직접-돌려보기"><a class="header" href="#judge-직접-돌려보기">judge 직접 돌려보기</a></h2>
+<p>어떤 실행이 왜 실패/성공인지 확인하려면 judge를 직접 돌린다(LLM 호출 없음, 즉시):</p>
 <pre><code class="language-sh">python3 benchmark/tasks/&lt;level&gt;/test.py &lt;run_dir&gt;
 echo "exit=$?"   # 0 = PASS, nonzero = FAIL
 # 예: python3 benchmark/tasks/l1-fib/test.py benchmark/.runs/codex-l1-fib-...
@@ -226,7 +226,7 @@ python3 benchmark/report.py
 <strong>codex와 openhands를 직접 비교 검증</strong>한 것이다.</p>
 <p>핵심 세 가지만 기억하자:</p>
 <ol>
-<li><strong>성공은 독립 채점기가 정한다</strong>(도구 자기보고 불신).</li>
+<li><strong>성공은 독립 judge가 정한다</strong>(도구 자기보고 불신).</li>
 <li><strong>steps는 도구끼리 직접 비교 금지</strong>(단위가 다름 — <code>step_method</code> 확인).</li>
 <li><strong>결과는 스냅샷</strong>이다(LLM 비결정성 — 확신하려면 반복 측정).</li>
 </ol>

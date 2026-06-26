@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f13c1f60.js";
+            window.path_to_searchindex_js = "searchindex-40749d75.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-6d3ce328.js"></script>
@@ -236,13 +236,13 @@
 <h3 id="②-공정한-채점-자기보고-불신"><a class="header" href="#②-공정한-채점-자기보고-불신">② 공정한 채점 (자기보고 불신)</a></h3>
 <ul>
 <li>성공 여부는 도구가 “다 됐어요“라고 말한 걸 <strong>믿지 않는다.</strong></li>
-<li>대신 <strong>독립 채점기(judge)</strong> 가 도구의 산출물을 다시 검사해 통과/실패를 정한다.</li>
-<li>즉 “테스트 다 통과했다“는 도구의 transcript 문구는 무시하고, 우리 채점기의 종료코드만 본다.</li>
+<li>대신 <strong>독립 judge</strong> 가 도구의 산출물을 다시 검사해 통과/실패를 정한다.</li>
+<li>즉 “테스트 다 통과했다“는 도구의 transcript 문구는 무시하고, 우리 judge의 종료코드만 본다.</li>
 </ul>
 <h3 id="③-정직한-기록"><a class="header" href="#③-정직한-기록">③ 정직한 기록</a></h3>
 <ul>
 <li>실패·재측정·이상치를 숨기지 않고 결과 리포트에 그대로 남긴다.</li>
-<li>예: 어떤 도구가 “성공“이라 우겨도 채점기가 실패로 판정하면 실패로 기록한다.</li>
+<li>예: 어떤 도구가 “성공“이라 우겨도 judge가 실패로 판정하면 실패로 기록한다.</li>
 </ul>
 <h2 id="왜-같은-모델qwen-122b인가"><a class="header" href="#왜-같은-모델qwen-122b인가">왜 같은 모델(qwen-122b)인가</a></h2>
 <p>만약 codex는 큰 모델, openhands는 작은 모델로 비교한다면 — 결과 차이가 <strong>도구 때문인지 모델
@@ -270,7 +270,7 @@
 </tbody>
 </table>
 </div>
-<h2 id="왜-3단계-사다리인가"><a class="header" href="#왜-3단계-사다리인가">왜 “3단계 사다리“인가</a></h2>
+<h2 id="왜-3단계-ladder인가"><a class="header" href="#왜-3단계-ladder인가">왜 “3단계 ladder“인가</a></h2>
 <p>핵심 아이디어: <strong>난이도를 한 칸씩 올려가며 도구의 한계가 어디서 드러나는지</strong>를 본다.</p>
 <ul>
 <li><strong>한 과제만 쓰면</strong> 우연(쉬워서 둘 다 통과 / 어려워서 둘 다 실패)에 묻혀 차이가 안 보인다.</li>
@@ -283,7 +283,7 @@
 </li>
 </ul>
 <blockquote>
-<p>그래서 결과를 보면 “능력의 천장“이 어디인지 읽힌다. 둘 다 L1·L2는 통과하는데 L3에서 갈린다면,
+<p>그래서 결과를 보면 “능력의 ceiling“이 어디인지 읽힌다. 둘 다 L1·L2는 통과하는데 L3에서 갈린다면,
 그 도구의 한계는 <strong>대형·다구성 과제를 끝까지 완성하는 지점</strong>에 있다는 뜻이다.</p>
 </blockquote>
 <h2 id="왜-이-구체적-과제fib--wordstat--kv인가"><a class="header" href="#왜-이-구체적-과제fib--wordstat--kv인가">왜 이 구체적 과제(fib / wordstat / KV)인가</a></h2>
@@ -298,7 +298,7 @@
 <h2 id="공정성-장치-모든-레벨-공통"><a class="header" href="#공정성-장치-모든-레벨-공통">공정성 장치 (모든 레벨 공통)</a></h2>
 <ul>
 <li><strong>프롬프트는 한 곳에만</strong>(<code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code>), 두 도구에 <strong>글자 그대로</strong> 동일하게 준다.</li>
-<li><strong>채점기(judge)는 도구에게 숨긴다</strong> — 프롬프트는 테스트 내용을 모른다. 그래서 한 채점기로 어느
+<li><strong>judge는 도구에게 숨긴다</strong> — 프롬프트는 테스트 내용을 모른다. 그래서 한 judge로 어느
 도구의 산출물이든 공정하게 판정하고, 도구가 테스트에 과적합할 수 없다.</li>
 <li>L2·L3는 <strong>블랙박스</strong>(subprocess)로 채점한다 — 내부 구현이 어떻든 <em>겉으로 약속한 동작</em>만 본다.</li>
 </ul>
@@ -311,19 +311,19 @@
 <tbody>
 <tr><td>두 도구가 <strong>기본 코드</strong>를 정확히 쓰는가</td><td>L1 (둘 다 통과가 기대치)</td></tr>
 <tr><td><strong>구조화된 CLI</strong>를 만들고 출력 계약을 지키는가</td><td>L2</td></tr>
-<tr><td><strong>복잡한 멀티모듈 서비스를 끝까지 완성</strong>하는가 (도구의 천장)</td><td>L3 (여기서 갈릴 가능성↑)</td></tr>
+<tr><td><strong>복잡한 멀티모듈 서비스를 끝까지 완성</strong>하는가 (도구의 ceiling)</td><td>L3 (여기서 갈릴 가능성↑)</td></tr>
 <tr><td>같은 능력이라도 <strong>얼마나 빠른가</strong></td><td>모든 레벨의 Time</td></tr>
-<tr><td>작업을 <strong>어떤 식으로</strong> 진행하는가(거칠기)</td><td>모든 레벨의 Steps(도구 내부 추세)</td></tr>
+<tr><td>작업을 <strong>어떤 식으로</strong> 진행하는가(granularity)</td><td>모든 레벨의 Steps(도구 내부 추세)</td></tr>
 </tbody>
 </table>
 </div>
 <blockquote>
-<p>요약하면: <strong>L1=바닥선, L2=현실적 중간, L3=천장 시험.</strong> 두 도구가 이 사다리의 어디서 갈라지는지가
+<p>요약하면: <strong>L1=바닥선, L2=현실적 중간, L3=ceiling 시험.</strong> 두 도구가 이 ladder의 어디서 갈라지는지가
 이 벤치마크의 핵심 관전 포인트다.</p>
 </blockquote>
 <h2 id="다음-1"><a class="header" href="#다음-1">다음</a></h2>
 <p>과제 설계를 이해했으니, <a href="#3-사전-준비--백엔드-확인">3. 사전 준비</a>에서 백엔드를 확인하고 실제로 돌려 보자.
-(실제 결과에서 이 사다리가 어떻게 갈렸는지는 <a href="#8-결과-요약과-결론">8. 결과 요약과 결론</a>에서 본다.)</p>
+(실제 결과에서 이 ladder가 어떻게 갈렸는지는 <a href="#8-결과-요약과-결론">8. 결과 요약과 결론</a>에서 본다.)</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="3-사전-준비--백엔드-확인"><a class="header" href="#3-사전-준비--백엔드-확인">3. 사전 준비 — 백엔드 확인</a></h1>
 <p>두 도구 모두 <strong>로컬 LiteLLM 게이트웨이(<code>:4000</code>)</strong> 를 통해 같은 qwen-122b를 쓴다. 비교를 시작하기
@@ -470,7 +470,7 @@ v1에서 실제로 발견·수정한 버그).</p>
 <p>이제 실제로 두 도구에 과제를 시킨다. 모든 실행은 저장소 루트(<code>/Users/ohama/projs/codex</code>)에서 한다.</p>
 <pre><code class="language-sh">export LITELLM_API_KEY=dummy   # 아직 안 했으면
 </code></pre>
-<h2 id="과제-3단계-복잡도-사다리"><a class="header" href="#과제-3단계-복잡도-사다리">과제 3단계 (복잡도 사다리)</a></h2>
+<h2 id="과제-3단계-복잡도-ladder"><a class="header" href="#과제-3단계-복잡도-ladder">과제 3단계 (복잡도 ladder)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -484,7 +484,7 @@ v1에서 실제로 발견·수정한 버그).</p>
 </table>
 </div>
 <p>각 과제의 프롬프트는 <code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code> 한 곳에만 있고, 두 도구에 <strong>글자 그대로
-동일하게</strong> 주어진다. 채점기 <code>benchmark/tasks/&lt;level&gt;/test.py</code> 는 도구가 못 보는 <strong>숨은 판정기</strong>다.</p>
+동일하게</strong> 주어진다. judge <code>benchmark/tasks/&lt;level&gt;/test.py</code> 는 도구가 못 보는 <strong>숨은 judge</strong>다.</p>
 <h2 id="①-한-셀-먼저-시험"><a class="header" href="#①-한-셀-먼저-시험">① 한 셀 먼저 시험</a></h2>
 <p>전체를 돌리기 전에, 한 칸(한 도구 × 한 레벨)을 먼저 돌려 흐름을 본다:</p>
 <pre><code class="language-sh">bash benchmark/run.sh codex l1
@@ -514,7 +514,7 @@ v1에서 실제로 발견·수정한 버그).</p>
 </code></pre>
 <ul>
 <li><strong>효과:</strong> <code>results.json</code> 을 읽어 사람이 읽는 리포트 <code>benchmark/RESULTS.md</code> 를 만든다(표 + 각 실행
-transcript 발췌 + 레벨별 차이 + 정직성 노트).</li>
+transcript 발췌 + 레벨별 차이 + honesty note).</li>
 <li><code>benchmark/.runs/</code> 는 git에 올라가지 않으므로 <strong><code>RESULTS.md</code> 가 그 실행의 유일한 영구 기록</strong>이다.</li>
 </ul>
 <h2 id="④-결과-열기"><a class="header" href="#④-결과-열기">④ 결과 열기</a></h2>
@@ -539,9 +539,9 @@ python3 benchmark/report.py      # → benchmark/RESULTS.md
 <h3 id="success--능력-가장-중요"><a class="header" href="#success--능력-가장-중요">Success — 능력 (가장 중요)</a></h3>
 <ul>
 <li><strong>의미:</strong> 산출물이 실제로 과제를 푸는가.</li>
-<li><strong>측정:</strong> 그 레벨의 독립 채점기(<code>tasks/&lt;level&gt;/test.py</code>)를 <strong>산출 폴더에 대해 다시 실행</strong> →
+<li><strong>측정:</strong> 그 레벨의 독립 judge(<code>tasks/&lt;level&gt;/test.py</code>)를 <strong>산출 폴더에 대해 다시 실행</strong> →
 종료코드 0이면 PASS, 아니면 FAIL.</li>
-<li><strong>주의:</strong> 도구가 “all tests passed” 라고 적어도 <strong>무시</strong>한다. 오직 채점기 재실행 결과만 신뢰.</li>
+<li><strong>주의:</strong> 도구가 “all tests passed” 라고 적어도 <strong>무시</strong>한다. 오직 judge 재실행 결과만 신뢰.</li>
 </ul>
 <h3 id="time--속도"><a class="header" href="#time--속도">Time — 속도</a></h3>
 <ul>
@@ -551,7 +551,7 @@ python3 benchmark/report.py      # → benchmark/RESULTS.md
 </ul>
 <h3 id="steps--작업량과정"><a class="header" href="#steps--작업량과정">Steps — 작업량/과정</a></h3>
 <ul>
-<li><strong>의미:</strong> 도구가 목표까지 몇 “스텝“을 밟았나(작업 과정의 거칠기).</li>
+<li><strong>의미:</strong> 도구가 목표까지 몇 “스텝“을 밟았나(작업 과정의 granularity).</li>
 <li><strong>측정 — 도구마다 단위가 다르다:</strong>
 <ul>
 <li>codex = transcript의 <code>exec</code>(셸 실행) 블록 수</li>
@@ -565,7 +565,7 @@ python3 benchmark/report.py      # → benchmark/RESULTS.md
 <h3 id="size--산출-규모"><a class="header" href="#size--산출-규모">Size — 산출 규모</a></h3>
 <ul>
 <li><strong>의미:</strong> 만들어 낸 파일 수와 코드 줄 수(LOC).</li>
-<li><strong>측정:</strong> 산출 폴더의 파일/LOC 합. 단 <code>transcript.log</code>·<code>meta.json</code>·<code>__pycache__</code>·<code>.pyc</code> 제외(부산물).</li>
+<li><strong>측정:</strong> 산출 폴더의 파일/LOC 합. 단 <code>transcript.log</code>·<code>meta.json</code>·<code>__pycache__</code>·<code>.pyc</code> 제외(artifact).</li>
 <li><strong>주의:</strong> 규모가 크다고 더 좋은 게 아니다. <strong>반드시 Success와 함께</strong> 본다(0 files면 보통 실패).</li>
 </ul>
 <h2 id="표-읽는-순서-추천"><a class="header" href="#표-읽는-순서-추천">표 읽는 순서 (추천)</a></h2>
@@ -600,7 +600,7 @@ python3 benchmark/report.py      # → benchmark/RESULTS.md
 <tbody>
 <tr><td>FAIL + <strong>0 files</strong>, 매우 짧은 시간</td><td>도구가 <strong>일찍 잘림/포기</strong>(진짜 실패)</td><td>transcript 끝이 중간에 끊겼나</td></tr>
 <tr><td>FAIL + <strong>0 files</strong>, 정상 시간</td><td>산출물이 <strong>다른 위치로 샘</strong>(격리/하니스 문제)</td><td>엉뚱한 폴더에 파일이 생겼나</td></tr>
-<tr><td>FAIL + 파일 있음</td><td>코드는 썼으나 <strong>계약 위반</strong>(진짜 실패)</td><td>채점기를 직접 돌려 어느 검사가 깨지나</td></tr>
+<tr><td>FAIL + 파일 있음</td><td>코드는 썼으나 <strong>계약 위반</strong>(진짜 실패)</td><td>judge를 직접 돌려 어느 검사가 깨지나</td></tr>
 </tbody>
 </table>
 </div>
@@ -608,9 +608,9 @@ python3 benchmark/report.py      # → benchmark/RESULTS.md
 <p><strong><code>0 files</code> FAIL은 항상 한 번 의심하라.</strong> 이 벤치마크 v1에서 openhands L2/L3가 처음엔
 “0 files FAIL“로 찍혔지만, 진단해 보니 <strong>격리 누출</strong>(출력이 정규 폴더로 샘)이었다 → 러너 수정 후
 재측정하니 PASS. 반면 codex L3는 14초 만에 잘린 <strong>진짜 실패</strong>라 그대로 뒀다. 이런 구분을 리포트의
-“정직성 노트“에 남긴다.</p>
+“honesty note“에 남긴다.</p>
 </blockquote>
-<p>채점기를 직접 돌려 확인:</p>
+<p>judge를 직접 돌려 확인:</p>
 <pre><code class="language-sh">python3 benchmark/tasks/l3-kvstore/test.py benchmark/.runs/&lt;해당-run-폴더&gt;
 echo "exit=$?"   # 0=PASS, nonzero=FAIL
 </code></pre>
@@ -624,7 +624,7 @@ echo "exit=$?"   # 0=PASS, nonzero=FAIL
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th></th><th>통과 레벨</th><th>속도(L1·L2)</th><th>천장(L3)</th><th>한 줄</th></tr>
+<tr><th></th><th>통과 레벨</th><th>속도(L1·L2)</th><th>ceiling(L3)</th><th>한 줄</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>codex</strong></td><td>L1·L2 (L3 실패)</td><td><strong>더 빠름</strong> (1.5~2배)</td><td>❌ truncate로 빈 패키지</td><td>쉬운~중간 과제를 빠르게 끝냄, 대형은 끝까지 못 감(이 실행)</td></tr>
@@ -632,13 +632,13 @@ echo "exit=$?"   # 0=PASS, nonzero=FAIL
 </tbody>
 </table>
 </div>
-<p><strong>과제 사다리가 어디서 갈렸나:</strong> L1·L2는 무승부(둘 다 통과), <strong>L3에서 분기</strong> — 가장 복잡한 과제에서
-codex의 천장이 드러났다. (왜 이 사다리로 분기를 본 건지는 <a href="#2-벤치마크-과제-3종--선정-이유와-기대효과">2장</a> 참고.)</p>
+<p><strong>과제 ladder가 어디서 갈렸나:</strong> L1·L2는 무승부(둘 다 통과), <strong>L3에서 분기</strong> — 가장 복잡한 과제에서
+codex의 ceiling이 드러났다. (왜 이 ladder로 분기를 본 건지는 <a href="#2-벤치마크-과제-3종--선정-이유와-기대효과">2장</a> 참고.)</p>
 <p><strong>기대효과 vs 실제(이 스냅샷):</strong></p>
 <ul>
 <li>L1 “둘 다 통과 기대” → ✅ 맞음.</li>
 <li>L2 “구조화 CLI” → ✅ 둘 다 통과.</li>
-<li>L3 “천장 시험, 갈릴 가능성↑” → ✅ 예상대로 갈림(codex 실패 / openhands 통과).</li>
+<li>L3 “ceiling 시험, 갈릴 가능성↑” → ✅ 예상대로 갈림(codex 실패 / openhands 통과).</li>
 </ul>
 <blockquote>
 <p>⚠️ 단, 이건 <strong>1회 측정</strong>이다. “codex가 L3를 못 한다“가 아니라 “이 실행에서 truncate됐다“이다.
@@ -722,12 +722,12 @@ codex의 천장이 드러났다. (왜 이 사다리로 분기를 본 건지는 <
 <tr><td>openhands 출력이 run 폴더에 없음 (<code>0 files</code>)</td><td>openhands 를 손으로 <code>--file</code> 로 부름 → <strong>반드시 <code>run.sh</code>/<code>run-matrix.sh</code> 로만</strong> 실행 (<a href="#5-openhands-를-qwen-122b-에-연결">5장</a>)</td></tr>
 <tr><td>모델이 qwen-122b 가 아님</td><td><a href="#4-codex-를-qwen-122b-에-연결">4</a>·<a href="#5-openhands-를-qwen-122b-에-연결">5</a>장 확인 명령 재실행</td></tr>
 <tr><td>매트릭스 중간에 느림/멈춘 듯</td><td>L3는 원래 오래 걸린다(수 분). 백그라운드(<code>&amp;</code>)로 돌렸는지 확인 — 직렬로 포그라운드 실행할 것</td></tr>
-<tr><td><code>FAIL</code> 인데 진짜인지 모르겠음</td><td><a href="#7-결과-해석">7장 §이상치 진단</a> — <code>0 files</code>면 누출 의심, 채점기 직접 실행해 확인</td></tr>
+<tr><td><code>FAIL</code> 인데 진짜인지 모르겠음</td><td><a href="#7-결과-해석">7장 §이상치 진단</a> — <code>0 files</code>면 누출 의심, judge 직접 실행해 확인</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="채점기-직접-돌려보기"><a class="header" href="#채점기-직접-돌려보기">채점기 직접 돌려보기</a></h2>
-<p>어떤 실행이 왜 실패/성공인지 확인하려면 채점기를 직접 돌린다(LLM 호출 없음, 즉시):</p>
+<h2 id="judge-직접-돌려보기"><a class="header" href="#judge-직접-돌려보기">judge 직접 돌려보기</a></h2>
+<p>어떤 실행이 왜 실패/성공인지 확인하려면 judge를 직접 돌린다(LLM 호출 없음, 즉시):</p>
 <pre><code class="language-sh">python3 benchmark/tasks/&lt;level&gt;/test.py &lt;run_dir&gt;
 echo "exit=$?"   # 0 = PASS, nonzero = FAIL
 # 예: python3 benchmark/tasks/l1-fib/test.py benchmark/.runs/codex-l1-fib-...
@@ -755,7 +755,7 @@ python3 benchmark/report.py
 <strong>codex와 openhands를 직접 비교 검증</strong>한 것이다.</p>
 <p>핵심 세 가지만 기억하자:</p>
 <ol>
-<li><strong>성공은 독립 채점기가 정한다</strong>(도구 자기보고 불신).</li>
+<li><strong>성공은 독립 judge가 정한다</strong>(도구 자기보고 불신).</li>
 <li><strong>steps는 도구끼리 직접 비교 금지</strong>(단위가 다름 — <code>step_method</code> 확인).</li>
 <li><strong>결과는 스냅샷</strong>이다(LLM 비결정성 — 확신하려면 반복 측정).</li>
 </ol>

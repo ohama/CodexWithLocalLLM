@@ -137,7 +137,7 @@ python3 benchmark/report.py
 
 효과: 가장 최신 `benchmark/.runs/matrix-*/results.json` 을 자동으로 찾아 `benchmark/RESULTS.md`
 를 쓴다(도구×레벨 표: 성공/시간/`steps[step_method]`/크기 + transcript 발췌 + 레벨별 차이).
-순수 포매팅이라 어떤 에이전트/채점기도 다시 돌리지 않는다(LLM 시간 0). **idempotent** —
+순수 포매팅이라 어떤 에이전트/judge도 다시 돌리지 않는다(LLM 시간 0). **idempotent** —
 같은 `results.json` 이면 byte-identical 한 RESULTS.md 가 나온다. 선택 인자로 특정 results.json
 이나 매트릭스 디렉터리를 줄 수 있다:
 
@@ -189,7 +189,7 @@ python3 benchmark/report.py
 bash benchmark/run.sh <tool> <level>
 ```
 
-## Caveats / 정직성 노트
+## Caveats / honesty note
 
 재실행자가 놀라지 않도록, 알아야 할 것들:
 

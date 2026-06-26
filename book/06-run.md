@@ -6,7 +6,7 @@
 export LITELLM_API_KEY=dummy   # 아직 안 했으면
 ```
 
-## 과제 3단계 (복잡도 사다리)
+## 과제 3단계 (복잡도 ladder)
 
 | 레벨 | 과제 | 무엇을 보나 |
 |------|------|-------------|
@@ -15,7 +15,7 @@ export LITELLM_API_KEY=dummy   # 아직 안 했으면
 | **L3** | KV 스토어 멀티모듈 서비스 | 패키지 구조 + 프로세스 간 영속성 |
 
 각 과제의 프롬프트는 `benchmark/tasks/<level>/PROMPT.md` 한 곳에만 있고, 두 도구에 **글자 그대로
-동일하게** 주어진다. 채점기 `benchmark/tasks/<level>/test.py` 는 도구가 못 보는 **숨은 판정기**다.
+동일하게** 주어진다. judge `benchmark/tasks/<level>/test.py` 는 도구가 못 보는 **숨은 judge**다.
 
 ## ① 한 셀 먼저 시험
 
@@ -52,7 +52,7 @@ bash benchmark/run-matrix.sh
 python3 benchmark/report.py
 ```
 - **효과:** `results.json` 을 읽어 사람이 읽는 리포트 `benchmark/RESULTS.md` 를 만든다(표 + 각 실행
-  transcript 발췌 + 레벨별 차이 + 정직성 노트).
+  transcript 발췌 + 레벨별 차이 + honesty note).
 - `benchmark/.runs/` 는 git에 올라가지 않으므로 **`RESULTS.md` 가 그 실행의 유일한 영구 기록**이다.
 
 ## ④ 결과 열기

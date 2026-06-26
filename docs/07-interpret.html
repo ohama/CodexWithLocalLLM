@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f13c1f60.js";
+            window.path_to_searchindex_js = "searchindex-40749d75.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-6d3ce328.js"></script>
@@ -191,9 +191,9 @@
 <h3 id="success--능력-가장-중요"><a class="header" href="#success--능력-가장-중요">Success — 능력 (가장 중요)</a></h3>
 <ul>
 <li><strong>의미:</strong> 산출물이 실제로 과제를 푸는가.</li>
-<li><strong>측정:</strong> 그 레벨의 독립 채점기(<code>tasks/&lt;level&gt;/test.py</code>)를 <strong>산출 폴더에 대해 다시 실행</strong> →
+<li><strong>측정:</strong> 그 레벨의 독립 judge(<code>tasks/&lt;level&gt;/test.py</code>)를 <strong>산출 폴더에 대해 다시 실행</strong> →
 종료코드 0이면 PASS, 아니면 FAIL.</li>
-<li><strong>주의:</strong> 도구가 “all tests passed” 라고 적어도 <strong>무시</strong>한다. 오직 채점기 재실행 결과만 신뢰.</li>
+<li><strong>주의:</strong> 도구가 “all tests passed” 라고 적어도 <strong>무시</strong>한다. 오직 judge 재실행 결과만 신뢰.</li>
 </ul>
 <h3 id="time--속도"><a class="header" href="#time--속도">Time — 속도</a></h3>
 <ul>
@@ -203,7 +203,7 @@
 </ul>
 <h3 id="steps--작업량과정"><a class="header" href="#steps--작업량과정">Steps — 작업량/과정</a></h3>
 <ul>
-<li><strong>의미:</strong> 도구가 목표까지 몇 “스텝“을 밟았나(작업 과정의 거칠기).</li>
+<li><strong>의미:</strong> 도구가 목표까지 몇 “스텝“을 밟았나(작업 과정의 granularity).</li>
 <li><strong>측정 — 도구마다 단위가 다르다:</strong>
 <ul>
 <li>codex = transcript의 <code>exec</code>(셸 실행) 블록 수</li>
@@ -217,7 +217,7 @@
 <h3 id="size--산출-규모"><a class="header" href="#size--산출-규모">Size — 산출 규모</a></h3>
 <ul>
 <li><strong>의미:</strong> 만들어 낸 파일 수와 코드 줄 수(LOC).</li>
-<li><strong>측정:</strong> 산출 폴더의 파일/LOC 합. 단 <code>transcript.log</code>·<code>meta.json</code>·<code>__pycache__</code>·<code>.pyc</code> 제외(부산물).</li>
+<li><strong>측정:</strong> 산출 폴더의 파일/LOC 합. 단 <code>transcript.log</code>·<code>meta.json</code>·<code>__pycache__</code>·<code>.pyc</code> 제외(artifact).</li>
 <li><strong>주의:</strong> 규모가 크다고 더 좋은 게 아니다. <strong>반드시 Success와 함께</strong> 본다(0 files면 보통 실패).</li>
 </ul>
 <h2 id="표-읽는-순서-추천"><a class="header" href="#표-읽는-순서-추천">표 읽는 순서 (추천)</a></h2>
@@ -252,7 +252,7 @@
 <tbody>
 <tr><td>FAIL + <strong>0 files</strong>, 매우 짧은 시간</td><td>도구가 <strong>일찍 잘림/포기</strong>(진짜 실패)</td><td>transcript 끝이 중간에 끊겼나</td></tr>
 <tr><td>FAIL + <strong>0 files</strong>, 정상 시간</td><td>산출물이 <strong>다른 위치로 샘</strong>(격리/하니스 문제)</td><td>엉뚱한 폴더에 파일이 생겼나</td></tr>
-<tr><td>FAIL + 파일 있음</td><td>코드는 썼으나 <strong>계약 위반</strong>(진짜 실패)</td><td>채점기를 직접 돌려 어느 검사가 깨지나</td></tr>
+<tr><td>FAIL + 파일 있음</td><td>코드는 썼으나 <strong>계약 위반</strong>(진짜 실패)</td><td>judge를 직접 돌려 어느 검사가 깨지나</td></tr>
 </tbody>
 </table>
 </div>
@@ -260,9 +260,9 @@
 <p><strong><code>0 files</code> FAIL은 항상 한 번 의심하라.</strong> 이 벤치마크 v1에서 openhands L2/L3가 처음엔
 “0 files FAIL“로 찍혔지만, 진단해 보니 <strong>격리 누출</strong>(출력이 정규 폴더로 샘)이었다 → 러너 수정 후
 재측정하니 PASS. 반면 codex L3는 14초 만에 잘린 <strong>진짜 실패</strong>라 그대로 뒀다. 이런 구분을 리포트의
-“정직성 노트“에 남긴다.</p>
+“honesty note“에 남긴다.</p>
 </blockquote>
-<p>채점기를 직접 돌려 확인:</p>
+<p>judge를 직접 돌려 확인:</p>
 <pre><code class="language-sh">python3 benchmark/tasks/l3-kvstore/test.py benchmark/.runs/&lt;해당-run-폴더&gt;
 echo "exit=$?"   # 0=PASS, nonzero=FAIL
 </code></pre>
