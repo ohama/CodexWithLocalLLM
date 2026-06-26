@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Fixed Tasks** - Three fixed-complexity, tool-agnostic tasks with objective pass criteria
 - [x] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
-- [ ] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
+- [x] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
 - [ ] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
 - [ ] **Phase 5: Reproducibility Guide** - A user can reproduce the whole benchmark from the docs
 
@@ -65,8 +65,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Create score.py: independent judge re-run (MET-01) + wall-clock duration (MET-02), extend meta.json
-- [ ] 03-02-PLAN.md — Extend score.py: tool-aware step count (MET-03) + output size (MET-04); auto-hook scorer into run.sh
+- [x] 03-01-PLAN.md — Create score.py: independent judge re-run (MET-01) + wall-clock duration (MET-02), extend meta.json
+- [x] 03-02-PLAN.md — Extend score.py: tool-aware step count (MET-03) + output size (MET-04); auto-hook scorer into run.sh
 
 ### Phase 4: Benchmark Run & Reporting
 **Goal**: Execute the full 2-tools × 3-levels matrix and record results as a comparison artifact with preserved transcripts.
@@ -107,6 +107,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Fixed Tasks | 2/2 | ✓ Complete | 2026-06-26 |
 | 2. Equal-Conditions Runner | 3/3 | ✓ Complete | 2026-06-26 |
-| 3. Metric Collection | 0/2 | Not started | - |
+| 3. Metric Collection | 2/2 | ✓ Complete | 2026-06-26 |
 | 4. Benchmark Run & Reporting | 0/2 | Not started | - |
 | 5. Reproducibility Guide | 0/2 | Not started | - |

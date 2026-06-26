@@ -68,10 +68,10 @@
 | RUN-03 | Phase 2 — Equal-Conditions Runner | Complete |
 | RUN-04 | Phase 2 — Equal-Conditions Runner | Complete |
 | RUN-05 | Phase 2 — Equal-Conditions Runner | Complete |
-| MET-01 | Phase 3 — Metric Collection | Pending |
-| MET-02 | Phase 3 — Metric Collection | Pending |
-| MET-03 | Phase 3 — Metric Collection | Pending |
-| MET-04 | Phase 3 — Metric Collection | Pending |
+| MET-01 | Phase 3 — Metric Collection | Complete |
+| MET-02 | Phase 3 — Metric Collection | Complete |
+| MET-03 | Phase 3 — Metric Collection | Complete |
+| MET-04 | Phase 3 — Metric Collection | Complete |
 | REP-01 | Phase 4 — Benchmark Run & Reporting | Pending |
 | REP-02 | Phase 4 — Benchmark Run & Reporting | Pending |
 | REP-03 | Phase 4 — Benchmark Run & Reporting | Pending |
