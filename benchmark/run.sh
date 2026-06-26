@@ -113,8 +113,32 @@ run_codex() {
 }
 
 run_openhands() {
-  # [stub] Plan 02 replaces this body with a real OpenHands invocation.
-  echo "[stub] would invoke openhands in $RUN_DIR (wired in Plan 02)"
+  cd "$RUN_DIR"
+  # Workspace pin (PROACTIVE, by default): this OpenHands (CLI 1.16.0 / SDK
+  # 1.21.0) resolves its agent workspace via get_work_dir() =
+  # os.environ.get("OPENHANDS_WORK_DIR", os.getcwd()) — NOT from SANDBOX_VOLUMES/
+  # WORKSPACE_BASE (those belong to the older docker app). So we pin the
+  # workspace to the isolated RUN_DIR via OPENHANDS_WORK_DIR on EVERY run; the
+  # solution always lands here, never in a shared/global workspace (RUN-02).
+  export OPENHANDS_WORK_DIR="$RUN_DIR"
+  # Same-model pin (RUN-03): --override-with-envs makes OpenHands take the LLM
+  # from these env vars (it also REQUIRES LLM_API_KEY + LLM_MODEL when enabled),
+  # so the model is enforced from the runner, independent of config drift.
+  # MODEL is resolved (from agent_settings.json) before dispatch in section 8.
+  export LLM_API_KEY=dummy
+  export LLM_BASE_URL="http://localhost:4000/v1"
+  export LLM_MODEL="$MODEL"
+  # Feed the prompt verbatim via --file (safer than --task for multi-line text;
+  # identical bytes to what codex receives). --headless runs non-interactively
+  # and auto-approves actions; --always-approve / --exit-without-confirmation are
+  # belt-and-suspenders so the run never blocks for human confirmation.
+  # `< /dev/null` for the same non-tty safety as codex.
+  set +e
+  LITELLM_API_KEY=dummy openhands --file "$PROMPT_FILE" --headless \
+    --always-approve --exit-without-confirmation --override-with-envs \
+    < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
+  TOOL_EXIT="${PIPESTATUS[0]}"   # openhands's real exit, not tee's
+  set -e
 }
 
 # ── 8. Start summary + dispatch ─────────────────────────────────────────
