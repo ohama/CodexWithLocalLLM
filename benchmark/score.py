@@ -11,18 +11,63 @@ Reads <run_dir>/meta.json (written by Phase 2's run.sh), records the two
           independent judge (tasks/<level>/test.py) against the files the agent
           actually produced. The tool's own "all tests pass" claim is ignored.
   MET-02  duration_seconds     — wall-clock seconds from started_at/finished_at.
+  MET-03  steps / step_method  — TOOL-AWARE step/tool-call count from the
+          transcript. The two tools' transcripts differ, so the extractor
+          branches on meta["tool"] and records the heuristic it used in
+          step_method (units differ per tool — keep both, never just the number).
 
-stdlib-only (json, os, sys, subprocess, datetime); re-running is idempotent.
+stdlib-only (json, os, re, sys, subprocess, datetime); re-running is idempotent.
 """
 
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
 
 # Locate tasks/<level>/test.py relative to this file, independent of cwd.
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+# ANSI CSI color/SGR escape sequences, stripped before parsing openhands output.
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+# openhands prints a run summary line like "Number of agent messages: 4".
+_OH_MSGS_RE = re.compile(r"Number of agent messages:\s*(\d+)")
+
+
+def extract_steps(run_dir, meta):
+    """MET-03: tool-aware step/tool-call count from the transcript.
+
+    Returns (steps:int, step_method:str). Units differ per tool — codex counts
+    `exec` command blocks, openhands reads its "Number of agent messages: N"
+    summary — so step_method documents which heuristic produced the number.
+    Best-effort: a missing transcript or absent marker yields steps=0 with a
+    self-describing step_method, never a crash.
+    """
+    tool = meta.get("tool")
+    transcript = os.path.join(run_dir, meta.get("transcript") or "transcript.log")
+    if not os.path.isfile(transcript):
+        return 0, "transcript-missing"
+
+    with open(transcript, encoding="utf-8", errors="ignore") as fh:
+        text = fh.read()
+
+    if tool == "codex":
+        # Each command execution is a line that is exactly `exec`, followed by
+        # the command and a ` succeeded in `/` failed in ` line. Count tool
+        # calls as the number of standalone `exec` markers.
+        steps = sum(1 for line in text.splitlines() if line.strip() == "exec")
+        return steps, "codex:count of 'exec' blocks"
+
+    if tool == "openhands":
+        # stdout is ANSI-colored — strip SGR codes first, then read the summary.
+        clean = _ANSI_RE.sub("", text)
+        m = _OH_MSGS_RE.search(clean)
+        if m:
+            return int(m.group(1)), "openhands:Number of agent messages"
+        return 0, "openhands:summary-not-found"
+
+    return 0, f"unknown-tool:{tool}"
 
 
 def score_run(run_dir):
@@ -66,6 +111,9 @@ def score_run(run_dir):
     except (KeyError, TypeError, ValueError):
         meta["duration_seconds"] = None
 
+    # --- MET-03: tool-aware step/tool-call count from the transcript ---
+    meta["steps"], meta["step_method"] = extract_steps(run_dir, meta)
+
     with open(meta_path, "w") as fh:
         json.dump(meta, fh, indent=2)
         fh.write("\n")
@@ -80,7 +128,8 @@ def main():
     m = score_run(run_dir)
     print(
         f"{m.get('level')}  passed={m.get('passed')}  "
-        f"duration_seconds={m.get('duration_seconds')}"
+        f"duration_seconds={m.get('duration_seconds')}  "
+        f"steps={m.get('steps')} ({m.get('step_method')})"
     )
     return 0
 
