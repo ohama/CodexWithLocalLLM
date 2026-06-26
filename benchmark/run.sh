@@ -198,6 +198,19 @@ cat > "$RUN_DIR/meta.json" <<EOF
 }
 EOF
 
+# ── 10b. Auto-score (Phase 3) — enrich meta.json with all four metrics ───
+# Runs AFTER meta.json is written; extends that same record in place with
+# passed/duration_seconds/steps/files/loc. BEST-EFFORT: the script runs under
+# `set -euo pipefail`, so guard with `set +e` — a scorer hiccup must NEVER abort
+# or mask the run. The run record already exists; this only enriches it.
+set +e
+python3 "$HERE/score.py" "$RUN_DIR"
+SCORE_EXIT=$?
+set -e
+if [ "$SCORE_EXIT" -ne 0 ]; then
+  echo "⚠ scorer failed (exit $SCORE_EXIT) — run record kept, metrics may be incomplete" >&2
+fi
+
 # ── 11. Final summary ───────────────────────────────────────────────────
 echo "──────── run complete ────────"
 echo "run dir    : $RUN_DIR"
@@ -205,3 +218,14 @@ echo "transcript : $RUN_DIR/transcript.log"
 echo "meta       : $RUN_DIR/meta.json"
 echo "model      : $MODEL"
 echo "exit code  : $TOOL_EXIT"
+# Echo the four metrics back from meta.json (best-effort; never fails the run).
+set +e
+python3 -c "
+import json,sys
+m=json.load(open('$RUN_DIR/meta.json'))
+print('passed     :', m.get('passed'))
+print('duration   :', m.get('duration_seconds'), 's')
+print('steps      :', m.get('steps'), '(', m.get('step_method'), ')')
+print('output     :', m.get('files'), 'files /', m.get('loc'), 'loc')
+" 2>/dev/null
+set -e
