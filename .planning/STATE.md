@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-06-26)
 ## Current Position
 
 Phase: 3 of 5 (Metric Collection)
-Plan: 1 of (TBD) in current phase
-Status: In progress
-Last activity: 2026-06-26 — Completed 03-01-PLAN.md (benchmark/score.py: MET-01 independent pass/fail via judge re-run + MET-02 duration_seconds, extends meta.json in place idempotently; verified on both sample run dirs — codex pass/0/43s, openhands pass/0/49s; zero new LLM time)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-06-26 — Completed 03-02-PLAN.md (score.py: MET-03 tool-aware steps+step_method [codex exec-blocks=2 / openhands agent-messages=4] + MET-04 files+loc [excludes transcript.log/meta.json/__pycache__; samples files=1/loc=31]; run.sh auto-invokes scorer after meta.json, best-effort; all 4 metrics in one meta.json; verified on both sample dirs, zero new LLM time)
 
-Progress: [██████░░░░] 55%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: ~9 min
-- Total execution time: 0.9 hours
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [██████░░░░] 55%
 |-------|-------|-------|----------|
 | 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
 | 2 — Equal-Conditions Runner | 3/3 | ~26 min | ~9 min |
-| 3 — Metric Collection | 1/? | ~12 min | ~12 min |
+| 3 — Metric Collection | 2/2 | ~20 min | ~10 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (~6 min), 02-02 (~12 min), 02-03 (~8 min), 03-01 (~12 min)
+- Last 5 plans: 02-02 (~12 min), 02-03 (~8 min), 03-01 (~12 min), 03-02 (~8 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -70,6 +70,10 @@ Recent decisions affecting current work:
 - meta['level'] is the full tasks/ subdir name → direct judge path tasks/<level>/test.py, no mapping table (03-01)
 - score.py is best-effort: missing judge → passed=false/judge_exit=null/judge_note; bad timestamps → duration_seconds=null; never crashes (03-01)
 - meta.json extended in place via load→merge→dump, idempotent (same inputs → identical metric values) (03-01)
+- MET-03 step count is TOOL-AWARE and always paired with step_method: codex = standalone 'exec' marker lines, openhands = 'Number of agent messages: N' after ANSI strip (units differ per tool — never compare raw counts) (03-02)
+- MET-04 output size excludes transcript.log, meta.json, __pycache__/, and .pyc; os.walk recurses so multi-file L2/L3 solutions in subdirs are counted; loc = splitlines on utf-8 errors=ignore (03-02)
+- score.py step/size extraction is best-effort: missing transcript→steps=0/transcript-missing, missing openhands marker→0/summary-not-found, unreadable file→1 file/0 loc; never crashes (03-02)
+- run.sh auto-invokes score.py after meta.json write (section 10b) guarded by set +e/capture/set -e — scorer failure warns but never aborts/masks the run; purely additive to Phase 2 (03-02)
 
 ### Pending Todos
 
@@ -81,6 +85,7 @@ None yet.
 
 [Issues that affect future work]
 
+- Phase 4 report MUST surface step_method, not just the raw steps number — codex tool-calls and openhands agent-messages are different units and cannot be compared directly (03-02)
 - codex exec hangs without `< /dev/null` in background/pipe — handled in runner (run_codex uses `< /dev/null`) (02-02)
 - Single mlx backend → tools must run serially, never concurrently (enforced by mkdir-mutex lock) (Phase 2)
 - RESOLVED (02-03): openhands `--headless --always-approve --exit-without-confirmation` ran clean at runtime, no conflict, exit 0, no interactive block.
@@ -89,6 +94,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 03-01-PLAN.md — created benchmark/score.py (stdlib-only). MET-01: pass/fail by re-running tasks/<level>/test.py as a separate process against produced files (passed/judge_exit; self-report ignored). MET-02: duration_seconds from meta timestamps. meta.json extended in place, original keys preserved, idempotent. Verified on both sample run dirs with zero new LLM time: codex pass/0/43s, openhands pass/0/49s.
+Stopped at: Completed 03-02-PLAN.md — extended benchmark/score.py with MET-03 (tool-aware steps + step_method: codex 'exec' blocks=2 / openhands 'Number of agent messages'=4) and MET-04 (files+loc, excluding transcript.log/meta.json/__pycache__/.pyc; L1 samples files=1/loc=31). Hooked score.py into run.sh section 10b (best-effort, never aborts run) so a single run yields all 4 metrics in one meta.json. Verified idempotent on both sample dirs, zero new LLM time. Phase 3 complete.
 Resume file: None
-Next: Phase 3 Plan 02 — extend score.py with step-count and output-size metrics (same load→merge→dump pattern; exclude __pycache__ from file counting).
+Next: Phase 4 — Reporting/aggregation. Carry-forward: surface step_method (units differ per tool), not just raw steps.
