@@ -91,6 +91,23 @@ codex
 **데모** — Codex × 로컬 qwen-122b로 만든 실제 프로그램:
 - 🎮 [테트리스](examples/demos/tetris/) (단일 `index.html`) · 생성 시 모델 왕복 전체 기록 → [SESSION.md](examples/demos/tetris/SESSION.md)
 
+## 벤치마크 — Codex vs OpenHands (재현 가능)
+
+같은 코딩 과제를 복잡도 3단계(L1 단일파일 → L2 멀티파일 CLI → L3 다중모듈 서비스)로 **codex**와
+**openhands**에 동일 조건(로컬 qwen-122b, 격리·순차)으로 시키고, 능력·시간·과정을 측정·기록하는
+재현 가능한 하니스. → **[benchmark/](benchmark/)**
+
+- **결과 리포트:** [benchmark/RESULTS.md](benchmark/RESULTS.md) — 도구×레벨 표(성공·시간·단계·규모) + transcript 발췌 + 레벨별 차이 + 정직성 노트
+- **재현 가이드:** [benchmark/REPRODUCE.md](benchmark/REPRODUCE.md) — 사전조건 확인 + 명령별 효과 + 처음부터 재실행
+- 실행: `bash benchmark/run.sh <tool> <level>` (1셀) · `bash benchmark/run-matrix.sh` → `python3 benchmark/report.py` (전체)
+
+| | L1 | L2 | L3 |
+|---|---|---|---|
+| **codex** | ✅ 26s | ✅ 98s | ❌ 14s (truncate) |
+| **openhands** | ✅ 49s | ✅ 145s | ✅ 147s |
+
+> codex는 빠르나 L3에서 잘려 실패, openhands는 2~3배 느리지만 전 레벨 성공. (steps 단위는 도구별로 달라 직접 비교 불가 — `step_method` 병기.) 결과는 LLM 비결정성으로 실행마다 달라질 수 있음.
+
 ## 문서
 
 | 문서 | 내용 |
