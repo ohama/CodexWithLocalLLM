@@ -1,13 +1,28 @@
-# Benchmark — 고정 과제 정의 (Codex vs OpenHands)
+# Benchmark — Codex vs OpenHands (로컬 qwen-122b)
 
-같은 과제를 두 코딩 도구(**Codex CLI**, **OpenHands**)에 **완전히 동일한 조건**으로
-던지고, 그 산출물을 **재현·검증 가능한 형태**로 채점하기 위한 **정식 과제 정의** 묶음이다.
-모델 변수를 제거하기 위해 두 도구 모두 동일한 로컬 `qwen-122b` 백엔드를 쓴다(런너는 Phase 2).
+같은 코딩 과제를 두 도구(**Codex CLI**, **OpenHands**)에 **동일 조건**(같은 모델 qwen-122b,
+격리·순차)으로 시키고, 능력·시간·과정을 측정해 **재현·검증 가능한 형태**로 비교하는 하니스.
 
-여기 들어 있는 것은 **과제 텍스트(PROMPT.md)뿐**이다. 채점기(test.py)와 검증용 레퍼런스 해답은
-Plan 02에서 추가된다. 이 디렉터리는 어떤 도구 런너와도 독립적이다(decoupling).
+## 📖 문서 길잡이 (여기부터 읽으세요)
 
-> 재현 가이드: **benchmark/REPRODUCE.md** (사전조건 확인 + 명령별 효과 + 처음부터 재실행)
+| 목적 | 문서 |
+|------|------|
+| 🟢 **처음 — 비교 검증 따라하기** | [START-HERE.md](START-HERE.md) (백엔드→연결→실행→읽기) |
+| 결과를 **어떻게 해석**하나 | [INTERPRETING.md](INTERPRETING.md) (4지표 의미·표 읽는 순서·오독 주의) |
+| **재현 레퍼런스** (명령별 효과) | [REPRODUCE.md](REPRODUCE.md) |
+| **실제 결과** 데이터 | [RESULTS.md](RESULTS.md) |
+| 이 파일 | 과제 정의·합격 기준·디렉터리 구조 (아래) |
+
+## 실행 한눈에
+```sh
+export LITELLM_API_KEY=dummy
+bash benchmark/run.sh codex l1        # 한 셀(도구,레벨)
+bash benchmark/run-matrix.sh          # 전체 6셀(직렬, ~10-15분)
+python3 benchmark/report.py           # → RESULTS.md
+```
+
+> 과제 텍스트는 `tasks/<level>/PROMPT.md` 한 곳에만(TASK-03), 채점기 `tasks/<level>/test.py`(stdlib
+> 독립 judge)가 합격을 판정. 프롬프트·채점기는 도구 런너와 독립적이다.
 
 ## 복잡도 3단계 (검증된 과제 재사용)
 
@@ -24,13 +39,18 @@ KV 스토어(멀티 모듈 서비스).
 
 ```
 benchmark/
-  README.md                       # 이 파일 (합격 기준 + 공통 규약)
+  START-HERE.md / INTERPRETING.md / REPRODUCE.md / RESULTS.md  # 길잡이·해석·재현·결과
+  README.md                       # 이 파일 (과제 정의 + 합격 기준 + 구조)
+  run.sh                          # 한 셀(도구,레벨) 실행 — 격리·순차 락·비대화
+  run-matrix.sh                   # 6셀 전체 매트릭스(직렬) → results.json
+  score.py                        # 4지표 채점/측정 (run.sh가 자동 호출)
+  report.py                       # results.json → RESULTS.md
   tasks/
-    l1-fib/PROMPT.md              # L1 정식 프롬프트 (단일 canonical 위치)
-    l2-wordstat/PROMPT.md         # L2 정식 프롬프트
-    l3-kvstore/PROMPT.md          # L3 정식 프롬프트
-    <level>/test.py               # 채점기(judge) — Plan 02에서 추가
-  reference/<level>/              # 채점기 검증용 레퍼런스 해답 — Plan 02에서 추가
+    l1-fib/{PROMPT.md,test.py}    # 정식 프롬프트(단일 canonical) + stdlib 독립 채점기
+    l2-wordstat/{PROMPT.md,test.py}
+    l3-kvstore/{PROMPT.md,test.py}
+  reference/<level>/              # 채점기 검증용 레퍼런스 해답
+  .runs/                          # 실행 산출물(gitignore) — RESULTS.md가 영구 기록
 ```
 
 각 레벨의 프롬프트는 위 `tasks/<level>/PROMPT.md` **단 한 곳에만** 존재한다(TASK-03).
