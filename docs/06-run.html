@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-40749d75.js";
+            window.path_to_searchindex_js = "searchindex-426d0d04.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-6d3ce328.js"></script>
@@ -184,7 +184,7 @@
 <p>이제 실제로 두 도구에 과제를 시킨다. 모든 실행은 저장소 루트(<code>/Users/ohama/projs/codex</code>)에서 한다.</p>
 <pre><code class="language-sh">export LITELLM_API_KEY=dummy   # 아직 안 했으면
 </code></pre>
-<h2 id="과제-3단계-복잡도-ladder"><a class="header" href="#과제-3단계-복잡도-ladder">과제 3단계 (복잡도 ladder)</a></h2>
+<h2 id="과제-6종-난이도--도메인"><a class="header" href="#과제-6종-난이도--도메인">과제 6종 (난이도 + 도메인)</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -194,9 +194,15 @@
 <tr><td><strong>L1</strong></td><td><code>fib(n)</code> 단일 파일</td><td>함수 한 개를 정확히</td></tr>
 <tr><td><strong>L2</strong></td><td><code>wordstat</code> 멀티파일 CLI</td><td>여러 파일 협력 + 표준출력 계약</td></tr>
 <tr><td><strong>L3</strong></td><td>KV 스토어 멀티모듈 서비스</td><td>패키지 구조 + 프로세스 간 영속성</td></tr>
+<tr><td><strong>L4</strong></td><td><code>calc</code> 산술식 평가 CLI</td><td>파서·우선순위·괄호 (<code>eval</code> 금지)</td></tr>
+<tr><td><strong>L5</strong></td><td><code>todo</code> 할 일 관리 CLI</td><td>서브커맨드 + JSON 영속 + 종료코드</td></tr>
+<tr><td><strong>L6</strong></td><td><code>csvstat</code> CSV 통계 CLI</td><td>CSV 파싱 + 수치 집계 + 에러처리</td></tr>
 </tbody>
 </table>
 </div>
+<blockquote>
+<p>각 과제의 결과물(파일 리스트)·기능·사용법은 <a href="02-tasks.html">2장</a> 및 <code>benchmark/tasks/&lt;level&gt;/ABOUT.md</code> 참고.</p>
+</blockquote>
 <p>각 과제의 프롬프트는 <code>benchmark/tasks/&lt;level&gt;/PROMPT.md</code> 한 곳에만 있고, 두 도구에 <strong>글자 그대로
 동일하게</strong> 주어진다. judge <code>benchmark/tasks/&lt;level&gt;/test.py</code> 는 도구가 못 보는 <strong>숨은 judge</strong>다.</p>
 <h2 id="①-한-셀-먼저-시험"><a class="header" href="#①-한-셀-먼저-시험">① 한 셀 먼저 시험</a></h2>
@@ -218,7 +224,7 @@
 <pre><code class="language-sh">bash benchmark/run-matrix.sh
 </code></pre>
 <ul>
-<li><strong>효과:</strong> codex L1→L2→L3, openhands L1→L2→L3 순으로 한 번에 하나씩 실행하고, 6개 결과를
+<li><strong>효과:</strong> codex L1..L6, 이어서 openhands L1..L6 순으로 한 번에 하나씩 실행하고, 12개 결과를
 하나의 <code>results.json</code> 으로 모은다. 전체 ~10–15분.</li>
 <li>⚠️ <strong>절대 백그라운드(<code>&amp;</code>)로 돌리지 말 것.</strong> 로컬 백엔드가 하나라 동시에 두 개를 돌리면 서로
 경합한다. 러너가 직렬을 강제하지만, 사람이 백그라운드로 띄우면 깨질 수 있다.</li>

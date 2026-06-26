@@ -6,13 +6,18 @@
 export LITELLM_API_KEY=dummy   # 아직 안 했으면
 ```
 
-## 과제 3단계 (복잡도 ladder)
+## 과제 6종 (난이도 + 도메인)
 
 | 레벨 | 과제 | 무엇을 보나 |
 |------|------|-------------|
 | **L1** | `fib(n)` 단일 파일 | 함수 한 개를 정확히 |
 | **L2** | `wordstat` 멀티파일 CLI | 여러 파일 협력 + 표준출력 계약 |
 | **L3** | KV 스토어 멀티모듈 서비스 | 패키지 구조 + 프로세스 간 영속성 |
+| **L4** | `calc` 산술식 평가 CLI | 파서·우선순위·괄호 (`eval` 금지) |
+| **L5** | `todo` 할 일 관리 CLI | 서브커맨드 + JSON 영속 + 종료코드 |
+| **L6** | `csvstat` CSV 통계 CLI | CSV 파싱 + 수치 집계 + 에러처리 |
+
+> 각 과제의 결과물(파일 리스트)·기능·사용법은 [2장](02-tasks.md) 및 `benchmark/tasks/<level>/ABOUT.md` 참고.
 
 각 과제의 프롬프트는 `benchmark/tasks/<level>/PROMPT.md` 한 곳에만 있고, 두 도구에 **글자 그대로
 동일하게** 주어진다. judge `benchmark/tasks/<level>/test.py` 는 도구가 못 보는 **숨은 judge**다.
@@ -41,7 +46,7 @@ bash benchmark/run.sh openhands l1
 ```sh
 bash benchmark/run-matrix.sh
 ```
-- **효과:** codex L1→L2→L3, openhands L1→L2→L3 순으로 한 번에 하나씩 실행하고, 6개 결과를
+- **효과:** codex L1..L6, 이어서 openhands L1..L6 순으로 한 번에 하나씩 실행하고, 12개 결과를
   하나의 `results.json` 으로 모은다. 전체 ~10–15분.
 - ⚠️ **절대 백그라운드(`&`)로 돌리지 말 것.** 로컬 백엔드가 하나라 동시에 두 개를 돌리면 서로
   경합한다. 러너가 직렬을 강제하지만, 사람이 백그라운드로 띄우면 깨질 수 있다.

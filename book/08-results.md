@@ -3,6 +3,10 @@
 앞 장의 해석법을 실제 측정값(v1.0, qwen-122b)에 적용해 보자. **이건 한 번의 스냅샷**이며, 당신이
 직접 돌리면 숫자는 달라질 수 있다.
 
+> 📌 아래 측정은 처음 3레벨(L1~L3) 기준이다. 이후 분별력을 높이려 **L4 calc · L5 todo · L6 csvstat**
+> 를 추가해 매트릭스가 **2 도구 × 6 레벨 = 12 셀**로 커졌다([2장](02-tasks.md) 참고). L4~L6의 수치는
+> `bash benchmark/run-matrix.sh && python3 benchmark/report.py` 를 직접 돌리면 `RESULTS.md` 에 채워진다.
+
 ## ⏩ 결과 한눈 요약 (TL;DR)
 
 | | 통과 레벨 | 속도(L1·L2) | ceiling(L3) | 한 줄 |

@@ -48,7 +48,7 @@ benchmark/
   START-HERE.md / INTERPRETING.md / REPRODUCE.md / RESULTS.md  # 길잡이·해석·재현·결과
   README.md                       # 이 파일 (과제 정의 + 합격 기준 + 구조)
   run.sh                          # 한 셀(도구,레벨) 실행 — 격리·순차 락·비대화
-  run-matrix.sh                   # 6셀 전체 매트릭스(직렬) → results.json
+  run-matrix.sh                   # 전체 매트릭스(2도구×6레벨=12셀, 직렬) → results.json
   score.py                        # 4지표 채점/측정 (run.sh가 자동 호출)
   report.py                       # results.json → RESULTS.md
   tasks/
