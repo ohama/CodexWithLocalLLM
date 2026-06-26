@@ -8,8 +8,13 @@ OpenAI **Codex CLI**를 클라우드 API 대신 **로컬 LLM**(Qwen3.5-MoE 122B,
 
 ## 📖 튜토리얼 책
 
-초보자가 따라하며 **수행→해석**하는 Codex vs OpenHands 벤치마크 튜토리얼:
-→ **https://ohama.github.io/CodexWithLocalLLM/** (소스: `book/`)
+초보 개발자가 따라하며 **수행 → 해석**하는 *Codex vs OpenHands 벤치마크* 튜토리얼 (mdBook).
+→ **https://ohama.github.io/CodexWithLocalLLM/** (소스: [`book/`](book/), 빌드: `docs/`)
+
+- **수행:** 개요 → 과제 3종(선정 이유·기대효과) → 백엔드 확인 → Codex 연결 → OpenHands 연결 → 실행
+- **해석:** 4지표 의미·표 읽는 법·흔한 오독 → 결과 요약(어디서 갈렸나)·결론
+- 비교 대상은 **codex·openhands 2개**, 시키는 과제는 **3종(L1 fib / L2 wordstat / L3 KV)**
+- 로컬 미리보기: `mdbook serve book --open`
 
 ## 무엇을 푸는가
 
