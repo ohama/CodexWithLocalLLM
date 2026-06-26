@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-06-26)
 ## Current Position
 
 Phase: 2 of 5 (Equal-Conditions Runner)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-06-26 — Completed 02-01-PLAN.md (runner skeleton: arg/level validation, isolated run-dir, mkdir-mutex serial lock, gateway preflight; tool invocation stubbed)
+Last activity: 2026-06-26 — Completed 02-02-PLAN.md (wired real codex/openhands invocations: codex exec < /dev/null, openhands --headless with workspace pinned to RUN_DIR; transcript.log + model-confirming meta.json per run)
 
-Progress: [███░░░░░░░] 27%
+Progress: [████░░░░░░] 36%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: ~8 min
-- Total execution time: 0.4 hours
+- Total plans completed: 4
+- Average duration: ~9 min
+- Total execution time: 0.6 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
-| 2 — Equal-Conditions Runner | 1/3 | ~6 min | ~6 min |
+| 2 — Equal-Conditions Runner | 2/3 | ~18 min | ~9 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~7 min), 01-02 (~9 min), 02-01 (~6 min)
+- Last 5 plans: 01-01 (~7 min), 01-02 (~9 min), 02-01 (~6 min), 02-02 (~12 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -58,6 +58,10 @@ Recent decisions affecting current work:
 - EXIT-trap rmdir installed only AFTER lock acquire so a losing run never deletes the holder's lock (02-01)
 - Arg/level/prompt validation runs before lock acquire so bad input never seizes the backend lock (02-01)
 - run.sh self-contained: gateway-curl + run-dir idioms copied inline, examples/codex-tests/common.sh NOT sourced (decoupling) (02-01)
+- OpenHands workspace pinned via OPENHANDS_WORK_DIR (get_work_dir mechanism in CLI 1.16.0/SDK 1.21.0), NOT SANDBOX_VOLUMES/WORKSPACE_BASE which belong to the older docker app (02-02)
+- --override-with-envs repurposed to pin the LLM model (LLM_MODEL) from the runner — it only overrides LLM_* in this version and requires them; strengthens RUN-03 against config drift (02-02)
+- Tool exit captured via ${PIPESTATUS[0]} under set +e; nonzero agent exit is a valid recorded run (never abort), meta.json written regardless (02-02)
+- meta.json model resolved from each tool's own config (codex config.toml / openhands agent_settings.json) so same-model criterion is offline-confirmable (02-02)
 
 ### Pending Todos
 
@@ -69,12 +73,14 @@ None yet.
 
 [Issues that affect future work]
 
-- codex exec hangs without `< /dev/null` in background/pipe — must be handled in runner (Phase 2)
-- Single mlx backend → tools must run serially, never concurrently (Phase 2)
+- codex exec hangs without `< /dev/null` in background/pipe — handled in runner (run_codex uses `< /dev/null`) (02-02)
+- Single mlx backend → tools must run serially, never concurrently (enforced by mkdir-mutex lock) (Phase 2)
+- Plan 03 must verify at runtime that openhands `--always-approve --exit-without-confirmation` don't conflict with `--headless` (could not be exercised without model time); `--headless` alone already auto-approves if they need trimming (02-02)
+- Plan 03 human-verify should CONFIRM openhands solution lands in $RUN_DIR (OPENHANDS_WORK_DIR pin), not fix it (02-02)
 
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 02-01-PLAN.md — benchmark/run.sh skeleton (arg/level validation, isolated run-dir, mkdir-mutex serial lock, gateway preflight) with stubbed tool invocation; benchmark/.gitignore
+Stopped at: Completed 02-02-PLAN.md — wired real codex/openhands invocations into run.sh (codex exec < /dev/null; openhands --headless, workspace pinned to RUN_DIR via OPENHANDS_WORK_DIR, model pinned via --override-with-envs); per-run transcript.log + model-confirming meta.json. Structurally verified (no model time).
 Resume file: None
-Next: Phase 2 Plan 02 — wire the real codex/openhands invocations into the run_codex/run_openhands stubs (handle codex exec stdin-hang via `< /dev/null`)
+Next: Phase 2 Plan 03 — single real smoke run + OpenHands isolation human-verify; confirm transcript.log/meta.json populate and the solution lands in $RUN_DIR
