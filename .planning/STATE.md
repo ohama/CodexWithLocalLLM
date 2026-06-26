@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-06-26)
 
 **Core value:** 같은 과제를 두 도구에 동일 조건으로 돌려, 재현·검증 가능한 형태로 능력·시간을 비교 기록한다.
-**Current focus:** Phase 3 — Metric Collection
+**Current focus:** Phase 4 — Benchmark Run & Reporting
 
 ## Current Position
 
-Phase: 3 of 5 (Metric Collection)
+Phase: 4 of 5 (Benchmark Run & Reporting)
 Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-06-26 — Completed 03-02-PLAN.md (score.py: MET-03 tool-aware steps+step_method [codex exec-blocks=2 / openhands agent-messages=4] + MET-04 files+loc [excludes transcript.log/meta.json/__pycache__; samples files=1/loc=31]; run.sh auto-invokes scorer after meta.json, best-effort; all 4 metrics in one meta.json; verified on both sample dirs, zero new LLM time)
+Last activity: 2026-06-26 — Completed 04-02-PLAN.md (benchmark/report.py: stdlib-only results.json→RESULTS.md generator, idempotent, zero LLM time; benchmark/RESULTS.md: durable self-contained report — 6-cell tool×level table [success+time+steps(step_method)+size], baked-in ANSI-stripped transcript excerpts, per-level codex-vs-openhands diffs, scoring honesty note [openhands L2/L3 re-run after --file isolation-leak fix; codex L3 genuine truncation FAIL]; step_method surfaced, raw step counts flagged non-comparable)
 
-Progress: [███████░░░] 70%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -30,9 +30,10 @@ Progress: [███████░░░] 70%
 | 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
 | 2 — Equal-Conditions Runner | 3/3 | ~26 min | ~9 min |
 | 3 — Metric Collection | 2/2 | ~20 min | ~10 min |
+| 4 — Benchmark Run & Reporting | 2/2 | (01 LLM-time matrix run + 04-02 ~6 min formatting) | — |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (~12 min), 02-03 (~8 min), 03-01 (~12 min), 03-02 (~8 min)
+- Last 5 plans: 02-03 (~8 min), 03-01 (~12 min), 03-02 (~8 min), 04-01 (matrix run), 04-02 (~6 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -74,6 +75,10 @@ Recent decisions affecting current work:
 - MET-04 output size excludes transcript.log, meta.json, __pycache__/, and .pyc; os.walk recurses so multi-file L2/L3 solutions in subdirs are counted; loc = splitlines on utf-8 errors=ignore (03-02)
 - score.py step/size extraction is best-effort: missing transcript→steps=0/transcript-missing, missing openhands marker→0/summary-not-found, unreadable file→1 file/0 loc; never crashes (03-02)
 - run.sh auto-invokes score.py after meta.json write (section 10b) guarded by set +e/capture/set -e — scorer failure warns but never aborts/masks the run; purely additive to Phase 2 (03-02)
+- benchmark/RESULTS.md is the durable record: transcript excerpts (ANSI-stripped head+tail) baked into the committed report because .runs/ is gitignored — report must be self-contained (04-02)
+- report.py is pure formatting over results.json (no agents/judges re-run, zero LLM time), idempotent: same results.json → byte-identical RESULTS.md (04-02)
+- Scoring honesty disclosed in-report, not hidden: openhands L2/L3 mis-scored FAIL by a --file isolation leak (workdir anchored to canonical task dir), re-run with inline --task → PASS; codex L3 is a GENUINE truncation FAIL (only ran `mkdir kvstore`, 0f/0loc) (04-02)
+- step_method surfaced in table cell + reading note + per-level process line; codex exec-blocks vs openhands agent-messages flagged non-comparable units throughout (04-02)
 
 ### Pending Todos
 
@@ -94,6 +99,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 03-02-PLAN.md — extended benchmark/score.py with MET-03 (tool-aware steps + step_method: codex 'exec' blocks=2 / openhands 'Number of agent messages'=4) and MET-04 (files+loc, excluding transcript.log/meta.json/__pycache__/.pyc; L1 samples files=1/loc=31). Hooked score.py into run.sh section 10b (best-effort, never aborts run) so a single run yields all 4 metrics in one meta.json. Verified idempotent on both sample dirs, zero new LLM time. Phase 3 complete.
+Stopped at: Completed 04-02-PLAN.md — created benchmark/report.py (stdlib-only results.json→RESULTS.md generator, auto-discovers latest matrix or argv path, idempotent, zero LLM time) and generated benchmark/RESULTS.md (durable committed report: 6-cell tool×level table with success+time+steps[step_method]+size, ANSI-stripped transcript excerpts baked in since .runs/ is gitignored, per-level codex-vs-openhands diffs, scoring honesty note). Verified: py_compile, all content assertions pass, byte-identical on re-run, RESULTS.md not gitignored. Phase 4 complete.
 Resume file: None
-Next: Phase 4 — Reporting/aggregation. Carry-forward: surface step_method (units differ per tool), not just raw steps.
+Next: Phase 5 (final / project wrap-up). Carry-forward: RESULTS.md is the durable deliverable; re-run `python3 benchmark/report.py` after any future matrix.
