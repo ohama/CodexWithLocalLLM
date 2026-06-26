@@ -92,10 +92,24 @@ if [ -e "$RUN_DIR" ]; then
 fi
 mkdir -p "$RUN_DIR"
 
-# ── 7. Tool invocation — STUBS (wired in Plan 02) ───────────────────────
+# ── 7. Tool invocation (wired in Plan 02) ───────────────────────────────
+# Both runners: cd into the isolated RUN_DIR, feed the verbatim PROMPT, tee
+# combined stdout+stderr to transcript.log, and record the REAL tool exit code
+# via ${PIPESTATUS[0]} (tee would otherwise mask it under `set -o pipefail`).
+# A nonzero agent exit is still a valid recorded run (pass/fail judging is
+# Phase 3), so we never abort the script on it — we record the code and finalize.
+TOOL_EXIT=0
+
 run_codex() {
-  # [stub] Plan 02 replaces this body with a real `codex exec` invocation.
-  echo "[stub] would invoke codex in $RUN_DIR (wired in Plan 02)"
+  cd "$RUN_DIR"
+  # `< /dev/null` is MANDATORY: without it `codex exec` hangs on stdin in a
+  # non-tty/background context. --sandbox workspace-write lets codex write its
+  # solution into the cwd (== RUN_DIR, the isolated dir).
+  set +e
+  LITELLM_API_KEY=dummy codex exec --skip-git-repo-check --sandbox workspace-write "$PROMPT" \
+    < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
+  TOOL_EXIT="${PIPESTATUS[0]}"   # codex's real exit, not tee's
+  set -e
 }
 
 run_openhands() {
