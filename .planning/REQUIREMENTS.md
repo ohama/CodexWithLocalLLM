@@ -75,9 +75,9 @@
 | REP-01 | Phase 4 — Benchmark Run & Reporting | Complete |
 | REP-02 | Phase 4 — Benchmark Run & Reporting | Complete |
 | REP-03 | Phase 4 — Benchmark Run & Reporting | Complete |
-| REPRO-01 | Phase 5 — Reproducibility Guide | Pending |
-| REPRO-02 | Phase 5 — Reproducibility Guide | Pending |
-| REPRO-03 | Phase 5 — Reproducibility Guide | Pending |
+| REPRO-01 | Phase 5 — Reproducibility Guide | Complete |
+| REPRO-02 | Phase 5 — Reproducibility Guide | Complete |
+| REPRO-03 | Phase 5 — Reproducibility Guide | Complete |
 
 **Coverage:**
 - v1 requirements: 18 total

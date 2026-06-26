@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
 - [x] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
 - [x] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
-- [ ] **Phase 5: Reproducibility Guide** - A user can reproduce the whole benchmark from the docs
+- [x] **Phase 5: Reproducibility Guide** - A user can reproduce the whole benchmark from the docs
 
 ## Phase Details
 
@@ -95,7 +95,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md — Write benchmark/REPRODUCE.md: preconditions + per-command effects + from-scratch re-run (REPRO-01..03)
+- [x] 05-01-PLAN.md — Write benchmark/REPRODUCE.md: preconditions + per-command effects + from-scratch re-run (REPRO-01..03)
 
 ## Progress
 
@@ -108,4 +108,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Equal-Conditions Runner | 3/3 | ✓ Complete | 2026-06-26 |
 | 3. Metric Collection | 2/2 | ✓ Complete | 2026-06-26 |
 | 4. Benchmark Run & Reporting | 2/2 | ✓ Complete | 2026-06-26 |
-| 5. Reproducibility Guide | 0/2 | Not started | - |
+| 5. Reproducibility Guide | 1/1 | ✓ Complete | 2026-06-26 |
