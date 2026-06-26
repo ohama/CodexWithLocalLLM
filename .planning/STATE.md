@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-06-26)
 
 **Core value:** 같은 과제를 두 도구에 동일 조건으로 돌려, 재현·검증 가능한 형태로 능력·시간을 비교 기록한다.
-**Current focus:** Phase 4 — Benchmark Run & Reporting
+**Current focus:** Project complete — milestone delivered (Phase 5 done)
 
 ## Current Position
 
-Phase: 4 of 5 (Benchmark Run & Reporting)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-06-26 — Completed 04-02-PLAN.md (benchmark/report.py: stdlib-only results.json→RESULTS.md generator, idempotent, zero LLM time; benchmark/RESULTS.md: durable self-contained report — 6-cell tool×level table [success+time+steps(step_method)+size], baked-in ANSI-stripped transcript excerpts, per-level codex-vs-openhands diffs, scoring honesty note [openhands L2/L3 re-run after --file isolation-leak fix; codex L3 genuine truncation FAIL]; step_method surfaced, raw step counts flagged non-comparable)
+Phase: 5 of 5 (Reproducibility Guide)
+Plan: 1 of 1 in current phase
+Status: Phase complete — MILESTONE COMPLETE
+Last activity: 2026-06-26 — Completed 05-01-PLAN.md (benchmark/REPRODUCE.md: single reproducibility guide — Overview [serial-only, .runs/ gitignored → RESULTS.md is the record] + Preconditions [env, gateway :4000 curl + role-shim/mlx port checks, codex/openhands model = qwen-122b offline-checkable, tool --version] + step-by-step run guide [run.sh single cell → run-matrix.sh 6-cell → report.py → read RESULTS.md, command+effect+artifacts+timing each] + from-scratch re-run sequence + Caveats [LLM nondeterminism, step_method unit incomparability, gitignored .runs/, codex L3 truncation, serial-only]; explicit openhands --file anti-pattern warning, phrased so the negative grep stays green; benchmark/README.md pointer added; REPRO-01..03 closed. Verification matrix-free: file existence + live precondition checks + run.sh usage-exit(2) + report.py py_compile, no LLM re-run)
 
-Progress: [█████████░] 90%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: ~9 min
-- Total execution time: 1.0 hours
+- Total execution time: ~1.1 hours
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: [█████████░] 90%
 | 2 — Equal-Conditions Runner | 3/3 | ~26 min | ~9 min |
 | 3 — Metric Collection | 2/2 | ~20 min | ~10 min |
 | 4 — Benchmark Run & Reporting | 2/2 | (01 LLM-time matrix run + 04-02 ~6 min formatting) | — |
+| 5 — Reproducibility Guide | 1/1 | ~7 min | ~7 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (~8 min), 03-01 (~12 min), 03-02 (~8 min), 04-01 (matrix run), 04-02 (~6 min)
+- Last 5 plans: 03-01 (~12 min), 03-02 (~8 min), 04-01 (matrix run), 04-02 (~6 min), 05-01 (~7 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - report.py is pure formatting over results.json (no agents/judges re-run, zero LLM time), idempotent: same results.json → byte-identical RESULTS.md (04-02)
 - Scoring honesty disclosed in-report, not hidden: openhands L2/L3 mis-scored FAIL by a --file isolation leak (workdir anchored to canonical task dir), re-run with inline --task → PASS; codex L3 is a GENUINE truncation FAIL (only ran `mkdir kvstore`, 0f/0loc) (04-02)
 - step_method surfaced in table cell + reading note + per-level process line; codex exec-blocks vs openhands agent-messages flagged non-comparable units throughout (04-02)
+- benchmark/REPRODUCE.md is the single reproduction source: preconditions → run-matrix.sh → report.py → commit RESULTS.md (+ single-cell run.sh shortcut); all runs routed through run.sh/run-matrix.sh, never hand-invoking openhands with --file (05-01)
+- --file anti-pattern warning phrased so `openhands` and `--file` never share a line → the plan's `! grep -E 'openhands .*--file'` check stays green without weakening the caution (05-01)
+- Reproducibility verification is matrix-free: file existence + live precondition checks (gateway curl, model grep/json, tool --version) + run.sh no-arg usage-exit(2) + report.py py_compile — never re-run the matrix or any LLM (05-01)
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 04-02-PLAN.md — created benchmark/report.py (stdlib-only results.json→RESULTS.md generator, auto-discovers latest matrix or argv path, idempotent, zero LLM time) and generated benchmark/RESULTS.md (durable committed report: 6-cell tool×level table with success+time+steps[step_method]+size, ANSI-stripped transcript excerpts baked in since .runs/ is gitignored, per-level codex-vs-openhands diffs, scoring honesty note). Verified: py_compile, all content assertions pass, byte-identical on re-run, RESULTS.md not gitignored. Phase 4 complete.
+Stopped at: Completed 05-01-PLAN.md — created benchmark/REPRODUCE.md (single reproducibility guide: Overview + Preconditions [env, gateway :4000 curl + role-shim/mlx port checks, codex/openhands model = qwen-122b offline-checkable, tool --version] + step-by-step run guide [run.sh → run-matrix.sh → report.py → RESULTS.md, command+effect+artifacts+timing each] + from-scratch re-run sequence + Caveats) and added a one-line pointer in benchmark/README.md. All runs routed through run.sh/run-matrix.sh; explicit openhands --file anti-pattern warning phrased to keep the negative grep green. Verified matrix-free: file existence, live precondition checks (gateway/model/tools), run.sh usage-exit(2), report.py py_compile — no LLM re-run. REPRO-01..03 closed. Phase 5 complete.
 Resume file: None
-Next: Phase 5 (final / project wrap-up). Carry-forward: RESULTS.md is the durable deliverable; re-run `python3 benchmark/report.py` after any future matrix.
+Next: MILESTONE COMPLETE — all 5 phases done. Carry-forward: benchmark/REPRODUCE.md is the reproduction entrypoint; benchmark/RESULTS.md is the durable record (re-run `python3 benchmark/report.py` and commit RESULTS.md after any future matrix, since .runs/ is gitignored).
