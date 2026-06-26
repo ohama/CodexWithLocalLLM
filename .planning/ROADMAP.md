@@ -77,11 +77,11 @@ Plans:
   2. Results are presented as a tool × level matrix table including success and time columns.
   3. Raw logs/transcripts for every run are preserved and referenced from the report.
   4. A per-level summary describes the codex-vs-openhands difference in time, process, and output.
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Run the full matrix and collect/store all metrics and transcripts
-- [ ] 04-02: Generate the tool × level results table and per-level difference summaries
+- [ ] 04-01-PLAN.md — Run the full 6-cell matrix serially via run.sh; preserve transcripts; aggregate metrics into results.json
+- [ ] 04-02-PLAN.md — Generate committed RESULTS.md: tool × level table (success+time+steps[step_method]+size), transcript refs, per-level diffs
 
 ### Phase 5: Reproducibility Guide
 **Goal**: A user can reproduce the entire benchmark from the documentation alone, with every command and its effect spelled out.
