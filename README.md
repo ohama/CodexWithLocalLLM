@@ -100,6 +100,7 @@ codex
 | [use-codex-from-phone](documentation/howto/use-codex-from-phone.md) | 휴대폰에서 사용 — Tailscale + SSH + tmux 원격 터미널 |
 | [codex-vs-hermes-workflow](documentation/codex-vs-hermes-workflow.md) | Codex vs Hermes 비교 — research→planning→execute. 실측: 단발은 동급, Hermes는 kanban 분해→워커 실행→통합(20테스트 통과)까지 실증 (병렬 caveat 포함) |
 | [hermes-swarm-tutorial](documentation/hermes-swarm-tutorial.md) | Hermes swarm 실행 따라하기(초보자용) — 매 명령과 효과 명시, 분해→워커 실행→검증 |
+| [codex-hermes-openhands-comparison](documentation/codex-hermes-openhands-comparison.md) | Codex vs Hermes vs OpenHands 3자 비교 — 동일 과제·동일 모델(qwen-122b) 실측, 동작방식 차이 |
 | [howto 목록](documentation/howto/README.md) | 전체 howto 인덱스 |
 
 ## 검증된 능력
