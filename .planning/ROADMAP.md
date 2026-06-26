@@ -12,7 +12,7 @@ This milestone builds a reproducible benchmark harness that runs the same three 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Fixed Tasks** - Three fixed-complexity, tool-agnostic tasks with objective pass criteria
+- [x] **Phase 1: Fixed Tasks** - Three fixed-complexity, tool-agnostic tasks with objective pass criteria
 - [ ] **Phase 2: Equal-Conditions Runner** - One command runs (tool, level) in isolation on the same model
 - [ ] **Phase 3: Metric Collection** - Four metrics captured automatically with independent pass/fail
 - [ ] **Phase 4: Benchmark Run & Reporting** - Full matrix executed and recorded as comparison artifact
@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-PLAN.md — Define and freeze L1/L2/L3 task specs + prompts + pass-criterion README (one canonical location)
-- [ ] 02-PLAN.md — Write stdlib-only independent judge per level + reference solutions, validated (exit 0 on reference, nonzero on broken)
+- [x] 01-PLAN.md — Define and freeze L1/L2/L3 task specs + prompts + pass-criterion README (one canonical location)
+- [x] 02-PLAN.md — Write stdlib-only independent judge per level + reference solutions, validated (exit 0 on reference, nonzero on broken)
 
 ### Phase 2: Equal-Conditions Runner
 **Goal**: A single command runs a chosen (tool, level) under identical, isolated conditions against qwen-122b, non-interactively and serially.
@@ -104,7 +104,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fixed Tasks | 0/2 | Not started | - |
+| 1. Fixed Tasks | 2/2 | ✓ Complete | 2026-06-26 |
 | 2. Equal-Conditions Runner | 0/2 | Not started | - |
 | 3. Metric Collection | 0/2 | Not started | - |
 | 4. Benchmark Run & Reporting | 0/2 | Not started | - |

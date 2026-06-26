@@ -60,9 +60,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TASK-01 | Phase 1 — Fixed Tasks | Pending |
-| TASK-02 | Phase 1 — Fixed Tasks | Pending |
-| TASK-03 | Phase 1 — Fixed Tasks | Pending |
+| TASK-01 | Phase 1 — Fixed Tasks | Complete |
+| TASK-02 | Phase 1 — Fixed Tasks | Complete |
+| TASK-03 | Phase 1 — Fixed Tasks | Complete |
 | RUN-01 | Phase 2 — Equal-Conditions Runner | Pending |
 | RUN-02 | Phase 2 — Equal-Conditions Runner | Pending |
 | RUN-03 | Phase 2 — Equal-Conditions Runner | Pending |
