@@ -158,3 +158,45 @@ PROMPT.md 를 가리키는
 플래그를 넘기는 방식은 금지한다. 그렇게 하면 openhands 가 그 파일이 있는 디렉터리(정식 task
 폴더)로 작업 디렉터리를 앵커링해, 격리된 RUN_DIR 바깥(정식 task 폴더)으로 산출물이 새어 나간다
 (Phase 4 에서 관측된 버그). `run.sh` 는 프롬프트를 인라인 `--task` 로 먹이므로 이 누수가 없다.
+
+## 처음부터 전부 재현 (Reproduce everything from scratch)
+
+깨끗한 체크아웃에서 **이 순서 하나만** 따르면 측정 전체가 재현된다(REPRO-03):
+
+```bash
+# 1. 게이트웨이 키 설정
+export LITELLM_API_KEY=dummy
+
+# 2. 사전조건 확인 — 위 "사전조건(Preconditions)" 섹션의 검사들을 그대로 실행해
+#    게이트웨이(:4000), 모델(qwen-122b x2), 도구(codex/openhands) 가 OK 인지 확인
+
+# 3. 전체 매트릭스 (6셀, 직렬, ~10-15분) — 절대 백그라운드 금지
+bash benchmark/run-matrix.sh
+
+# 4. 리포트 생성 -> benchmark/RESULTS.md
+python3 benchmark/report.py
+
+# 5. benchmark/RESULTS.md 를 열어 확인하고 커밋한다
+#    (.runs/ 는 gitignore 되므로 RESULTS.md 가 유일하게 남는 기록이다)
+```
+
+단일 셀만 빠르게 돌려보려면:
+
+```bash
+bash benchmark/run.sh <tool> <level>
+```
+
+## Caveats / 정직성 노트
+
+재실행자가 놀라지 않도록, 알아야 할 것들:
+
+- **LLM 비결정성(nondeterminism):** 성공 여부·시간·스텝 수는 실행마다 달라진다. 당신의 숫자가
+  커밋된 `RESULTS.md` 와 다를 수 있다 — 정상이다. 우리가 보장하는 것은 *숫자*가 아니라 *절차*다.
+- **스텝 단위가 도구마다 다르다(step_method):** codex 는 `exec` 툴콜 블록 수, openhands 는
+  `Number of agent messages` 수다. **원시 스텝 수를 같은 단위로 비교하지 말 것.**
+- **`benchmark/.runs/` 는 gitignore** 된다 → `RESULTS.md` 가 유일한 영속 기록이다. `report.py`
+  실행 후 **반드시 커밋**하라.
+- **codex L3(kvstore) truncation 은 알려진 실제 결과**다(진짜 FAIL — `mkdir kvstore` 만 하고
+  0f/0loc). 하니스 버그가 아니다.
+- **직렬 전용:** mlx 백엔드가 하나뿐이라 한 번에 한 셀만. `run-matrix.sh` 를 절대 백그라운드로
+  돌리지 말 것.
