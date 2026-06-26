@@ -99,6 +99,7 @@ codex
 
 - 🟢 **처음이라면 여기부터:** [benchmark/START-HERE.md](benchmark/START-HERE.md) — 백엔드 확인 → codex 연결 → openhands 연결 → 실행 → 결과 읽기 (초보자 길잡이)
 - **결과 리포트:** [benchmark/RESULTS.md](benchmark/RESULTS.md) — 도구×레벨 표(성공·시간·단계·규모) + transcript 발췌 + 레벨별 차이 + 정직성 노트
+- **결과 해석법:** [benchmark/INTERPRETING.md](benchmark/INTERPRETING.md) — 무엇을 재나 + 4지표 의미 + 표 읽는 순서 + 흔한 오독·이상치 진단
 - **재현 가이드:** [benchmark/REPRODUCE.md](benchmark/REPRODUCE.md) — 사전조건 확인 + 명령별 효과 + 처음부터 재실행
 - 실행: `bash benchmark/run.sh <tool> <level>` (1셀) · `bash benchmark/run-matrix.sh` → `python3 benchmark/report.py` (전체)
 

@@ -111,6 +111,8 @@ open benchmark/RESULTS.md     # 또는 에디터로 열기
 - **결과는 실행마다 달라질 수 있다**(LLM 비결정성). `benchmark/.runs/` 는 git 에 안 올라가므로
   **RESULTS.md 가 유일하게 남는 기록**이다.
 
+지표 의미·표 읽는 순서·흔한 오독을 자세히 → **[INTERPRETING.md](INTERPRETING.md)**.
+
 해설/분석을 더 보고 싶으면 → **[../documentation/codex-hermes-openhands-comparison.md](../documentation/codex-hermes-openhands-comparison.md)**
 (codex/hermes/openhands 동작 방식 비교).
 
