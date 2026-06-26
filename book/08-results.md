@@ -1,73 +1,69 @@
 # 8. 결과 요약과 결론
 
-앞 장의 해석법을 **실제 측정값**(2 도구 × 6 레벨 = 12셀, qwen-122b)에 적용해 보자. **이건 한 번의
+앞 장의 해석법을 **실제 14셀 측정값**(2 도구 × 7 레벨, qwen-122b)에 적용해 보자. **이건 한 번의
 스냅샷**이며, 당신이 직접 돌리면 숫자는 달라질 수 있다.
-
-> 📌 이후 **L7(HTTP KV API, 최난도)** 를 추가해 매트릭스가 **2×7 = 14셀**로 커졌다([2장](02-tasks.md)).
-> 아래 표는 L1~L6 측정분이며, L7 수치는 `bash benchmark/run-matrix.sh && python3 benchmark/report.py`
-> 를 다시 돌리면 `RESULTS.md` 에 채워진다.
 
 ## ⏩ 결과 한눈 요약 (TL;DR)
 
 | | 통과 | 실패 | 속도 | 한 줄 |
 |---|---|---|---|---|
-| **codex** | L1·L2·**L4·L5·L6** (5/6) | **L3** | 통과 셀에서 대체로 **더 빠름** | 빠르고 폭넓게 통과, 단 L3(KV 서비스)만 truncate로 실패 |
-| **openhands** | **L1~L6 전부 (6/6)** | 없음 | 더 느림(약 1.3~2배) | 느리지만 6종 모두 완성 |
+| **codex** | L1·L2·L4·L5·L6 (5/7) | **L3·L7** | 통과 셀에서 대체로 **더 빠름** | 빠르고 폭넓게 통과, 단 **큰 서비스 과제(L3·L7)** 는 truncate로 실패 |
+| **openhands** | **L1~L7 전부 (7/7)** | 없음 | 더 느림(약 1.3~2배) | 느리지만 7종 모두 완성 |
 
-**어디서 갈렸나:** 새로 추가한 L4·L5·L6에서는 **둘 다 통과** — 분별의 분기점은 여전히 **L3 한 곳**
-(codex만 실패). 즉 codex의 약점은 "멀티모듈 + 상태영속 서비스(L3)를 끝까지 완성"하는 특정 지점이고,
-*알고리즘(L4)·서브커맨드 상태(L5)·데이터처리(L6)* 는 codex도 문제없이 해냈다.
+**어디서 갈렸나:** 분기점이 **두 곳(L3·L7)** 으로 또렷해졌다 — 둘 다 **멀티모듈 + 상태영속 "서비스"**
+과제다. codex는 L3(KV 스토어)·L7(HTTP API)에서 **거의 시작하자마자(~14·33초, ~49k 토큰) truncate**되어
+빈 패키지만 남겼다. 반면 알고리즘(L4)·서브커맨드 상태(L5)·데이터처리(L6)는 codex도 문제없이 통과.
+
+> **핵심 패턴:** codex의 약점은 "난이도 일반"이 아니라 **크고 다구성인 서비스를 끝까지 완성**하는
+> 특정 유형(L3·L7)이다. 같은 ~49k 토큰 지점 truncation이 **세 번(L3 2회 + L7 1회) 재현**됐다.
 
 **기대효과 vs 실제:**
 - L1 기본기 / L2 구조화 CLI → ✅ 둘 다 통과(예상대로).
-- L3 멀티모듈+영속 "ceiling 시험" → ✅ 예상대로 갈림(codex 실패 / openhands 통과).
-- L4 알고리즘·L5 상태·L6 데이터 → 둘 다 통과. **이 스냅샷에선 분별이 안 됨**(둘 다 능력 있음) —
-  더 벌리려면 난이도를 더 높이거나 반복 측정이 필요(아래 결론).
+- L3·L7 "서비스 ceiling 시험" → ✅ 예상대로 갈림(codex 실패 / openhands 통과). **L7 추가로 분기 확증.**
+- L4 알고리즘·L5 상태·L6 데이터 → 둘 다 통과(이 난이도에선 변별 안 됨 — 둘 다 능력 있음).
 
-> ⚠️ 1회 측정이다. "codex가 L3를 못 한다"가 아니라 "이 실행에서 truncate됐다"이다(이전 실행에서도
-> 같은 14초 truncation이 재현된 점은 주목할 만하다).
+## 측정 결과 (14셀)
 
-## 측정 결과 (12셀)
+| Tool | Level | Success | Time | Size |
+|------|-------|---------|------|------|
+| codex | L1 fib | ✅ PASS | 23s | 1f / 25loc |
+| codex | L2 wordstat | ✅ PASS | 83s | 4f / 191loc |
+| codex | L3 kvstore | ❌ FAIL | 14s | 0f / 0loc |
+| codex | L4 calc | ✅ PASS | 88s | 1f / 187loc |
+| codex | L5 todo | ✅ PASS | 101s | 8f / 341loc |
+| codex | L6 csvstat | ✅ PASS | 142s | 5f / 490loc |
+| codex | **L7 kvapi** | ❌ **FAIL** | 33s | 0f / 0loc |
+| openhands | L1 fib | ✅ PASS | 47s | 1f / 31loc |
+| openhands | L2 wordstat | ✅ PASS | 165s | 4f / 305loc |
+| openhands | L3 kvstore | ✅ PASS | 134s | 9f / 360loc |
+| openhands | L4 calc | ✅ PASS | 120s | 1f / 200loc |
+| openhands | L5 todo | ✅ PASS | 159s | 3f / 341loc |
+| openhands | L6 csvstat | ✅ PASS | 173s | 5f / 345loc |
+| openhands | **L7 kvapi** | ✅ **PASS** | 190s | 9f / 516loc |
 
-| Tool | Level | Success | Time | Steps (step_method) | Size |
-|------|-------|---------|------|---------------------|------|
-| codex | L1 fib | ✅ PASS | 23s | 2 (codex: exec) | 1f / 25loc |
-| codex | L2 wordstat | ✅ PASS | 83s | 6 (codex: exec) | 4f / 191loc |
-| codex | L3 kvstore | ❌ FAIL | 14s | 2 (codex: exec) | 0f / 0loc |
-| codex | L4 calc | ✅ PASS | 88s | — (codex: exec) | 1f / 187loc |
-| codex | L5 todo | ✅ PASS | 101s | — (codex: exec) | 8f / 341loc |
-| codex | L6 csvstat | ✅ PASS | 142s | — (codex: exec) | 5f / 490loc |
-| openhands | L1 fib | ✅ PASS | 47s | 4 (oh: msgs) | 1f / 31loc |
-| openhands | L2 wordstat | ✅ PASS | 165s | 17 (oh: msgs) | 4f / 305loc |
-| openhands | L3 kvstore | ✅ PASS | 134s | 12 (oh: msgs) | 9f / 360loc |
-| openhands | L4 calc | ✅ PASS | 120s | — (oh: msgs) | 1f / 200loc |
-| openhands | L5 todo | ✅ PASS | 159s | — (oh: msgs) | 3f / 341loc |
-| openhands | L6 csvstat | ✅ PASS | 173s | — (oh: msgs) | 5f / 345loc |
-
-(정확한 steps·transcript 발췌는 `benchmark/RESULTS.md` 참고. steps는 도구별 단위가 달라 직접 비교 금지.)
+(steps 열은 도구별 단위가 달라 생략 — 전체·steps·transcript 발췌는 `benchmark/RESULTS.md`.)
 
 ## 해석 (§7의 순서대로 읽기)
 
-**1) Success:** codex 5/6 (L3만 실패), openhands 6/6.
-**2) 레벨별:** L1·L2·L4·L5·L6은 둘 다 통과 → 능력 대등. **L3에서만 분기**(codex 실패).
+**1) Success:** codex 5/7 (L3·L7 실패), openhands 7/7.
+**2) 레벨별:** L1·L2·L4·L5·L6은 둘 다 통과 → 능력 대등. **L3·L7(큰 서비스)에서 분기**(codex 실패).
 **3) Time:** 통과한 셀들에서 codex가 대체로 더 빠르다(L1 23 vs 47, L4 88 vs 120, L6 142 vs 173).
-openhands는 안정적으로 통과하지만 느린 편.
-**4) Steps:** 도구 내부 추세로만 — codex/openhands 단위가 달라 raw 비교 금지(§7).
-**5) 이상치 — codex L3:** `0 files` + `14초` → 진짜 truncation(빈 `kvstore/`만 만들고 끊김). 격리
-누출 아님(tasks/ 정규 유지 확인). 두 번째 실행에서도 동일 재현.
+**4) Steps:** 도구 내부 추세로만 — 단위가 달라 raw 비교 금지(§7).
+**5) 이상치 — codex L3·L7:** 둘 다 `0 files` + 매우 짧은 시간 → 진짜 truncation(빈 패키지만 만들고 끊김,
+~49k 토큰). 격리 누출 아님(tasks/ 정규 유지 확인). **반복 재현됨.**
 
 ## 이 스냅샷이 말하는 것 / 말하지 못하는 것
 
 **말할 수 있는 것:**
-- codex는 **6종 중 5종을 빠르게 통과**하되 **L3(멀티모듈 KV 서비스)에서 반복적으로 truncate**되어 실패.
-- openhands는 **6종 전부 완성**(더 느림).
-- 새 과제(L4 알고리즘 / L5 상태 / L6 데이터)는 **둘 다 통과** → 이 난이도에선 분별 못 함.
+- codex는 **7종 중 5종을 빠르게 통과**하되 **큰 멀티모듈 서비스(L3·L7)에서 반복적으로 truncate**되어 실패.
+- openhands는 **7종 전부 완성**(더 느림).
+- **L7 추가가 효과적이었다** — L3 한 곳뿐이던 분기점이 "서비스 유형 = codex의 약점"이라는 **패턴**으로 확증됐다.
 
 **말하지 못하는 것:**
 - "openhands가 항상 낫다" — ❌. 통과 셀에선 codex가 더 빨랐다.
-- "codex는 L3를 영영 못 한다" — ⚠️ 두 번 재현됐지만 여전히 1구성의 결과. 반복 통과율로 확정 필요.
+- "codex는 서비스 과제를 영영 못 한다" — ⚠️ 반복 재현됐지만 1구성(이 모델·이 설정)의 결과. 통과율로 확정 필요.
 - steps로 효율 비교 — ❌. 단위가 다르다.
-- "L4~L6은 변별력이 없다" — ❌. 이 난이도/모델에선 안 갈렸을 뿐. 더 어려운 변형이나 반복 측정이 필요.
+- "L4~L6은 변별력이 없다" — ❌. 이 난이도/모델에선 안 갈렸을 뿐.
 
 ## 결론 (균형 잡힌 읽기)
 

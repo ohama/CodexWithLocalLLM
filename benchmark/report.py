@@ -38,8 +38,19 @@ REPO = os.path.dirname(HERE)
 OUT_PATH = os.path.join(HERE, "RESULTS.md")
 
 DASH = "—"
-LEVELS = ["l1-fib", "l2-wordstat", "l3-kvstore"]
+# Canonical ordering; any level present in the data but not listed here is
+# appended in sorted order, so new tasks (l4..l7+) show up automatically.
+LEVEL_ORDER = ["l1-fib", "l2-wordstat", "l3-kvstore", "l4-calc", "l5-todo",
+               "l6-csvstat", "l7-kvapi"]
 TOOLS = ["codex", "openhands"]
+
+
+def levels_in(cells):
+    """Levels actually present in the data, canonical order first then extras."""
+    present = {c.get("level") for c in cells if c.get("level")}
+    ordered = [lv for lv in LEVEL_ORDER if lv in present]
+    ordered += sorted(lv for lv in present if lv not in LEVEL_ORDER)
+    return ordered
 
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
 
@@ -174,7 +185,7 @@ def build_provenance(results_path, cells):
         "  - Both are the same local **qwen-122b** family served at "
         "`http://localhost:4000/v1`; the two tools merely report the model string "
         "differently (codex: `qwen-122b-codex`, openhands: `openai/qwen-122b`).",
-        f"- **Cells:** {len(cells)} (2 tools × 3 levels)",
+        f"- **Cells:** {len(cells)} (2 tools × {len(levels_in(cells))} levels)",
         "",
         "> This report is the **durable** record. `benchmark/.runs/` is gitignored, so the "
         "raw run directories are not committed — the metrics table and transcript excerpts "
@@ -191,7 +202,7 @@ def build_matrix_table(cells):
         "| Tool | Level | Success | Time | Steps (step_method) | Size (files / loc) |",
         "|------|-------|---------|------|---------------------|--------------------|",
     ]
-    for level in LEVELS:
+    for level in levels_in(cells):
         for tool in TOOLS:
             c = find_cell(cells, tool, level)
             if c is None:
@@ -256,7 +267,7 @@ def build_transcripts(cells):
         "the evidence survives in the committed report even though `benchmark/.runs/` is "
         "gitignored.\n"
     )
-    for level in LEVELS:
+    for level in levels_in(cells):
         for tool in TOOLS:
             c = find_cell(cells, tool, level)
             if c is None:
@@ -284,7 +295,7 @@ def build_transcripts(cells):
 
 def build_per_level(cells):
     out = ["## Per-level codex vs openhands difference summary (REP-03)", ""]
-    for level in LEVELS:
+    for level in levels_in(cells):
         cx = find_cell(cells, "codex", level)
         oh = find_cell(cells, "openhands", level)
         out.append(f"### {level}")
