@@ -92,11 +92,10 @@ Plans:
   2. Preconditions (LiteLLM/mlx up, model = qwen-122b, openhands settings) have documented verification commands.
   3. One place explains how to re-run the whole measurement from scratch.
   4. Following the guide on a clean checkout reproduces the matrix (or clearly states the expected outputs).
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 05-01: Write the step-by-step run guide with precondition checks and effects per command
-- [ ] 05-02: Add the from-scratch re-run section and validate by following it clean
+- [ ] 05-01-PLAN.md — Write benchmark/REPRODUCE.md: preconditions + per-command effects + from-scratch re-run (REPRO-01..03)
 
 ## Progress
 
