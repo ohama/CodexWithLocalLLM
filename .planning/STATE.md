@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-06-26)
 
 **Core value:** 같은 과제를 두 도구에 동일 조건으로 돌려, 재현·검증 가능한 형태로 능력·시간을 비교 기록한다.
-**Current focus:** Phase 2 — Equal-Conditions Runner
+**Current focus:** Phase 3 — Metric Collection
 
 ## Current Position
 
-Phase: 2 of 5 (Equal-Conditions Runner)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-06-26 — Completed 02-03-PLAN.md (live L1 smoke for both tools on real qwen-122b backend, serial; each left an isolated run dir with non-empty transcript.log + qwen-122b meta.json + fib.py inside; no leakage; RUN-01..05 confirmed live; Phase 2 complete)
+Phase: 3 of 5 (Metric Collection)
+Plan: 1 of (TBD) in current phase
+Status: In progress
+Last activity: 2026-06-26 — Completed 03-01-PLAN.md (benchmark/score.py: MET-01 independent pass/fail via judge re-run + MET-02 duration_seconds, extends meta.json in place idempotently; verified on both sample run dirs — codex pass/0/43s, openhands pass/0/49s; zero new LLM time)
 
-Progress: [█████░░░░░] 45%
+Progress: [██████░░░░] 55%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: ~8 min
-- Total execution time: 0.7 hours
+- Total plans completed: 6
+- Average duration: ~9 min
+- Total execution time: 0.9 hours
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [█████░░░░░] 45%
 |-------|-------|-------|----------|
 | 1 — Fixed Tasks | 2/2 | ~16 min | ~8 min |
 | 2 — Equal-Conditions Runner | 3/3 | ~26 min | ~9 min |
+| 3 — Metric Collection | 1/? | ~12 min | ~12 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (~9 min), 02-01 (~6 min), 02-02 (~12 min), 02-03 (~8 min)
+- Last 5 plans: 02-01 (~6 min), 02-02 (~12 min), 02-03 (~8 min), 03-01 (~12 min)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -65,6 +66,10 @@ Recent decisions affecting current work:
 - OpenHands workspace pinned via OPENHANDS_WORK_DIR (not --override-with-envs, which only pins the LLM) — live-confirmed in 02-03: openhands fib.py lands inside $RUN_DIR, no leakage to repo root or ~/.openhands/workspace (02-03)
 - Runner leaves transcript.log + meta.json per run dir as the stable Phase 3 contract; Phase 2 does no judging/metrics — correctness scoring is deferred to Phase 3 (02-03)
 - RUN-01..05 confirmed LIVE on real qwen-122b backend: one command/tool, isolated dirs, both qwen-122b @ :4000, non-interactive (exit 0), serial under lock (02-03)
+- MET-01 correctness decided ONLY by judge process exit; transcript/self-report/meta exit_code never consulted (03-01)
+- meta['level'] is the full tasks/ subdir name → direct judge path tasks/<level>/test.py, no mapping table (03-01)
+- score.py is best-effort: missing judge → passed=false/judge_exit=null/judge_note; bad timestamps → duration_seconds=null; never crashes (03-01)
+- meta.json extended in place via load→merge→dump, idempotent (same inputs → identical metric values) (03-01)
 
 ### Pending Todos
 
@@ -84,6 +89,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-26
-Stopped at: Completed 02-03-PLAN.md — live L1 smoke for both tools on the real qwen-122b backend (serial under the lock). Each left an isolated benchmark/.runs/ dir with a non-empty transcript.log + qwen-122b meta.json (@ :4000) + fib.py inside; no leakage to repo root or ~/.openhands/workspace; both exit 0; openhands isolation human-verified. RUN-01..05 confirmed live. PHASE 2 COMPLETE.
+Stopped at: Completed 03-01-PLAN.md — created benchmark/score.py (stdlib-only). MET-01: pass/fail by re-running tasks/<level>/test.py as a separate process against produced files (passed/judge_exit; self-report ignored). MET-02: duration_seconds from meta timestamps. meta.json extended in place, original keys preserved, idempotent. Verified on both sample run dirs with zero new LLM time: codex pass/0/43s, openhands pass/0/49s.
 Resume file: None
-Next: Phase 3 — metric measurement (read each run dir's meta.json + transcript.log, run the hidden judges, record capability/time per tool). The two L1 run dirs are ready reference inputs.
+Next: Phase 3 Plan 02 — extend score.py with step-count and output-size metrics (same load→merge→dump pattern; exclude __pycache__ from file counting).
