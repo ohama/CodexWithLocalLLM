@@ -15,6 +15,9 @@ Reads <run_dir>/meta.json (written by Phase 2's run.sh), records the two
           transcript. The two tools' transcripts differ, so the extractor
           branches on meta["tool"] and records the heuristic it used in
           step_method (units differ per tool — keep both, never just the number).
+  MET-04  files / loc          — output size: number of files the agent produced
+          in the run dir and total lines of code, excluding harness artifacts
+          (transcript.log, meta.json) and __pycache__/.pyc.
 
 stdlib-only (json, os, re, sys, subprocess, datetime); re-running is idempotent.
 """
@@ -33,6 +36,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 _ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 # openhands prints a run summary line like "Number of agent messages: 4".
 _OH_MSGS_RE = re.compile(r"Number of agent messages:\s*(\d+)")
+
+# Harness artifacts that exist in every run dir but were NOT produced by the
+# agent — excluded from the output-size count.
+_HARNESS_FILES = {"transcript.log", "meta.json"}
 
 
 def extract_steps(run_dir, meta):
@@ -68,6 +75,35 @@ def extract_steps(run_dir, meta):
         return 0, "openhands:summary-not-found"
 
     return 0, f"unknown-tool:{tool}"
+
+
+def measure_output(run_dir):
+    """MET-04: output size — count of agent-produced files and total LOC.
+
+    Walks run_dir (so multi-file L2/L3 solutions in subdirs like kvstore/ are
+    counted) and excludes the harness artifacts and caches:
+      - exact names: transcript.log, meta.json
+      - anything under a __pycache__/ directory
+      - .pyc files
+    Returns (files:int, loc:int). LOC sums line counts of each produced file read
+    as text; unreadable/binary files contribute 0 lines (best-effort).
+    """
+    files = 0
+    loc = 0
+    for root, dirs, names in os.walk(run_dir):
+        # Prune cache dirs so nothing beneath them is ever counted.
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        for name in names:
+            if name in _HARNESS_FILES or name.endswith(".pyc"):
+                continue
+            files += 1
+            path = os.path.join(root, name)
+            try:
+                with open(path, encoding="utf-8", errors="ignore") as fh:
+                    loc += len(fh.read().splitlines())
+            except OSError:
+                pass  # unreadable -> counted as a file, 0 lines
+    return files, loc
 
 
 def score_run(run_dir):
@@ -114,6 +150,9 @@ def score_run(run_dir):
     # --- MET-03: tool-aware step/tool-call count from the transcript ---
     meta["steps"], meta["step_method"] = extract_steps(run_dir, meta)
 
+    # --- MET-04: output size — agent-produced files + total LOC ---
+    meta["files"], meta["loc"] = measure_output(run_dir)
+
     with open(meta_path, "w") as fh:
         json.dump(meta, fh, indent=2)
         fh.write("\n")
@@ -129,7 +168,8 @@ def main():
     print(
         f"{m.get('level')}  passed={m.get('passed')}  "
         f"duration_seconds={m.get('duration_seconds')}  "
-        f"steps={m.get('steps')} ({m.get('step_method')})"
+        f"steps={m.get('steps')} ({m.get('step_method')})  "
+        f"files={m.get('files')}  loc={m.get('loc')}"
     )
     return 0
 
