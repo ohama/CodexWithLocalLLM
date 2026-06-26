@@ -106,8 +106,7 @@ run_codex() {
   # non-tty/background context. --sandbox workspace-write lets codex write its
   # solution into the cwd (== RUN_DIR, the isolated dir).
   set +e
-  LITELLM_API_KEY=dummy codex exec --skip-git-repo-check --sandbox workspace-write "$PROMPT" \
-    < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
+  LITELLM_API_KEY=dummy codex exec --skip-git-repo-check --sandbox workspace-write "$PROMPT" < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
   TOOL_EXIT="${PIPESTATUS[0]}"   # codex's real exit, not tee's
   set -e
 }
