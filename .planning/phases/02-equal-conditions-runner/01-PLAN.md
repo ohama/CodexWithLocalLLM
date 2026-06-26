@@ -126,11 +126,15 @@ Both checks must happen BEFORE creating the run dir / invoking a tool.
 
 Serial lock (RUN-05) — single mlx backend must never be hit by two runs at once:
 - Use a mkdir-based atomic mutex (macOS base has no `flock`): LOCK="$HERE/.runs/.lock".
-  `mkdir "$LOCK"` succeeds for exactly one process; on failure, the run is already in progress.
+  Ensure the parent exists first (`mkdir -p "$HERE/.runs"`), then attempt `mkdir "$LOCK"`, which
+  succeeds for exactly one process; on failure, the run is already in progress.
 - Default behavior: print "another run holds the lock (single backend, serial only)" and exit 3.
   (Simple + safe. A blocking wait is optional; aborting is the deterministic, testable default.)
-- Ensure the lock is always released: `trap 'rmdir "$LOCK" 2>/dev/null || true' EXIT`.
-  (Guarantees cleanup even on error/Ctrl-C.)
+- Install the cleanup trap ONLY AFTER a successful `mkdir "$LOCK"`:
+  `trap 'rmdir "$LOCK" 2>/dev/null || true' EXIT`. This is critical — if the trap were set before
+  the acquire attempt, a process that FAILED to acquire (lock already held) would delete the
+  holder's lock on exit, breaking the serial guarantee. Setting the trap post-acquire means a
+  losing invocation exits 3 and leaves the holder's lock untouched.
 
 Gateway preflight (supports RUN-03) — abort early if backend down:
 - `curl -sf -m 5 http://localhost:4000/v1/models -H "Authorization: Bearer dummy"` >/dev/null.
@@ -141,20 +145,26 @@ Gateway preflight (supports RUN-03) — abort early if backend down:
 Order in main flow: validate args -> acquire lock -> gateway preflight -> create RUN_DIR -> dispatch.
   </action>
   <verify>
-# Lock held -> second concurrent invocation aborts (uses stub, no LLM):
-( bash benchmark/run.sh codex l1 & FIRST=$!; sleep 0.2; \
-  bash benchmark/run.sh codex l1; echo "second exit=$?"; wait $FIRST )
-# Expect the second to print the lock message and exit 3.
-# Lock auto-released afterwards:
+# Serial lock is DETERMINISTIC (no timing race): pre-create the lock dir, then invoke and assert
+# the run refuses to proceed with exit 3, then clean up. (The stub releases the lock in ~100ms, so a
+# background+sleep race would false-fail a correct lock — this avoids that entirely.)
+mkdir -p benchmark/.runs/.lock
+bash benchmark/run.sh codex l1; test $? -eq 3 && echo "lock honored (exit 3)"
+# A losing invocation must NOT remove the holder's lock (trap is post-acquire only):
+test -d benchmark/.runs/.lock && echo "holder lock untouched"
+rmdir benchmark/.runs/.lock
+# Lock auto-released after a normal (lock-free) run via the EXIT trap:
+bash benchmark/run.sh codex l1 >/dev/null
 test ! -d benchmark/.runs/.lock && echo "lock released"
 # Gateway preflight present and reachable in this env:
 grep -q 'localhost:4000/v1/models' benchmark/run.sh
 bash benchmark/run.sh codex l1 >/dev/null && echo "gateway ok, stub ran"
   </verify>
   <done>
-Two concurrent run.sh invocations cannot both proceed (second exits 3 with a clear message), the lock
-is always released via EXIT trap, and a down gateway aborts with a friendly nonzero exit before any run
-dir/tool invocation. Verified entirely with stubs — no model time consumed.
+A run cannot proceed while the lock dir already exists (exits 3 with a clear message) and a losing
+invocation leaves the holder's lock intact; a normal run releases the lock via the EXIT trap; and a
+down gateway aborts with a friendly nonzero exit before any run dir/tool invocation. Verified
+deterministically with stubs — no timing race, no model time consumed.
   </done>
 </task>
 
@@ -164,7 +174,7 @@ dir/tool invocation. Verified entirely with stubs — no model time consumed.
 - `bash benchmark/run.sh` (no args) and bad tool/level all exit nonzero with usage.
 - `bash benchmark/run.sh codex l1` (stub) creates exactly one fresh benchmark/.runs/codex-l1-fib-* dir.
 - Level aliases (l1 / l1-fib / 1) all resolve to tasks/l1-fib.
-- Concurrent invocation: only one proceeds; lock released afterward.
+- Serial lock: a pre-existing lock dir forces exit 3 and is left untouched; a normal run releases its own lock.
 - Gateway-down path returns nonzero before creating a run dir.
 - No LLM/model call happens anywhere in this plan (invocation is stubbed).
 </verification>

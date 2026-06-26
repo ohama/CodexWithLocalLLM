@@ -10,7 +10,7 @@ autonomous: false
 must_haves:
   truths:
     - "A real `benchmark/run.sh codex l1` run completes non-interactively and leaves an isolated dir containing the agent's solution, a non-empty transcript.log, and a meta.json naming qwen-122b."
-    - "A real `benchmark/run.sh openhands l1` run completes headless and leaves its solution INSIDE the run dir (isolation holds), with transcript.log + meta.json."
+    - "A real `benchmark/run.sh openhands l1` run completes headless and — because Plan 02 pins the workspace to $RUN_DIR by default — leaves its solution INSIDE the run dir (isolation confirmed), with transcript.log + meta.json."
     - "Neither run hangs on stdin nor blocks on an interactive prompt."
     - "The single backend is hit by only one run at a time (runs done serially under the lock)."
   artifacts: []
@@ -28,8 +28,8 @@ must_haves:
 <objective>
 Prove the runner works end-to-end with the smallest real task (L1 fib) for BOTH tools, run serially.
 This is the single place in Phase 2 that spends real model time, deliberately kept minimal (L1 only)
-and gated for human confirmation because the one genuine unknown — where openhands writes its
-solution — is best eyeballed by a person.
+and gated for human confirmation — a final eyeball that both tools left clean isolated dirs (openhands'
+workspace is already pinned to the run dir by Plan 02, so this is a confirmation, not a fix point).
 
 Purpose: Live confirmation of RUN-01..RUN-05 on the real backend (one isolated run per tool, same
 model qwen-122b, non-interactive, serial). No judging/metrics here (that's Phase 3) — we only confirm
@@ -86,9 +86,10 @@ a meta.json confirming qwen-122b @ :4000, and the agent's solution file(s) insid
 <task type="checkpoint:human-verify" gate="blocking">
   <what-built>
 The equal-conditions runner `benchmark/run.sh <tool> <level>`: isolated run dirs, serial lock,
-gateway preflight, non-interactive codex (`< /dev/null`) and openhands (`--headless`) invocations,
-raw transcript capture, and a model-confirming meta.json. The codex L1 path was just auto-verified.
-The one remaining unknown is whether openhands writes its solution INTO the run dir (isolation).
+gateway preflight, non-interactive codex (`< /dev/null`) and openhands (`--headless`, workspace pinned
+to the run dir via `--override-with-envs`) invocations, raw transcript capture, and a model-confirming
+meta.json. The codex L1 path was just auto-verified. This checkpoint CONFIRMS that openhands' default
+workspace pin actually lands the solution INSIDE the run dir.
   </what-built>
   <how-to-verify>
 1. Ensure the LiteLLM/mlx backend is up (qwen-122b). The runner preflight will tell you if not.
@@ -100,10 +101,11 @@ The one remaining unknown is whether openhands writes its solution INTO the run 
      - transcript.log is present and non-empty
      - meta.json shows model containing "qwen-122b" and base_url with :4000
      - the agent's solution file(s) (e.g. fib.py) are INSIDE this run dir (NOT in the repo root,
-       NOT in ~/.openhands/workspace). This is the isolation check (RUN-02).
+       NOT in ~/.openhands/workspace). This is the isolation confirmation (RUN-02) — the Plan 02
+       workspace pin should make this the default outcome.
 6. Sanity: the two run dirs (codex + openhands) are separate and neither leaked into the other.
-If openhands wrote files somewhere other than the run dir, report where — Plan 02's run_openhands
-needs the workspace-override fix before sign-off.
+If, despite the default pin, openhands wrote files somewhere other than the run dir, report where so
+the `--override-with-envs` vars in Plan 02's run_openhands can be corrected.
   </how-to-verify>
   <resume-signal>
 Type "approved" if both tools left isolated dirs with transcript + meta (qwen-122b) and openhands'

@@ -11,7 +11,7 @@ autonomous: true
 must_haves:
   truths:
     - "codex runs non-interactively (`codex exec ... < /dev/null`) inside the run dir and never hangs on stdin."
-    - "openhands runs non-interactively (`--headless`) and writes its solution into the run dir, not into a shared/global workspace."
+    - "openhands runs non-interactively (`--headless`) with its workspace pinned to $RUN_DIR BY DEFAULT (via env override), so its solution always lands in the isolated run dir, never a shared/global workspace."
     - "Every run leaves a non-empty transcript.log capturing the raw tool output in its run dir."
     - "Every run writes a meta record (meta.json) naming the model used (qwen-122b family) and the exit code, so the same-model criterion is confirmable after the fact."
     - "The PROMPT.md text is fed to the tool verbatim — identical text across both tools."
@@ -30,8 +30,12 @@ must_haves:
       pattern: "codex exec.*< /dev/null"
     - from: "benchmark/run.sh"
       to: "openhands"
-      via: "LITELLM_API_KEY=dummy openhands --task ... --headless < /dev/null inside run dir"
+      via: "LITELLM_API_KEY=dummy openhands --headless --override-with-envs (workspace pinned to $RUN_DIR) ... < /dev/null inside run dir"
       pattern: "openhands.*--headless"
+    - from: "benchmark/run.sh"
+      to: "openhands workspace = $RUN_DIR"
+      via: "--override-with-envs with workspace/sandbox vars (e.g. SANDBOX_VOLUMES / WORKSPACE_BASE) set to $RUN_DIR — applied unconditionally"
+      pattern: "override-with-envs"
     - from: "benchmark/run.sh"
       to: "transcript.log"
       via: "tee of combined stdout+stderr into the run dir"
@@ -112,7 +116,7 @@ aborting the script on agent failure.
 </task>
 
 <task type="auto">
-  <name>Task 2: Implement run_openhands (headless, verbatim prompt, output lands in run dir)</name>
+  <name>Task 2: Implement run_openhands (headless, verbatim prompt, workspace pinned to RUN_DIR by default)</name>
   <files>benchmark/run.sh</files>
   <action>
 Replace the `run_openhands` stub with a real non-interactive invocation.
@@ -126,11 +130,15 @@ Replace the `run_openhands` stub with a real non-interactive invocation.
   blocks, add `--always-approve` and/or `--exit-without-confirmation` (both are valid flags per
   `openhands --help`) so the run completes without human input. Document which flags were needed in
   the SUMMARY.
-- Isolation caveat (verify during the run): confirm openhands actually writes the solution INTO
-  $RUN_DIR (cwd). OpenHands' local runtime may use a configured workspace_base instead of cwd. If a
-  smoke check shows files landing elsewhere, point its workspace at $RUN_DIR via env override
-  (`--override-with-envs` with the appropriate workspace/volume env, e.g. SANDBOX_VOLUMES/WORKSPACE_BASE)
-  so RUN-02 isolation holds. Record the resolved mechanism in the SUMMARY.
+- Workspace isolation (PROACTIVE — pin BY DEFAULT, do not leave conditional): OpenHands' local
+  runtime resolves its workspace from a configured workspace_base / sandbox volume, NOT from cwd, so
+  without an explicit pin its solution can land in ~/.openhands/workspace and break RUN-02. Therefore
+  ALWAYS pin the workspace to $RUN_DIR using the documented env override on every openhands invocation:
+  `--override-with-envs` with the appropriate workspace/sandbox vars (e.g. SANDBOX_VOLUMES and/or
+  WORKSPACE_BASE) set to "$RUN_DIR". This is the default path, not a fallback — there is no "run first,
+  fix if misplaced" branch. (Consult `openhands --help` for the exact env-var names and record the
+  resolved set in the SUMMARY.) With this pin in place, Plan 03's human-verify is a CONFIRMATION of
+  isolation, not a fix point.
 - Capture combined stdout+stderr via `tee "$RUN_DIR/transcript.log"`; record the real exit code with
   `${PIPESTATUS[0]}`. As with codex, do not abort the script on a nonzero agent exit.
   </action>
@@ -138,15 +146,16 @@ Replace the `run_openhands` stub with a real non-interactive invocation.
 grep -q 'openhands' benchmark/run.sh
 grep -q -- '--headless' benchmark/run.sh
 grep -Eq 'openhands --(file|task)' benchmark/run.sh
+grep -q -- '--override-with-envs' benchmark/run.sh   # workspace pin applied by default
 grep -q '< /dev/null' benchmark/run.sh
 grep -q 'tee .*transcript.log' benchmark/run.sh
 bash -n benchmark/run.sh   # syntax OK
-# (A real openhands run + output-location confirmation happens in Plan 03's human-verify.)
+# (A real openhands run + isolation confirmation happens in Plan 03's human-verify.)
   </verify>
   <done>
 run_openhands cd's into RUN_DIR, invokes openhands headless with the verbatim prompt and `< /dev/null`,
-tees output to transcript.log, records the real exit code, and has a documented mechanism to keep the
-solution inside the isolated run dir.
+unconditionally pins the workspace to $RUN_DIR via `--override-with-envs` (so the solution always lands
+in the isolated run dir), tees output to transcript.log, and records the real exit code.
   </done>
 </task>
 
@@ -170,6 +179,9 @@ meta.json fields (one JSON object):
   started_at, finished_at (UTC ISO), exit_code (the real tool exit code from Task 1/2),
   transcript ("transcript.log").
 
+NOTE (scope): started_at/finished_at are RECORD-ONLY timestamps for provenance. Do NOT compute,
+aggregate, or judge wall-clock metrics here — metric measurement/aggregation is Phase 3.
+
 Then print a final summary to stdout: RUN_DIR, transcript path, resolved model, exit_code.
 
 Edge: meta.json must be written even when the agent exited nonzero (recording a failed run is valid).
@@ -185,8 +197,8 @@ python3 -c "import json;print(json.load(open('${HOME}/.openhands/agent_settings.
   </verify>
   <done>
 Every run writes meta.json naming the qwen-122b model (resolved from the tool's own config), base_url,
-exit_code, and timestamps; the runner prints a final summary. The same-model criterion is confirmable
-from the run record alone. No new dependencies introduced (stdlib + grep/sed).
+exit_code, and record-only timestamps; the runner prints a final summary. The same-model criterion is
+confirmable from the run record alone. No new dependencies introduced (stdlib + grep/sed).
   </done>
 </task>
 
@@ -195,7 +207,8 @@ from the run record alone. No new dependencies introduced (stdlib + grep/sed).
 <verification>
 - bash -n benchmark/run.sh passes (syntax) after all three tasks.
 - run.sh contains: `codex exec ... < /dev/null`, `--sandbox workspace-write`, `--skip-git-repo-check`,
-  `openhands ... --headless`, `tee ... transcript.log`, `meta.json`, model resolution to qwen-122b.
+  `openhands ... --headless`, `--override-with-envs` (workspace pinned to $RUN_DIR), `tee ... transcript.log`,
+  `meta.json`, model resolution to qwen-122b.
 - Config sources (~/.codex/config.toml, ~/.openhands/agent_settings.json) are readable and contain the
   qwen-122b model strings.
 - No real LLM run is required to verify this plan (the single real smoke is Plan 03). This keeps model
@@ -205,7 +218,8 @@ from the run record alone. No new dependencies introduced (stdlib + grep/sed).
 <success_criteria>
 RUN-03 (both tools -> qwen-122b, model confirmable from meta.json), RUN-04 (codex `< /dev/null`,
 openhands `--headless`, no interactive block), and the real-invocation half of RUN-05 are implemented.
-Each run leaves an isolated dir with transcript.log + meta.json. Structurally verified with ~0 model time.
+openhands' workspace is pinned to the isolated run dir by default. Each run leaves an isolated dir with
+transcript.log + meta.json. Structurally verified with ~0 model time.
 </success_criteria>
 
 <output>
