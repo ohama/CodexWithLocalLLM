@@ -68,7 +68,7 @@ python3 benchmark/tasks/<level>/test.py <solution_dir>   # exit 0 → PASS
 - **도구의 자가 보고(self-report)는 신뢰하지 않는다.** "테스트 다 통과했다"는 도구의 말이 아니라,
   우리의 독립 채점기 종료 코드만이 합격을 결정한다(forward ref: MET-01, Phase 3).
 
-## 공통 규약 (Plan 02 채점기가 의존하는 약속)
+## 공통 규약 (채점기가 의존하는 약속)
 
 1. **채점기 호출:** `python3 tasks/<level>/test.py <solution_dir>` 형태로 실행한다.
    `<solution_dir>` 가 생략되면 현재 디렉터리(`.`)를 기본값으로 쓴다.
@@ -77,4 +77,4 @@ python3 benchmark/tasks/<level>/test.py <solution_dir>   # exit 0 → PASS
    이것이 재현성을 보장한다(PROJECT.md 제약).
 4. **동일 프롬프트 규칙:** `PROMPT.md` 의 **정확한 텍스트를 모든 도구에 그대로(verbatim)** 먹인다.
    도구별 맞춤 문구는 없다(TASK-03).
-5. **decoupling:** 프롬프트/테스트는 여기에 살고, 어떤 도구 런너와도 독립적이다(런너는 Phase 2).
+5. **decoupling:** 프롬프트/테스트는 여기에 살고, 도구 런너(`run.sh`)와 독립적이다.
