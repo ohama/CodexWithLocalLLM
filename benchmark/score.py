@@ -74,6 +74,27 @@ def extract_steps(run_dir, meta):
             return int(m.group(1)), "openhands:Number of agent messages"
         return 0, "openhands:summary-not-found"
 
+    if tool in ("qclaude", "qclaude35"):
+        # Claude Code is run with `--output-format stream-json --verbose`, so the
+        # transcript is JSONL of events. Count tool_use blocks in assistant turns
+        # — the analog of codex's `exec` count (one per tool invocation).
+        steps = 0
+        for line in text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except ValueError:
+                continue  # non-JSON noise (warnings) — skip
+            if obj.get("type") != "assistant":
+                continue
+            content = obj.get("message", {}).get("content", [])
+            if isinstance(content, list):
+                steps += sum(1 for b in content
+                             if isinstance(b, dict) and b.get("type") == "tool_use")
+        return steps, "qclaude:count of tool_use events"
+
     return 0, f"unknown-tool:{tool}"
 
 

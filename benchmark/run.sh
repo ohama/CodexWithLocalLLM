@@ -34,8 +34,8 @@ TOOL="$1"
 LEVEL_ARG="$2"
 
 case "$TOOL" in
-  codex|openhands) ;;
-  *) echo "✗ unknown tool: '$TOOL' (expected codex|openhands)" >&2; usage ;;
+  codex|openhands|qclaude|qclaude35) ;;
+  *) echo "✗ unknown tool: '$TOOL' (expected codex|openhands|qclaude|qclaude35)" >&2; usage ;;
 esac
 
 # ── 2. Level normalization ──────────────────────────────────────────────
@@ -90,6 +90,13 @@ if ! curl -sf -m 5 http://localhost:4000/v1/models \
   echo "✗ LiteLLM gateway (:4000) not responding — check the LiteLLM/mlx service" >&2
   exit 1
 fi
+# qclaude* additionally goes through claude-code-proxy (:8082); fail early if down.
+if [ "$TOOL" = "qclaude" ] || [ "$TOOL" = "qclaude35" ]; then
+  if ! curl -sf -m 5 http://localhost:8082/ >/dev/null 2>&1; then
+    echo "✗ claude-code-proxy (:8082) not responding — check com.ohama.claude-proxy" >&2
+    exit 1
+  fi
+fi
 
 # ── 6. Fresh isolated run dir ───────────────────────────────────────────
 STAMP="$(date -u +%Y%m%d-%H%M%S)"
@@ -116,6 +123,29 @@ run_codex() {
   set +e
   LITELLM_API_KEY=dummy codex exec --skip-git-repo-check --sandbox workspace-write "$PROMPT" < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
   TOOL_EXIT="${PIPESTATUS[0]}"   # codex's real exit, not tee's
+  set -e
+}
+
+run_qclaude() {
+  cd "$RUN_DIR"
+  # Claude Code (local qwen via claude-code-proxy :8082). The tier flag picks the
+  # backend via the proxy's tier mapping (proxy.env):
+  #   qclaude   → --model opus   → qwen-122b-claude (122b, == the weights codex ran)
+  #   qclaude35 → --model sonnet → qwen-35b-claude  (35b, the fast tier)
+  # CLAUDE_TIER is set by the dispatcher below.
+  # --dangerously-skip-permissions: headless tool use (Write/Bash) with no prompts,
+  # matching codex --sandbox workspace-write / openhands --always-approve.
+  # --output-format stream-json --verbose: emit per-event JSONL so score.py can
+  # count tool_use events (the codex/openhands transcripts don't apply here).
+  # `< /dev/null` for the same non-tty safety as the others. The FULL path to
+  # claude is MANDATORY (a bare `claude` re-expands via the user's tmux wrapper).
+  set +e
+  ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy \
+    /opt/homebrew/bin/claude -p "$PROMPT" --model "$CLAUDE_TIER" \
+    --dangerously-skip-permissions \
+    --output-format stream-json --verbose \
+    < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
+  TOOL_EXIT="${PIPESTATUS[0]}"   # claude's real exit, not tee's
   set -e
 }
 
@@ -167,6 +197,18 @@ resolve_model() {
     openhands)
       MODEL="$(python3 -c "import json;print(json.load(open('$HOME/.openhands/agent_settings.json'))['llm']['model'])")"
       ;;
+    qclaude)
+      # claude-code-proxy maps the opus tier to qwen-122b-claude (proxy.env), the
+      # same 122b weights codex used. No per-run config to read — it's the fixed
+      # proxy routing for --model opus.
+      CLAUDE_TIER="opus"
+      MODEL="qwen-122b-claude"
+      ;;
+    qclaude35)
+      # The sonnet tier maps to qwen-35b-claude (proxy.env) — the fast 35b model.
+      CLAUDE_TIER="sonnet"
+      MODEL="qwen-35b-claude"
+      ;;
   esac
   [ -n "${MODEL:-}" ] || MODEL="unknown"
   # Same-model assertion (RUN-03): both tools must run the qwen-122b backend.
@@ -188,8 +230,9 @@ echo "prompt file : $PROMPT_FILE"
 # measurement/aggregation is Phase 3. These only stamp when the run happened.
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 case "$TOOL" in
-  codex)     run_codex ;;
-  openhands) run_openhands ;;
+  codex)               run_codex ;;
+  openhands)           run_openhands ;;
+  qclaude|qclaude35)   run_qclaude ;;
 esac
 FINISHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 

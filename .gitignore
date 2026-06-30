@@ -12,6 +12,9 @@ Thumbs.db
 *.log
 logs/
 
+# Local scratch / working dir (temp outputs, cloned build dirs)
+scratchpad/
+
 # Environment / secrets
 .env
 .env.local

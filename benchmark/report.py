@@ -251,10 +251,22 @@ def build_honesty_note():
             "instead of the isolated run dir, so its output never landed where the judge looked. "
             "After switching to an inline `--task` (no workdir leak), L2 and L3 were **re-run** "
             "and both **PASS**. The numbers above are from those clean re-runs.",
-            "2. **codex L3 (`l3-kvstore`) is a GENUINE failure**, not a harness artifact. codex "
-            "truncated at ~14s after only running `mkdir kvstore` — it produced an empty package "
-            "(0 files, 0 loc) and the judge correctly fails it. This is reported as a real FAIL, "
-            "not hidden or re-run away.",
+            "2. **codex L3 / L7 are GENUINE failures**, not harness artifacts — but the cause is "
+            "an agent-loop degeneration in the model, NOT task difficulty and NOT a token cap. "
+            "Both tasks require a package subdirectory, so codex's first concrete action is a bare "
+            "`mkdir -p <pkg>` (empty stdout); on the next turn qwen-122b re-emits its opening "
+            "preamble with no tool call, so `codex exec` treats the turn as complete and exits "
+            "cleanly (exit 0) with 0 files. Reproduced 3× (L3 ×2, L7 ×1). The \"~49k tokens\" is "
+            "just the normal cost of a 2-turn session — L1 **passed** at 48,604 tokens — so it is "
+            "not a ceiling. **Verified** by re-running L7 with a flat (no-package, no-`mkdir`) "
+            "variant of the identical HTTP contract: codex then ran 13 steps and produced a "
+            "complete, working solution (server + persistence + restart, all routes), confirming "
+            "the HTTP-service logic was never the blocker. The flat run also exposed a *second* "
+            "degeneration mode: after the solution was done, a cleanup `rm` was rejected by the "
+            "sandbox and qwen retried the identical rejected command 242× until timeout. Both "
+            "modes are model-side loop-control failures on unusual tool results (empty output / "
+            "policy rejection). The L3/L7 cells are reported as real FAILs, not hidden or re-run "
+            "away.",
             "",
         ]
     )
