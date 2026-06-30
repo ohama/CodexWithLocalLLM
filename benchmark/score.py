@@ -74,7 +74,7 @@ def extract_steps(run_dir, meta):
             return int(m.group(1)), "openhands:Number of agent messages"
         return 0, "openhands:summary-not-found"
 
-    if tool in ("qclaude", "qclaude35"):
+    if tool in ("qclaude", "qclaude35", "qcf"):
         # Claude Code is run with `--output-format stream-json --verbose`, so the
         # transcript is JSONL of events. Count tool_use blocks in assistant turns
         # — the analog of codex's `exec` count (one per tool invocation).

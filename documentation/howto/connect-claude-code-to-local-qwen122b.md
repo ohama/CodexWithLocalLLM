@@ -336,6 +336,39 @@ alias qclaude='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dum
 # 검증: zsh -ic 'qclaude --version' → "2.1.195 (Claude Code)" (open terminal failed 뜨면 아직 샘)
 ```
 
+### P-8. 빠른 모드 — `--bare` 로 첫 턴 prefill 줄이기 (✅ 측정 2026-06-30)
+
+로컬 qwen에서 qclaude가 codex보다 느린 **진짜 원인은 "캐싱 비활성"이 아니다** — codex도 같은
+로컬 mlx라 Anthropic 캐싱이 없다. 원인은 **Claude Code가 보내는 거대한 프롬프트**(시스템 프롬프트
++ 툴 25종 스키마 + CLAUDE.md/메모리/스킬)를 mlx가 **턴마다 콜드 prefill** 하는 것. prefill은
+선형(122b ≈ **1k 토큰당 1.75초**)이라 첫 토큰까지(ttft) 79~196초가 걸린다.
+
+**해결: 프롬프트를 줄인다.** `--bare`(훅/LSP/플러그인 + CLAUDE.md/메모리/스킬 **자동주입** skip)
++ `--tools`(툴 스키마 최소화). 같은 122b·같은 L1 과제에서 측정:
+
+| | 툴 스키마 | ttft | 총시간 |
+|---|---|---|---|
+| 풀 환경 (`qclaude`) | 25 | 98.6s | 158.2s |
+| **`--bare` + 툴 최소** | 3~7 | **8.9s** | **28.5s** |
+
+→ **ttft 11× / 총시간 5.5× 단축** (codex의 23s급). 정답은 그대로 PASS.
+
+```bash
+# ~/.zshrc — 빠른 모드 별칭 (qclaude는 풀기능용으로 그대로 둔다)
+# --bare 라도 슬래시 명령/스킬은 /name 으로 그대로 쓸 수 있다.
+alias qcf='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy /opt/homebrew/bin/claude --model opus --bare --tools Read Write Edit Bash Grep Glob WebFetch'
+alias qcf35='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy /opt/homebrew/bin/claude --model sonnet --bare --tools Read Write Edit Bash Grep Glob WebFetch'
+# 사용: qcf "..."   → 빠른 122b   /   qcf35 "..." → 최속 35b   /   qclaude → 풀기능(메모리·CLAUDE.md)
+```
+
+**트레이드오프 (`--bare`로 빠져나가는 것):** CLAUDE.md/자동 메모리 주입, 훅, MCP, 플러그인(LSP).
+프로젝트 지침이 필요하면 `qcf --add-dir .`(그만큼 프롬프트↑), 툴 더 필요하면 `--tools`에 추가.
+
+> 참고: **한 세션 안**에서는 첫 턴 이후 mlx가 prefix를 재사용(~0.1s)하므로 둘째 턴부터 빠르다.
+> `--bare`의 이득은 그 **첫 턴/새 세션**의 콜드 prefill을 싸게 만드는 것. 무거운 작업은 `qcf`(122b),
+> 가벼운 잡일/속도 우선은 `qcf35`(35b). `--prefill-step-size` 상향은 효과 없었다(연산 병목).
+> (3자 벤치마크 근거: `benchmark/RESULTS-3way-qwen.md`.)
+
 ---
 
 ## Step 2 — (참고용·비권장) Claude 전용 LiteLLM 모델 추가

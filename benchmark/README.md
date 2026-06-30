@@ -11,6 +11,7 @@
 | `openhands` | OpenHands | qwen-122b | |
 | `qclaude` | Claude Code (`--model opus`) | **qwen-122b** | claude-code-proxy 경유, codex와 동일 weights |
 | `qclaude35` | Claude Code (`--model sonnet`) | **qwen-35b** | 빠른 tier |
+| `qcf` | Claude Code (`--model opus --bare`) | **qwen-122b** | 프롬프트 최소화(빠른 모드) — qclaude와 비교용 |
 
 > **공정성:** `codex`와 `qclaude`는 *같은 122b weights*(role-shim→mlx :8001)를 쓴다 — 차이는
 > 클라이언트/API 번역 경로뿐. `qclaude` vs `qclaude35`는 *같은 클라이언트, 다른 모델 크기*(122b vs 35b).
@@ -25,6 +26,7 @@
 | **실제 결과** — codex vs openhands (14셀) | [RESULTS.md](RESULTS.md) |
 | **실제 결과** — codex vs qclaude·qclaude35 (3자, qwen) | [RESULTS-3way-qwen.md](RESULTS-3way-qwen.md) · 분석 [RESULTS-3way-notes.md](RESULTS-3way-notes.md) |
 | **실제 결과** — codex vs qclaude (2자, 122b) | [RESULTS-qclaude-vs-codex.md](RESULTS-qclaude-vs-codex.md) |
+| **실제 결과** — qcf(`--bare` 빠른 모드) vs qclaude | [RESULTS-qcf-bare.md](RESULTS-qcf-bare.md) |
 | 이 파일 | 과제 정의·합격 기준·디렉터리 구조 (아래) |
 
 ## 실행 한눈에
@@ -71,8 +73,9 @@ benchmark/
   START-HERE.md / INTERPRETING.md / REPRODUCE.md / RESULTS.md  # 길잡이·해석·재현·결과
   RESULTS-3way-qwen.md + RESULTS-3way-notes.md  # codex vs qclaude(122b) vs qclaude35(35b)
   RESULTS-qclaude-vs-codex.md     # codex vs qclaude(122b) 2자 비교
+  RESULTS-qcf-bare.md             # qcf(--bare 빠른 모드) vs qclaude — prefill/속도 분석
   README.md                       # 이 파일 (과제 정의 + 합격 기준 + 구조)
-  run.sh                          # 한 셀(도구,레벨) 실행 — codex|openhands|qclaude|qclaude35, 격리·순차 락·비대화
+  run.sh                          # 한 셀(도구,레벨) 실행 — codex|openhands|qclaude|qclaude35|qcf, 격리·순차 락·비대화
   run-matrix.sh                   # codex+openhands 매트릭스(2도구×7레벨=14셀, 직렬) → results.json
   score.py                        # 4지표 채점/측정 (run.sh가 자동 호출; qclaude는 tool_use로 step 집계)
   report.py                       # results.json → RESULTS.md (codex vs openhands)

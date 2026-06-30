@@ -34,8 +34,8 @@ TOOL="$1"
 LEVEL_ARG="$2"
 
 case "$TOOL" in
-  codex|openhands|qclaude|qclaude35) ;;
-  *) echo "✗ unknown tool: '$TOOL' (expected codex|openhands|qclaude|qclaude35)" >&2; usage ;;
+  codex|openhands|qclaude|qclaude35|qcf) ;;
+  *) echo "✗ unknown tool: '$TOOL' (expected codex|openhands|qclaude|qclaude35|qcf)" >&2; usage ;;
 esac
 
 # ── 2. Level normalization ──────────────────────────────────────────────
@@ -91,7 +91,7 @@ if ! curl -sf -m 5 http://localhost:4000/v1/models \
   exit 1
 fi
 # qclaude* additionally goes through claude-code-proxy (:8082); fail early if down.
-if [ "$TOOL" = "qclaude" ] || [ "$TOOL" = "qclaude35" ]; then
+if [ "$TOOL" = "qclaude" ] || [ "$TOOL" = "qclaude35" ] || [ "$TOOL" = "qcf" ]; then
   if ! curl -sf -m 5 http://localhost:8082/ >/dev/null 2>&1; then
     echo "✗ claude-code-proxy (:8082) not responding — check com.ohama.claude-proxy" >&2
     exit 1
@@ -139,11 +139,16 @@ run_qclaude() {
   # count tool_use events (the codex/openhands transcripts don't apply here).
   # `< /dev/null` for the same non-tty safety as the others. The FULL path to
   # claude is MANDATORY (a bare `claude` re-expands via the user's tmux wrapper).
+  # CLAUDE_FLAGS (set per tool) adds the "fast mode" knobs for qcf:
+  #   --bare (skip hooks/LSP/plugins + CLAUDE.md/memory/skills auto-injection) and a
+  #   minimal --tools set. This shrinks the prompt → far smaller cold prefill. Empty
+  #   for qclaude/qclaude35 (full environment).
   set +e
   ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy \
     /opt/homebrew/bin/claude -p "$PROMPT" --model "$CLAUDE_TIER" \
     --dangerously-skip-permissions \
     --output-format stream-json --verbose \
+    ${CLAUDE_FLAGS:-} \
     < /dev/null 2>&1 | tee "$RUN_DIR/transcript.log"
   TOOL_EXIT="${PIPESTATUS[0]}"   # claude's real exit, not tee's
   set -e
@@ -209,6 +214,13 @@ resolve_model() {
       CLAUDE_TIER="sonnet"
       MODEL="qwen-35b-claude"
       ;;
+    qcf)
+      # Fast mode: same 122b weights as qclaude, but --bare + minimal --tools to
+      # shrink the prompt (smaller cold prefill). Compare directly against qclaude.
+      CLAUDE_TIER="opus"
+      MODEL="qwen-122b-claude"
+      CLAUDE_FLAGS="--bare --tools Read Write Edit Bash Grep Glob WebFetch"
+      ;;
   esac
   [ -n "${MODEL:-}" ] || MODEL="unknown"
   # Same-model assertion (RUN-03): both tools must run the qwen-122b backend.
@@ -230,9 +242,9 @@ echo "prompt file : $PROMPT_FILE"
 # measurement/aggregation is Phase 3. These only stamp when the run happened.
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 case "$TOOL" in
-  codex)               run_codex ;;
-  openhands)           run_openhands ;;
-  qclaude|qclaude35)   run_qclaude ;;
+  codex)                    run_codex ;;
+  openhands)                run_openhands ;;
+  qclaude|qclaude35|qcf)    run_qclaude ;;
 esac
 FINISHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
