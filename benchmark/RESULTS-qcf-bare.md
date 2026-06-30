@@ -47,7 +47,10 @@ frozen judge requires them at the run-dir root). Not a functional failure — se
 
    → With the hint, **qcf is functionally 7/7**. The failures were the judge's strict
    root-layout contract, not capability. (`--bare` appears slightly more prone to the miss
-   since it drops the layout-nudging context — small sample.)
+   since it drops the layout-nudging context — small sample.) **Cross-check:** full-env
+   `qclaude` + the same root hint also turns its lone L7 fail into a **PASS** (1183s, 29
+   steps, `serve.py` at root) — so qclaude is likewise 7/7 with the hint, confirming L7 is a
+   layout artifact for *all* Claude Code variants, not a model gap.
 4. **L7 stays heavy even fixed (528s / 40 steps).** Lean mode does not help, and arguably
    hurts, the hardest multi-step task; the ttft win is dwarfed by generation + step churn.
 
@@ -59,6 +62,7 @@ frozen judge requires them at the run-dir root). Not a functional failure — se
   (or `qcf --add-dir .` for project context); expect the total-time win to shrink and watch
   for step inflation on the hardest tasks.
 - The layout misses are a **judge-contract artifact** shared by all Claude Code variants, not
-  a model gap. (qclaude's lone L7 fail is the same; see the qclaude+hint check in the 3-way notes.)
+  a model gap — verified: both qcf and full-env qclaude pass L5/L7 once a one-line root hint
+  is added (qcf L7 528s, qclaude L7 1183s).
 
 _Measured 2026-06-30. Raw runs under `.runs/qcf-*` and `.runs/qcf-hint-*` (gitignored)._
