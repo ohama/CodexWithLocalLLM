@@ -358,11 +358,20 @@ alias qclaude='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dum
 # --bare 라도 슬래시 명령/스킬은 /name 으로 그대로 쓸 수 있다.
 alias qcf='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy /opt/homebrew/bin/claude --model opus --bare --tools Read Write Edit Bash Grep Glob WebFetch'
 alias qcf35='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy /opt/homebrew/bin/claude --model sonnet --bare --tools Read Write Edit Bash Grep Glob WebFetch'
-# 사용: qcf "..."   → 빠른 122b   /   qcf35 "..." → 최속 35b   /   qclaude → 풀기능(메모리·CLAUDE.md)
+# 프로젝트용: qcf + --add-dir . → 현재 레포 CLAUDE.md만 복원(규칙 준수), 메모리/스킬/훅은 여전히 off
+alias qcfp='ANTHROPIC_BASE_URL=http://localhost:8082 ANTHROPIC_AUTH_TOKEN=dummy /opt/homebrew/bin/claude --model opus --bare --tools Read Write Edit Bash Grep Glob WebFetch --add-dir .'
+# 사용: qcf → 빠른 122b / qcf35 → 최속 35b / qcfp → 레포 규칙 지키며 빠르게 / qclaude → 풀기능
 ```
 
 **트레이드오프 (`--bare`로 빠져나가는 것):** CLAUDE.md/자동 메모리 주입, 훅, MCP, 플러그인(LSP).
-프로젝트 지침이 필요하면 `qcf --add-dir .`(그만큼 프롬프트↑), 툴 더 필요하면 `--tools`에 추가.
+
+**`--add-dir .` 은 언제?** 두 역할: ① cwd 밖 디렉토리 접근 허용(cwd 자체는 기본 허용이라 단순 파일쓰기엔 불필요),
+② `--bare`에서 **그 디렉토리의 CLAUDE.md만 다시 로드**. 즉 `qcfp`(=`qcf --add-dir .`)는 "프로젝트 규칙은
+지키되 속도는 챙기는" 절충 — 메모리/스킬/훅은 계속 off라 풀환경보다 훨씬 가볍다.
+- **항상 붙이는 건 비추**: CLAUDE.md를 프롬프트에 되살려 prefill 비용을 그만큼 되돌린다(≈1k토큰당 1.75초).
+  CLAUDE.md가 크거나 일회성 작업이면 `qcf`로, 레포 규칙이 필요하면 `qcfp`로.
+- 풀환경(`qclaude`) 느림의 주범은 CLAUDE.md 하나가 아니라 **툴 25종 + 스킬 + 메모리**였으므로,
+  `qcfp`는 속도 대부분을 유지한다. 툴이 더 필요하면 `--tools`에 추가.
 
 > 참고: **한 세션 안**에서는 첫 턴 이후 mlx가 prefix를 재사용(~0.1s)하므로 둘째 턴부터 빠르다.
 > `--bare`의 이득은 그 **첫 턴/새 세션**의 콜드 prefill을 싸게 만드는 것. 무거운 작업은 `qcf`(122b),

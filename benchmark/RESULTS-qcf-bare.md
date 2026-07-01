@@ -64,5 +64,9 @@ frozen judge requires them at the run-dir root). Not a functional failure — se
 - The layout misses are a **judge-contract artifact** shared by all Claude Code variants, not
   a model gap — verified: both qcf and full-env qclaude pass L5/L7 once a one-line root hint
   is added (qcf L7 528s, qclaude L7 1183s).
+- **Consolidated: `qcf` (122b) + root hint = 7/7 in ~891s** (L1 27 · L2 83 · L3 96 · L4 114 ·
+  L5 95 · L6 126 · L7 350s) — full pass at 44% of full-env qclaude's wall-clock (6/7, 2028s).
+  (L4 passes on 122b regardless of the hint; only the 35b tier failed L4. L7 total varies
+  run-to-run — 350–528s — since it's the heaviest multi-step task.)
 
 _Measured 2026-06-30. Raw runs under `.runs/qcf-*` and `.runs/qcf-hint-*` (gitignored)._
